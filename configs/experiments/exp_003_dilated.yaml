@@ -1,0 +1,6 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+name: exp_003_dilated
+description: Model dengan dilated convolution.
+
+model:
+  architecture: null   # TODO: varian dilated dari arsitektur baseline

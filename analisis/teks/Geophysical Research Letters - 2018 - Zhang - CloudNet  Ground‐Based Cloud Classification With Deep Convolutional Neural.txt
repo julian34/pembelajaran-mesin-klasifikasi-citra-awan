@@ -1,0 +1,573 @@
+=== HALAMAN PDF 1 ===
+Geophysical             Research             Letters
+
+RESEARCH          LET TER                                            CloudNet:            Ground-Based            Cloud            Classiﬁcation            With            Deep
+10.1029/2018GL077787                                                 Convolutional            Neural            Network
+
+
+Key      Points:
+•   CloudNet   is   a   convolutional                                Jinglin              Zhang1         ,       Pu              Liu1,2,       Feng              Zhang1,2,       and       Qianqian              Song1
+  neural   network   model   superior   to
+  conventional   ground-based   cloud                                1Key   Laboratory   of   Meteorological   Disaster,   Ministry   of   Education,   Nanjing   University   of   Information   Science   and
+  classiﬁcation                                                      Technology,   Nanjing,   China,   2 State   Key   Laboratory   of   Severe   Weather,   Chinese   Academy   of   Meteorological   Sciences,
+•   We   propose   a   comprehensive                                 Beijing,   China
+  ground-based   cloud   database
+  consisting   of   11   categories   under
+  meteorological   criteria   and
+  containing   three   times   more   cloud                          Abstrac t         Clouds    have    an    enormous    inﬂuence    on    the    Earth’s    energy    balance,    climate,    and    weather.
+  images   than   the   previous   database                          Cloud    types    have    diﬀerent    cloud    radiative    eﬀects,    which    is    an    essential    indicator    of    the    cloud    eﬀect    on
+•   Contrails   are   considered   as   a   new                      radiation.   Therefore,   identifying    the   cloud   type   is    important   in   meteorology.   In   this    letter,   we   propose   a    new
+  type   of   cloud   in   ground-based   cloud
+  classiﬁcation                                                      convolutional    neural    network    model,    called    CloudNet,    for    accurate    ground-based    meteorological    cloud
+                                                                     classiﬁcation.   We   build   a   ground-based   cloud   data   set,   called   Cirrus   Cumulus   Stratus   Nimbus,   which   consists
+Supporting     Information:                                          of    11    categories    under    meteorological    standards.    The    total    number    of    cloud    images    is    three    times    that    of
+•   Supporting  Information  S1                                      the    previous    database.    In    particular,    it    is    the    ﬁrst    time    that    contrails,    a    type    of    cloud    generated    by    human
+•   Figure  S1                                                       activity,    have    been    taken    into    account    in    the    ground-based    cloud    classiﬁcation,    making    the    Cirrus    Cumulus
+                                                                     Stratus    Nimbus    data    set    more    discriminative    and    comprehensive    than    existing    ground-based    cloud
+Correspondence     to:                                               databases.    The    evaluation    of    a    large    number    of    experiments    demonstrates    that    the    proposed    CloudNet
+F.     Z h a n g ,                                                   model   could   achieve   good   performance   in   meteorological   cloud   classiﬁcation.
+fengzhang@nuist.edu.cn
+                                                                     Plain         Language         Summary          With    the    recent    progress    of    deep    learning,    an    investigation    is
+Citation:                                                            performed    using    convolutional    neural    networks    (CNNs)    to    classify    10    typical    cloud    types    and    contrails.
+Zhang,   J.   L.,   Liu,   P.,   Zhang,   F.,                        Although   CNNs   have   obtained   remarkable   results   in   image   classiﬁcation,   few   works   evaluate   their   eﬃciency
+&   Song,   Q.   Q.   (2018).                                        and    accuracy    of    cloud    classiﬁcation.    Highly    accurate    and    automated    cloud    classiﬁcation    approaches,
+CloudNet:   Ground-based                                             especially    the    technology    of    convective    cloud    identiﬁcation,    are    essential    to    discover    a    hazardous    weather
+cloud   classiﬁcation   with   deep                                  process.    Moreover,    an    explicit    recognition    of    contrails    would    promote    the    study    of    how    the    contrails    impact
+convolutional   neural   network.
+Geophysical          Research                                        global    warming.    Therefore,    a    discriminative    and    comprehensive    ground-based    cloud    database    is    built    for
+Letters,          45,     8665–8672.                                 the    CNNs    training.    The    database    consists    of    10    categories    with    meteorological    standards    and    contrails.    As
+https://doi.org/10.1029/2018GL077787                                 far    as    we    know,    it    is    the    ﬁrst    time    that    contrails    are    taken    into    consideration    as    one    new    type    of    cloud    in
+                                                                     ground-based    cloud    classiﬁcation.    The    total    number    of    cloud    images    in    our    database    is    three    times    as
+Received   7   MAR   2018                                            many    as    that    of    the    previously    studied    database.    The    public    of    this    database    will    promote    more    and    more
+Accepted   26   JUL   2018                                           research    based    on    cloud    classiﬁcation.    What    is    more,    we    propose    the    CloudNet,    a    new    framework    of    CNNs,
+Accepted   article   online   03   AUG   2018                        which    can    achieve    exceeding    progress    compared    with    the    conventional    approaches    in    the    ground-based
+Published   online   28   AUG   2018                                 cloud   classiﬁcation.
+
+                                                                     1.           Introduction
+                                                                     Clouds   cover   more   than   60%   of   the   global   surface   and,   consequently,   play   a   vital   role   in   regulating   the   Earth’s
+                                                                     radiation     budget,     through     shortwave     cooling     and     longwave     warming     eﬀects     (Duda     et     al.,     2013;     Rossow     &
+                                                                     Schiﬀer,     1991).     Additionally,     the     cloud-type     variations     (e.g.,     variations     in     cloud-top     height     and     water     con-
+                                                                     tent)     can     aﬀect     both     shortwave     and     longwave     radiation.     The     temporal     and     spatial     distributions     of     various
+                                                                     cloud    types    could    vary    with    climate    change    (Chen    et    al.,    2000;    Stephens,    2005).    In    particular,    contrails    have
+                                                                     a    huge    eﬀect    on    global    climate    (Minnis    et    al.,    2005;    Zhang    et    al.,    2017).    To    our    best    knowledge,    it    is    the    ﬁrst
+                                                                     time    that    contrails    have    been    taken    into    account    in    the    ground-based    cloud    database,    which    makes    it    more
+                                                                     valuable    than    existing    ground-based    cloud    databases    and    will    help    promote    the    study    of    eﬀects    of    contrails
+                                                                     on    global    warming.    Highly    accurate    automated    cloud    classiﬁcation    approaches,    especially    convective    cloud
+                                                                     identiﬁcation,   are   essential   to   identify   hazardous   weather   processes.   The   accuracy   of   weather   prediction   and
+                                                                     rainfall    estimation    systems    are    improved    substantially    by    having    information    about    cloud    cover    distribution
+                                                                     and    being    able    to    trace    changes    in    meteorological    conditions    (Torsum    &    Kwiatkowska,    1999).    For    example,
+                                                                     automated    and    immediately    available    interpretation    of    cloud    images    would    be    a    powerful    aid    to    U.S.    Navy
+©2018.   American  Geophysical  Union.                               forecasters   who   are   required   to   issue   specialized   analyses,   nowcasts,   and   forecasts   at   sea   (Bankert   &   Richard,
+All  Rights  Reserved.                                               1994).
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8665
+
+=== HALAMAN PDF 2 ===
+                                                                        Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+                                                                      Ground-based   cloud   classiﬁcation   has   been   studied   extensively   in   the   research   community   over   the   past   few
+                                                                      decades.   The   conventional   cloud   classiﬁcation   method   still   relies   on   experts’   experience,   which   makes   it   labor
+                                                                      intensive.    Furthermore,    the    task    is    unreliable,    time-consuming,    and    to    some    extent,    dependent    on    operator
+                                                                      experience.   The   classiﬁcation   results   usually   introduce   uncertainty   and   biases   through   the   extraction   of   cloud
+                                                                      ﬁeld    information    from    these    images    by    visual/manual    interpretation.    Therefore,    there    is    urgent    demand    for
+                                                                      an   automatic,   accurate   cloud   classiﬁcation   method.
+                                                                      At     present,     cloud     classiﬁcation     research     is     mainly     based     on     satellite     and     ground     observations.     It     is     easy     to
+                                                                      obtain   the   large-scale   global   atmospheric   motion   status   of   cloud   top   from   satellite   data,   although   these   data
+                                                                      lack    detailed   local    information    due    to    the   limited    resolution.    On    the    contrary,    the   details    of    local    cloud    cover
+                                                                      and   types   are   easily   obtained   by   using   ground   observation   instruments.   With   the   development   of   continuous
+                                                                      observation    instruments,    such    as    the    whole-sky    imager    and    the    total-sky    imager    (Liu    &    Zhang,    2016;    Slater
+                                                                      et    al.,    2001),    cloud    images    produced    by    these    instruments    with    constant    high    resolution    are    used    for    cloud
+                                                                      classiﬁcation.    Therefore,    an    increasing    number    of    algorithms    have    been    proposed    to    extract    the    cloud    tex-
+                                                                      ture   and   structural   features   for   cloud   recognition.   For   instance,   the   local   binary   pattern   (Ojala   et   al.,   2000)   and
+                                                                      binary    decision    trees    (Buch    &    Sun,    2005)    extract    features    from    cloud    images    using    the    texture    measurement
+                                                                      algorithm,    but    the    accuracy    of    these    algorithms    is    not    suﬃcient. Other    algorithms    extract    spectral    features
+                                                                      to    classify    seven    classes    of    clouds    and    have    achieved    good    performance    (Heinle    et    al.,    2010),    but    the    prob-
+                                                                      lem    of    misclassiﬁcation    needs    to    be    addressed.    A    color    census    transform    can    be    used    to    capture    texture    and
+                                                                      structure   information   from   a   color   sky   image   simultaneously   (Zhuo   et   al.,   2014),   but   the   overall   accuracy   and
+                                                                      the    number    of    clouds    in    the    data    set    are    unsatisfactory.    Integrating    both    color    and    texture    information    has
+                                                                      yielded    excellent    results    in    cloud    taxonomies    (Dev    et    al.,    2015),    but    the    database    only    has    ﬁve    cloud    types,
+                                                                      and     the     total     number     of     clouds     in     the     data     set     is     784.     The     learning     group     patterns     algorithm     uses     wireless
+                                                                      sensor   networks   to   extract   cloud   features   (Liu   &   Zhang,   2016),   but   the   averaging   accuracy   acquired   from   two
+                                                                      databases    is    81%.    Although    these    eﬀorts    have    contributed    to    cloud    classiﬁcation,    accurate    cloud    classiﬁca-
+                                                                      tion   has   not   been   achieved   satisfactorily.   Therefore,   a   wholly   automated   algorithm   classifying   ground-based
+                                                                      cloud   images   with   high   accuracy   is   still   being   developed.
+                                                                      In     the     past     few     years,     convolutional     neural     networks     (CNNs),     which     are     a     deep     learning     architecture,     have
+                                                                      achieved    remarkable    results    in    some    ﬁelds,    such    as    computer    vision    and    pattern    recognition    (Schroﬀ    et    al.,
+                                                                      2015;   Taigman   et   al.,   2014).   CNNs   can   learn   increasingly   complex   patterns   and   discriminative   texture   through
+                                                                      large    pretrained    and    labeled    data    sets,    whereas    it    is    diﬃcult    for    traditional    approaches    to    deﬁne    and    extract
+                                                                      features   of   clouds   due   to   the   complexity   of   cloud   texture   and   patterns   (Lee   et   al.,   1990).   Moreover,   CNNs   usu-
+                                                                      ally   function   as   a   hierarchical   feature   extraction   framework.   In   general,   the   shallow   layers   of   CNNs   capture   the
+                                                                      ﬁne  texture  (e.g.,  shape  and  edge),  and  the  deeper  layers  reﬂect  the  high-level  semantic  information  (based  on
+                                                                      pixels).   A   previous   study   proved   that   both   the   texture   and   semantic   features   are   essential   for   cloud   characteri-
+                                                                      zation  (Zhuo  et  al.,  2014).  Although  CNNs  have  achieved  remarkable  results  in  image  classiﬁcation,  few  studies
+                                                                      have    evaluated    their    eﬃciency    and    accuracy    for    cloud    classiﬁcation.    As    special    texture    images    with    irregular
+                                                                      shapes,    cloud    images    contain    distinct    features    in    cloud    representation,    especially    for    contrails.    Considering
+                                                                      that    the    characteristics    of    clouds    are    highly    variable    and    diﬃcult    to    classify,    the    adaptive    learning    nature    of
+                                                                      neural   network    classiﬁcation   makes    it    an   alternative    approach    to    cloud    classiﬁcation    with    high    accuracy    and
+                                                                      computational   eﬃciency   (Bin   et   al.,   1999).   Both   the   spatial   layout   information   of   fully   connected   (FC)   features
+                                                                      and     local    texture     information     of     shallower     convolutional     layers     are    necessary     from     cloud     representation     to
+                                                                      cloud   classiﬁcation.
+                                                                      In    this    letter,    we    present    an    optimized    CNN    model    Cloud    Network    (CloudNet),    for    ground-based    cloud    clas-
+                                                                      siﬁcation.      CloudNet      improves      the      accuracy      of      cloud      classiﬁcation      and      avoids      the      mistakes      caused      by      the
+                                                                      conventional    reliance    on    the    empirical    classiﬁcation.    The    rest    of    this    letter    is    structured    as    follows.    We    intro-
+                                                                      duce   the   CloudNet   model   in   section   2.   Section   3   describes   two   data   sets   we   used   in   the   experiment,   and   the
+                                                                      experimental    detail    is    discussed.    Section    4    gives    various    evaluation    matrixes    to    assess    the    CloudNet    model
+                                                                      trained  from  the  CCSN  data  set  and  compares  our  results  with  the  state  of  art  methods.  Finally,  the  conclusions
+                                                                      are   summarized   in   section   5.
+
+                                                                      2.           Model
+                                                                      2.1.           Model       Architecture
+                                                                      CloudNet,     an     optimized     CNN,     is     used     for     the     sequence-to-sequence     learning     task.     CloudNet     evolved     from
+                                                                      an     improvement     of     Alexnet     (Krizhevsky     et     al.,     2012)     and     is     well     suited     to     learning     features     of     cloud     repre-
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8666
+
+=== HALAMAN PDF 3 ===
+                                                                            Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure         1.   Illustration   of   the   CloudNet   architecture.   Overall,   the   network   contains   ﬁve   convolutional   layers   and   two   fully   connected   layers.
+
+
+                                                                          sentations    and    distinguishing    the    diﬀerent    categories    of    cloud    images.    As    shown    in    Figure    1,    the    CloudNet
+                                                                          consists    of    ﬁve    convolutional    layers    and    two    FC    layers.    Thus,    the    architecture    of    CloudNet    is    straightforward
+                                                                          and   simple   compared   with   previous   architectures   (Szegedy   et   al.,   2015).   CloudNet   takes   a   series   of   ﬁxed-size
+                                                                          red-green-blue    cloud    images    as    inputs    and    a    sequence    of    label    predictions    as    outputs,    which    represent    the
+                                                                          probability    of    each    category.    In    addition,    to    optimize    the    network,    the    input    is    fed    into    the    network    using    a
+                                                                          robust    strategy    that    subtracts    the    mean    red-green-blue    value    of    each    pixel    over    the    training    set    to    improve
+                                                                          training   speed   and   accuracy.
+                                                                          For   such   multiclass   classiﬁcation   problems,   directly   applying   the   FC   layers   and   convolutional   layers   of   a   CNN
+                                                                          cannot    give    satisfactory    results    (Shi    et    al.,    2017;    Ye    et    al.,    2017).    Because    the    cloud    feature    is    hard    to    extract,
+                                                                          the    third    and    fourth    convolutional    layers    are    connected    directly    without    a    pooling    layer.    We    apply    dropout
+                                                                          (Srivastava    et    al.,    2014)    to    the    ﬁfth    and    sixth    FC    layer    after    the    nonlinearity.    The    ﬁnal    layer    of    softmax    activa-
+                                                                          tion    produces    a    distribution    over    the    11    output    probability    classes    for    each    category.    We    use    the    stochastic
+                                                                          gradient   descent   (Tsuruoka   et   al.,   2009)   optimizer   with   the   default   parameters   (Krizhevsky   et   al.,   2012)   in   the
+                                                                          experiment.   CloudNet   is   trained   from   scratch.   Finally,   we   save   the   best   model   conﬁguration,   as   evaluated   with
+                                                                          a   test   set   during   the   optimization   process.
+
+
+                                                                          3.           Data
+                                                                          3.1.           Ground-Based       Cloud       Databases
+                                                                          To   train   any   neural   network   that   requires   supervised   learning   to   do   classiﬁcation   work,   expertly   labeled   data
+                                                                          must      be      available.      The      availability      of      suﬃcient      training      samples      is      the      fundamental      issue      that      should      be
+                                                                          addressed   (Xiao   et   al.,   2016;   Zhuo   et   al.,   2014).   In   addition,   creating   a   more   extensive   database   for   training   and
+                                                                          testing    contributes    greatly    to    the    accuracy    of    classiﬁcation    (Bankert    &    Richard,     1994).    Therefore,    to    achieve
+                                                                          high   performance,   the   scale   of   the   labeled   data   sets   is   the   critical   factor   in   allowing   CNNs   to   work   eﬃciently.
+                                                                          For     example,     the     ImageNet     (Deng     et     al.,     2014)     consists     of     over     10     million     labeled     images     and     is     the     most
+                                                                          well-known   and   comprehensive   data   set   and   is   suitable   for   diﬀerent   kinds   of   image   classiﬁcation   methods.
+                                                                          1.   Singapore     Whole-sky     Imaging     Categories     (SWIMCAT )     Data     set:     the     SWIMCAT     database     (Dev     et     al.,     2015),
+                                                                               contains     784     sky/cloud     patch     images     with     125           ×      125     pixels.     The     data     sets     are     divided     into     ﬁve     distinct
+                                                                               categories:    clear    sky,    patterned    clouds,    thick    dark    clouds,    thick    white    clouds,    and    veil    clouds.    Some    repre-
+                                                                               sentative   samples   of   the   ﬁve   categories   clouds   are   shown   in   Figure   2c.   There   are   several   studies   (Dev   et   al.,
+                                                                               2015;    Shi    et    al.,    2017)    based    on    the    SWIMCAT    data    set,    but    the    data    set    does    not    include    all    the    required
+                                                                               cloud   categories,   which   is   insuﬃcient   from   the   perspective   of   meteorological   research   and   applications.
+                                                                          2.   Cirrus    Cumulus    Stratus    Nimbus    (CCSN)    Data    set:    we    construct    a    CCSN    data    set    under    the    meteorological
+                                                                               criteria.    The    data    set    is    three    times    larger    than    SWIMCAT    and    contains    2,543    unique    ground-based    cloud
+                                                                               images,  which  are  labeled  after  several  rounds  of  subjective  classiﬁcation  based  on  visual  characteristics  and
+                                                                               meteorological    experts’    experience.    According    to    the    World    Meteorological    Organization’s    genera-based
+                                                                               classiﬁcation    recommendation,    we    divide    CCSN    into    10    categories.    Contrails    are    added    as    a    new    category
+                                                                               to   the   CCSN   data   set.   The   total   number   of   samples   increases   the   training   diﬃculty   but   improves   the   feature
+                                                                               extraction    of    CloudNet    trained    with    the    CCSN    data    set.    Moreover,    due    to    the    large    number    of    cloud    types,
+                                                                               cloud    images    in    this    database    have    large    illumination    variation    and    intraclass    variation.    In    the    CCSN    data
+                                                                               sets,     all     images     have     a     resolution     of     256          ×     256     and     are     in     the     JPEG     format.     Table     1     presents     the     descrip-
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8667
+
+=== HALAMAN PDF 4 ===
+                                                                                                                Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                             Figure         2.   Cloud   samples   from   (a;   left   to   right)   the   CCSN   database    followed   by   Ac,   Sc,   Ns,   Cu,   Ci,   Cc,   Cb,   As,   Ct,   Cs,   St,   (b)
+                                                                                                             the   six-class   HUST   (Huazhong   University   of   Science   and   Technology)   database    (Zhuo   et   al.,   2014)   followed   by   Ac,   As,   Cc,
+                                                                                                             Clear   sky,   Cs,   Cu,   Sc,   St   and   Ci,   and   (c)   clouds   images   come   from   SWIMCAT   (Dev   et   al.,   2015)   followed   by   Clear   sky,
+                                                                                                             patterned   clouds,   thick   dark   clouds,   thick   white   clouds   and   veil   clouds.   CCSN   =   Cirrus   Cumulus   Stratus   Nimbus;
+                                                                                                             SWIMCAT   =   Singapore   Whole-sky   Imaging   Categories;   Ci   =   cirrus;   Cs   =   cirrostratus;   Cc   =   cirrocumulus;   Ac   =   altocumulus;
+                                                                                                             As   =   altostratus;   Cu   =   cumulus;   Cb   =   cumulonimbus;   Ns   =   nimbostratus;   Sc   =   stratocumulus;   St   =   stratus;   Ct   =   contrail.
+
+
+                                                                                                                    tions   of   the   cloud   categories   in   the   CCSN   database.   Figure   2a   shows   some   cloud   samples   in   the   CCSN   data
+                                                                                                                    set.     Compared     with     the     enormous     number     of     samples     in     the     ImageNet     data     set     (Deng     et     al.,     2014),     the
+                                                                                                                    number    of    training    samples    in    the    CCSN    data    set    is    small.    However,    the    three    databases    in    Figures    2a – 2c
+                                                                                                                    show    that    our    database    measures    classiﬁcation    accuracy    better    than    the    other    two    databases,    which    are
+                                                                                                                    less   representative,   implying   that   our   CCSN   database   is   superior   to   other   databases.
+
+                                                                                                             3.2.           Implementation       Illustrations
+                                                                                                             All    kinds    of    clouds    possess    an    abundance    of    textures,    which    can    be    used    to    describe    the    appearance    of    the
+                                                                                                             cloud.   For   one   individual   convolutional   layer,   the   diﬀerent   ﬁlter   banks   are   used   to   capture   textures   like   edges,
+                                                                                                             spots,  and  bars.  Each  ﬁlter  is  trained  to  obtain  a  high  response  for  a  given  pattern  or  texture  (Ye  et  al.,  2017).  The
+                                                                                                             visualization   of   each   layer   of   CloudNet   can   be   found   in   Figure   3,   in   which   we   just   show   one   of   the   numerous
+                                                                                                             units    produced    by    the    convolutional    operation    on    each    layer.    The    feature    maps    of    the    convolutional    layers
+                                                                                                             present   diﬀerent   activation   eﬀects   for   the   same   cloud   image.   Figures   3a,   3c,   and   3e   show   the   visualization   of
+                                                                                                             feature   maps   in   diﬀerent   convolutional   layers,   whereas   Figures   3b,   3d,   and   3f   show   the   reconstruction   of   the
+                                                                                                             cloud   image   using   the   corresponding   features.   Analyzed   with   feature   maps   and   reconstruction   cloud   images,
+
+
+
+
+                                                                                                                Ta  b  l  e           1
+                                                                                                                Details     of     Cirrus     Cumulus     Stratus     Nimbus     Database
+
+                                                                                                                Category                                       Number   of   images                                                                           Type                                                                           Description
+                                                                                                                          Ci                                                                                                                 139                                                                                                                         Cirrus                                                                       Fibrous,   white   feathery   clouds   of   ice   crystals
+                                                                                                                         Cs                                                                                                               287                                                                                                      Cirrostratus                                                    Milky,   translucent   cloud   veil   of   ice   crystals
+                                                                                                                         Cc                                                                                                               268                                                                                                Cirrocumulus                                              Fleecy   cloud,   cloud   banks   of   small,   white   ﬂakes
+                                                                                                                         Ac                                                                                                               221                                                                                                  Altocumulus                                                Grey   cloud   bundles,   compound   like   rough   ﬂeecy   cloud
+                                                                                                                         As                                                                                                               188                                                                                                        Altostratus                                                       Dense,   gray   layer   cloud,   often   even   and   opaque
+                                                                                                                         Cu                                                                                                              182                                                                                                               Cumulus                                                             Heap   clouds   with   ﬂat   bases   in   the   middle   or   lower   level
+                                                                                                                        Cb                                                                                                              242                                                                                         Cumulonimbus                                       Middle   or   lower   cloud   level   thundercloud
+                                                                                                                         Ns                                                                                                               274                                                                                               Nimbostratus                                              Rain   cloud;   grey,   dark   layer   cloud,   indistinct   outlines
+                                                                                                                         Sc                                                                                                                340                                                                                            Stratocumulus                                          Rollers   or   banks   of   compound   dark   gray   layer   cloud
+                                                                                                                          St                                                                                                                 202                                                                                                                     Stratus                                                                    Low   layer   cloud,   causes   fog   or   ﬁne   precipitation
+                                                                                                                         Ct                                                                                                                200                                                                                                               Contrails                                                             Line-shaped   clouds   produced   by   aircraft   engine   exhausts
+                                                                                                                      Total                                                                                                 2,543
+                                                                                                                Note.   The   generic   name   of   the   cloud   abbreviation   is   used   to   represent   the   category.
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8668
+
+=== HALAMAN PDF 5 ===
+                                                                                            Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                          Figure         3.   (a,   c,   and   e)   Visualization   of   features   from   four   convolutional   layers   of   CloudNet,   denoted   Conv1-12   (channel
+                                                                                          number   12   on   Conv1),   Conv2-255,   Conv3-384,   and   Conv4-583.   The   corresponding   reconstructions   of   the   cloud   images
+                                                                                          are   shown   in   (b),   (d),   and   (f )   visualized   via   regularized   optimization.
+
+
+
+                                                                                          the  ﬁrst  layer  (shallow  layer  like  Conv1)  of  CloudNet  can  well  reﬂect  the  shape  of  diﬀerent  clouds.  Furthermore,
+                                                                                          the   deep   layer   (Conv2,   Conv3,   and   Conv4)   can   recover   the   edges   of   diﬀerent   clouds   well.
+
+                                                                                          For     both     the     SWIMCAT     and     CCSN     data     sets,     the     samples     are     divided     into     a     training     set     and     a     test     set.     First,
+                                                                                          we    verify    the    data    set    to    make    sure    that    there    is    no    cloud    image    overlap    between    the    training    and    test    set.
+                                                                                          Before     the     CloudNet     training,     we     subtract     the     mean     activity     over     the     training     set     for     each     pixel     and     adopt
+                                                                                          data   augmentation   methods,   such   as   random   crop   and  ﬂip,   to   increase   the   number   of   training   samples.   More-
+                                                                                          over,    the    model    trained    from    this    data    set    shows    excellent    generalization,    which    prevents    overﬁtting    during
+                                                                                          training   and   makes   the   model   more   eﬃcient   and   robust.   CloudNet   is   trained   with   a   stochastic   gradient   using
+                                                                                          the    machine    learning    software    package    Caﬀe    (Jia    et    al.,    2014)    and    running    on    an    NVIDIA    GeForce    GTX780Ti
+                                                                                          with   batch   size   8.   Our   experiments   use   momentum   parameters   (Sutskever   et   al.,   2013)   with   a   decay   of   0.9.   In
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8669
+
+=== HALAMAN PDF 6 ===
+                                                                                                                                         Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+   Ta  b  l  e           2                                                                                                                                                                                                                                     addition,       we       use       a       learning       rate       of       0.001       and       train       20,000       epochs.       The
+   Performance     Evaluation     of     C     ategories     in     the     Cirrus     Cumulus     Stratus     Nimbus                                                                                                                                          learning   rate   is   reduced   by   a   factor   of   10   every   5,000   epochs.
+   Database
+
+   Category                                               F   measures                                               Precision                                               Recall                                               Accuracy                     4.           Experimental         Results         and         Analysis
+   Ci                                                                                                                       0.96                                                                                       0.92                                                                               1                                                                               0.894.1.           Experimental       Conﬁguration
+   Cs                                                                                                                    0.76                                                                                       0.89                                                                     0.67                                                                     0.86To    evaluate    the    CloudNet    model    objectively,    the    CloudNet    conﬁguration
+   Cc                                                                                                                   0.96                                                                                       0.92                                                                               1                                                                               0.89was     trained     from     the     CCSN     data     set     and     SWIMCAT     database     as     the     pre-
+   Ac                                                                                                                   0.96                                                                                       0.92                                                                               1                                                                               0.89trained     model.     The     individual     classiﬁcation     precision,     recall,     F     measures,
+   As                                                                                                                    0.59                                                                                                 1                                                                               0.42                                                                     0.86and   accuracy   are   evaluated   for   the   11   categories   in   the   CCSN   data   set.   Pre-
+   Cu                                                                                                                  0.96                                                                                       0.92                                                                               1                                                                               0.89cision    refers    to    the    proportion    of    relevant    instances    among    the    retrieved
+   Cb                                                                                                                 0.92                                                                                       0.92                                                                     0.92                                                                     0.88instances,    whereas    recall    or    sensitivity    refers    to    the    percentage    of    appro-
+   Ns                                                                                                                   0.96                                                                                                 1                                                                               0.92                                                                     0.89priate  instances  that  have  been  retrieved  over  the  total  amount  of  relevant
+   Sc                                                                                                                     0.69                                                                                       0.52                                                                               1                                                                               0.83instances.      Therefore,      both      precision      and      recall      used      here      are      based      on
+                                                                                                                                                                                                                                                                    a     comprehensive     understanding     and     the     eﬀectiveness     measurement     of
+   St                                                                                                                       0.82                                                                                           0.9                                                                         0.75                                                                     0.87our    model.    F    measure    considers    both    accuracy    and    precision    and    can    be
+   Ct                                                                                                                               1                                                                                                           1                                                                                         1                                                                               0.9interpreted    as    a    weighted    harmonic    mean    of    the    precision    and    recall.    We
+   Note.    Ci    =    cirrus;    Cs    =    cirrostratus;    Cc    =    cirrocumulus;    Ac    =    altocumulus;                                                                                                                                                   also     report     the     macroprecision     and     microprecision.     In     such     a     multiclass
+   As    =    altostratus;    Cu    =    cumulus;    Cb    =    cumulonimbus;    Ns    =    nimbostratus;                                                                                                                                                           classiﬁcation    task,    macroprecision    gives    equal    weight    to    each    cloud    class.
+   Sc   =   stratocumulus;   St   =   stratus;   Ct   =   contrail.                                                                                                                                                                                                 Therefore,   it   is   an   indication   of   CloudNet   performance   across   all   the   cloud
+
+                                                                                                                                                                                                                                                                    categories.    However,    microprecision    gives    equal    weight    to    each    per-type
+                                                                                                                                      classiﬁcation   decision   (Dev   et   al.,   2015;   Sebastiani,   2002).
+                                                                                                                                      The   calculations   (Asch,   2013)   are   as   follows.  True   positives   (tp),   true   negatives   (tn),   false   positives   (fp),   and   false
+                                                                                                                                      negatives   (fn)   are   used   to   calculate   precision,   recall,   and   accuracy.
+
+                                                                                                                                                                                                                                                                                                                                                                                                                         ∑C
+                                                                                                                                                                                                                                  Precision         =                                                  tp                                                                                                                        c      tpc
+                                                                                                                                                                                                                                                                               tp       +        fp  ,  Recall          =                                                  tptp       +        fn  ,   Accuracy         =        N                   ,                                                                                                                                                                           (1)
+
+                                                                                                                                      where        tpc     is   the   number   of   tp   for   class   c,   C   is   the   number   of   classes,   and   N   is   the   total   number   of   instances   in
+                                                                                                                                      the   data   set.
+
+                                                                                                                                                                                                                                                                                                                                                                          2 )tp
+                                                                                                                                                                                                                                                                     F         −       score(𝛽)=                                                                                                     (1       +    𝛽(1       +    𝛽2 )tp       +    𝛽2  fp       +        fn  .                                                                                                                                                                                                                                                 (2)
+
+
+                                                                                                                                      Most   commonly,   𝛽is   taken   to   be   1,   with   a   deﬁnition   equal   to   the   F   measure.       F𝛽measure   reaches   its   best   value
+                                                                                                                                      at   1   and   its   worst   score   at   0.   The   macroaveraged   results   can   be   computed   as
+
+                                                                                                                                                                                                                                                                                                                      ∑q
+                                                                                                                                                                                                                                                                              Bmacro           =       1q                          B(tp𝜆,      fp𝜆,      tp𝜆,      fn𝜆),                                                                                                                                                                                                                                                                     (3)
+                                                                                                                                                                                                                                                                                                                      𝜆=1
+
+                                                                                                                                      whereas   the   microaveraged   can   be   computed   as
+
+                                                                                                                                                                                                                                                                                               (           q∑                     ∑q                         ∑q                          ∑q                      )
+                                                                                                                                                                                                                                                          Bmicro           =          B                            tp𝜆,                        fp𝜆,                       tp𝜆,                        fn𝜆                .                                                                                                                                                                                                                           (4)
+                                                                                                                                                                                                                                                                                                      𝜆=1                         𝜆=1                         𝜆=1                        𝜆=1
+
+                                                                                                                                      The     L         =     𝜆j ,(     j  =1           …                        q  )  is  the  set  of  labels,  whereas     B(tp,      tn,      fp,      fn)  is  calculated  based  on  the  number  of  tp,  tn,  fp,
+                                                                                                                                      and   fn,   respectively.   Let       tp𝜆,      fp𝜆,      tn𝜆,   and       fn𝜆represent   the   number   of   tp,   fp,   tn,   and   fn   after   binary   evaluation
+                                                                                                                                      for   a   label   𝜆.
+
+
+                                                                                                                                                                                                                    Ta  b  l  e           3
+                                                                                                                                                                                                                    Performance     Evaluation     Measures     for     the     Cirrus     Cumulus     Stratus     Nimbus
+                                                                                                                                                                                                                    Database
+
+                                                                                                                                                                                                                    Pmacro                                                                                                                             Rmacro                                                                                                                             Pmicro                                                                                                                             Rmicro                                                                   Average
+                                                                                                                                                                                                                    0.91                                                                                      0.87                                                                             0.87                                                                           0.87                                                                                   0.88
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8670
+
+=== HALAMAN PDF 7 ===
+                                                                           Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                         Figure         4.   Two   confusion   matrices   are   used   to   evaluate   the   eﬀectiveness    of   CloudNet.   Confusion   matrix   (a)   is   the   model
+                                                                         prediction   with   the   Singapore   Whole-sky   Imaging   Categories   test   set,   which   randomly   selects   12   images   in   each
+                                                                         category.   Confusion   matrix   (b)   is   the   same   as   (a),   but   (b)   is   the   model   prediction   with   the   Cirrus   Cumulus   Stratus   Nimbus
+                                                                         test   set.   Ci   =   cirrus;   Cs   =   cirrostratus;   Cc   =   cirrocumulus;   Ac   =   altocumulus;   As   =   altostratus;   Cu   =   cumulus;
+                                                                         Cb   =   cumulonimbus;   Ns   =   nimbostratus;   Sc   =   stratocumulus;   St   =   stratus;   Ct   =   contrail.
+
+                                                                         4.2.           Results       Discussion
+                                                                         Tables   2   and   3   show   the   performance   assessment   of   cloud   classiﬁcation   of   the   CCSN   database   using   diﬀerent
+                                                                         evaluation     matrices     for     each     category.     Sc     in     Table     2     has     a     poor     precision     of     52%     but     a     high     recall     of     100%,
+                                                                         and    As    has    a    recall    of    42%    but    a    high    precision    100%.    Most    of    the    remaining    cloud    classes    show    accuracies
+                                                                         ranging  from  86%  to  96%.  Therefore,  our  proposed  classiﬁcation  approach  achieves  near-perfect  classiﬁcation
+                                                                         accuracy   for   most   categories.   Table   3   displays   the   experimental   classiﬁcation   results,   giving   overall   score   rates
+                                                                         ranging   from   87%   to   91%,   which   are   superior   to   the   state-of-the-art   methods   (Xiao   et   al.,   2016;   Ye   et   al.,   2017)
+                                                                         with    average    scores    of    81%    and    87%,    respectively.    Moreover,    the    average    score    is    88%,    which    indicates    the
+                                                                         eﬀectiveness    and    generalization    of    CloudNet.    Because    of    the    critical    and    comprehensive    database    we    built
+                                                                         and   the   unique   model   we   used,   the   experimental   results   are   rather   good.
+                                                                         Figure   4a   illustrates   the   confusion   matrix   of   prediction   maps   with   the   SWIMCAT   test   data   set.   The   misclassiﬁ-
+                                                                         cation  of  the  veil  background  and  clear  sky  causes  the  poor  performance  of  veil  category.  However,  the  overall
+                                                                         classiﬁcation    accuracy    of    CloudNet    still    outperforms    the    other    traditional    classiﬁcation    methods.    For    exam-
+                                                                         ple,   confusion   occurred   between   thick   dark   clouds   and   veil   cloud   in   Dev   et   al.   (2015),   and   their   experimental
+                                                                         results    of    0.02    and    0.15    are    higher    than    our    results.    Figure    4b    shows    a    confusion    matrix    of    CloudNet    predic-
+                                                                         tions    with    the    CCSN    test    data    set.    A    small    number    of    incorrect    classiﬁcations    are    close    to    the    correct    classes
+                                                                         in   both   morphological   and   meteorological   criterion.   For   example,   confusing   As   and   Sc   seems   to   make   sense,
+                                                                         due    to    the    highly    similar    shape,    structure,    transparency,    and    arrangement    of    the    two    categories.    The    height
+                                                                         is   the   main   diﬀerence   between   the   categories;   As   is   a   high   type   of   clouds,   whereas   Sc   is   a   low   type   of   cloud.
+
+                                                                         5.           Conclusion
+                                                                         Based  on  recent  progress  in  deep  learning,  we  used  CNNs  to  classify  10  typical  cloud  types  and  contrails.  Auto-
+                                                                         mated   ground-based   cloud   classiﬁcation   would   be   a   valuable   tool   in   meteorological   analyses   and   forecasting
+                                                                         and     could     build     an     accurate     connection     between     cloud     types     and     radiative     properties     for     climate     change
+                                                                         predictions.     We     proposed     a     deep     learning     model,     CloudNet,     for     ground-based     cloud     classiﬁcation,     relying
+                                                                         on   texture,   structure,   and   shape   features   simultaneously.   We   also   built   a   large,   annotated   CCSN   data   set   that
+                                                                         maps   a   sequence   of   raw   cloud   images   with   ground   truth   labels.   We   also   considered   contrails   for   the   ﬁrst   time
+                                                                         in   the   CCSN   data   set.
+                                                                         Extensive     experimental     results     indicate     that     the     CloudNet     achieves     high     eﬃciency     with     the     online     SWIM-
+                                                                         CAT   data   set   and   performs   well   with   the   complicated   CCSN   data   set   in   the   ground-based   cloud   classiﬁcation
+                                                                         challenge.      A      small      portion      of      the      misclassiﬁcations      occurred      between      As      and      Sc,      Cs      and      Sc,      and      Sc      and
+                                                                         St.     These     errors,     however,     are     well     understood.     There     is     a     mutual     transformation     among     the     three     types     of
+                                                                         clouds.   Introducing   features   from   other   data   sources   to   enrich   the   CCSN   database   may   improve   the   classiﬁca-
+                                                                         tion    accuracy.    Furthermore,    we    conﬁrmed    that    better    results    could    be    obtained    with    abundant    information
+                                                                         about   the   diﬀerent   location   and   cross-domain   eﬀects,   such   as   local   illumination   conditions.   We   are   convinced
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8671
+
+=== HALAMAN PDF 8 ===
+                                                                                       Geophysical             Research             Letters                                                                                                                                                                                                                   10.1029/2018GL077787
+
+
+
+                                                                                     that    the    algorithm    can    be    improved    by    using    the    instructions    clariﬁed    above    to    eliminate    errors    caused    by
+                                                                                     questionable   images.   However,   the   CNN   presented   here   is   already   robust   and   suitable   for   research   purposes.
+
+
+Acknowledgments                                                                      References
+This  work  was  carried  out  with  The                                             Asch,   V.   (2013).   Macro-   and   micro-averaged   evaluation   measures   (Te  c  h          R  e  p .).   Antwerp,   Belgium:   University   of   Antwerp.
+Natural  Science  Foundation  of  Jiangsu                                            Bankert,   L.,   &   Richard   (1994).   Cloud   classiﬁcation   of   AVHRR   imagery   in   maritime   regions   using   a   probabilistic   neural   network.       Journal      of
+Province  of  China  (Grant  BK20150931).                                                Applied      Meteorology,      33,   909 – 918.
+National  Natural  Science  Foundation  of                                           Bin,   T.,   Mukhtiar,   S.,   Sadjadi,   A.,   Hear,   T.   H.   V.,   &   Reinke,   D.   L.   (1999).   A   study   of   cloud   classiﬁcation   with   neural   networks   using   spectral   and
+China  (Grants  61702275,  41675003,  and                                                textural   features.      IEEE      Transactions      on      Neural      Networks,      10(1),   138.
+41775008),  and  Priority  Academic                                                  Buch,   K.   A.   J.,   &   Sun,   C.   H.   (2005).   Cloud   classiﬁcation   using   whole-sky   imager   data.       Ninth      Symposium      on      Meteorological      Observations      and
+Program  Development  of  Jiangsu                                                        Instrumentation,      16(3),   353 – 358.
+Higher  Education  Institutions  (PAPD).                                             Chen,   T.,   Rossow,   W.   B.,   &   Zhang,   Y.   (2000).   Radiative   eﬀects   of   cloud-type   variations.Journal      of      Climate,      13(1),   264 – 286.
+This  paper  is  also  the  contribution  228                                        Deng,  J.,   Socher,   R.,   Fei-Fei,  L.,   Dong,   W.,   Li,   K.,   &   Li,   L.-J.   (2009).   Imagenet:  A   large-scale  hierarchical   image   database.  In      IEEE      Computer      Society
+to  the  ESMC  of  NUIST.  The  SWIMCAT                                                  Conference      on      Computer      Vision      and      Pattern      Recognition      Workshops  (pp.   248 – 255)   Miami,   FL.
+database  used  in  our  paper  can  be                                              Dev,   S.,   Lee,   Y.   H.,   &   Winkler,   S.   (2015).   Categorization   of   cloud   image   patches   using   an   improved   texton-based   approach.   In       IEEE
+found  at  http://vintage.winklerbros.                                                   International      Conference      on      Image      Processing  (pp.   422 – 426)   Quebec   City,   QC,   Canada.
+net/swimcat.html.  We  also  thank  the                                              Duda,   P.,   Minnis,   P.,   Khlopenkov,   K.,   Chee,   T.   L.,   &   Boeke,   R.   (2013).   Estimation   of   2006   Northern   Hemisphere   contrail   coverage   using   MODIS
+author  who  provided  the  SWIMCAT                                                      data.      Geophysical      Research      Letters,      40,   612 – 617.   https://doi.org/10.1002/grl.50097
+database.  Our  database  examples                                                   Heinle,   A.,   Macke,   A.,   &   Srivastav,   A.   (2010).   Automatic   cloud   classiﬁcation   of   whole   sky   images.       Atmospheric       Measurement       Techniques
+are  available  upon  request  at                                                        Discussions,      3(3),   557 – 567.
+https://github.com/upuil/CCSN-Database.                                              Jia,   Y.,   Shelhamer,   E.,   Donahue,   J.,   Karayev,   S.,   Long,   J.,   Girshick,   R.   B.,   et   al.   (2014).   Caﬀe:   Convolutional   architecture   for   fast   fea-
+                                                                                         ture   embedding.       Conference       Proceedings       of       the       22nd       ACM       international       conference       on       Multimedia   (pp.   675 – 678).   Retrieved   from
+                                                                                         https://scholar.google.com/citations?view_op=view_citation&hl=en&citation_for_view=-ltRSM0AAAAJ:u5HHmVD_uO8C
+                                                                                     Krizhevsky,   A.,   Sutskever,   I.,   &   Hinton,   G.   E.   (2012).   Imagenet   classiﬁcation   with   deep   convolutional   neural   networks   Communications   of   the
+                                                                                         Acm   60(2).
+                                                                                     Lee,   J.,  Weger,   R.   C.,   Sengupta,  S.   K.,   &   Welch,   R.   M.   (1990).   A   neural  network   approach   to   cloud  classiﬁcation.       Geoscience      and      Remote      Sensing
+                                                                                         IEEE      Transactions      on,      28(5),   846 – 855.
+                                                                                     Liu,   S.,   &   Zhang,   Z.   (2016).   Learning   group   patterns   for   ground-based   cloud   classiﬁcation   in   wireless   sensor   networks.       Eurasip      Journal      on
+                                                                                         Wireless      Communications      and      Networking,      1,1–6.
+                                                                                     Minnis,   P.,   Ayers,   J.   K.,   Palikonda,   R.,   &   Phan,   D.   (2005).   Contrails,   cirrus   trends,   and   climate.      Journal      of      Climate,      17(8),   1671 – 1685.
+                                                                                     Ojala,   T.,   Pietikäinen,   M.,   &   Mäenpää,   T.   (2000).       Gray       scale       and       rotation       invariant       texture       classiﬁcation       with       local       binary       patterns.Berlin
+                                                                                         Heidelberg:   Springer.   404 – 420.
+                                                                                     Rossow,   W.,   &   Schiﬀer,   R.   (1991).   ISCCP   cloud   data   products.Bulletin      of      the      American      Meteorological      Society,      72(1),   2 – 20.
+                                                                                     Schroﬀ,    F.,    Kalenichenko,    D.,    &    Philbin,    J.    (2015).    FaceNet:    A    uniﬁed    embedding    for    face    recognition    and    clustering.    CoRR.
+                                                                                         http://arxiv.org/abs/1503.03832
+                                                                                     Sebastiani,   F.   (2002).   Machine   learning   in   automated   text   categorization.      Acm      Computing      Surveys,      31(1),   1 – 47.
+                                                                                     Shi,   C.,   Wang,   C.,   Wang,   Y.,   &   Xiao,   B.   (2017).   Deep   convolutional   activations-based   features   for   ground-based   cloud   classiﬁcation.       IEEE
+                                                                                         Geoscience      and      Remote      Sensing      Letters,      99,1–5.
+                                                                                     Slater,   D.   W.,   Long,   C.   N.,   &   Tooman,   T.   P.   (2001).   Total   sky   imager/whole   sky   imager   cloud   fraction   comparison.
+                                                                                     Srivastava,   N.,   Hinton,   G.,   Krizhevsky,   A.,   Sutskever,   I.,   &   Salakhutdinov,   R.   (2014).   Dropout:   A   simple   way   to   prevent   neural   networks   from
+                                                                                         overﬁtting.      Journal      of      Machine      Learning      Research,      15,   1929 – 1958.
+                                                                                     Stephens,   G.   (2005).   Cloud   feedbacks   in   the   climate   system:   A   critical   review.      Journal      of      Climate,      18(2),   273 – 273.
+                                                                                     Sutskever,  I.,  Martens,  J.,  Dahl,  G.,  &  Hinton,  G.  (2013).  On  the  importance  of  initialization  and  momentum  in  deep  learning.  In      Proceedings      of
+                                                                                         International      Conference      on      Machine      Learning      (ICML)  (pp.   1139 – 1147).   Atlanta,   GA,   USA.
+                                                                                     Szegedy,   C.,   Vanhoucke,   V.,   Ioe,   S.,   Shlens,   J.,   &   Wojna,   Z.   (2015).   Rethinking   the   inception   architecture   for   computer   vision.CoRR,
+                                                                                         abs/1512.00567.
+                                                                                     Taigman,   Y.,   Yang,   M.,   Ranzato,   M.,   &   Wolf,   L.   (2014).   DeepFace:   Closing   the   gap   to   human-level   performance   in   face   veriﬁcation.
+                                                                                         In      Proceedings      of      the      IEEE      conference      on      computer      vision      and      pattern      recognition  (pp.   1701 – 1708).   Columbus,   OH,   USA.
+                                                                                     Torsum,   I.   S.,   &   Kwiatkowska,   E.   (1999).   Neural   network   system   for   cloud   classiﬁcation   from   satellite   images.       Proc       Spie,      6(6),   3785 – 3790.
+                                                                                     Tsuruoka,   Y.,   Tsujii,   J.,   &   Ananiadou,   S.   (2009).   Stochastic   gradient   descent   training   for   l1-regularized   log-linear   models   with   cumulative
+                                                                                         penalty.   In       Proceedings       of       the       47th       Annual       Meeting       of       the       Association       for       Computational       Linguistics       and       the       4th       International       Joint
+                                                                                         Conference      on      Natural      Language      Processing      of      the      AFNLP   (pp.   477 – 485).   Singapore.
+                                                                                     Xiao,   Y.,   Cao,   Z.,   Zhuo,   W.,   Ye,   L.,   &   Zhu,   L.   (2016).   mCLOUD:   A   multiview   visual   feature   extraction   mechanism   for   ground-based   cloud   image
+                                                                                         categorization.      Journal      of      Atmospheric      and      Oceanic      Technology,      33(4),   789 – 801.   https://doi.org/10.1175/JTECH-D-15-0015.1
+                                                                                     Ye,   L.,   Cao,   Z.,   &   Xiao,   Y.   (2017).   Deepcloud:   Ground-based   cloud   image   categorization   using   deep   convolutional   features.      IEEE      Transactions
+                                                                                         on      Geoscience      and      Remote      Sensing,      99,   1 – 12.
+                                                                                     Zhang,   J.   L.,   Shang,   J.,   &   Zhang,   G.   Y.   (2017).   Veriﬁcation   for   diﬀerent   contrail   parameterizations   based   on   integrated   satellite   observation
+                                                                                         and   ECMWF   reanalysis   data.      Advances      in      Meteorology,      1,   1 – 11.
+                                                                                     Zhuo,   W.,   Cao,   Z.,   &   Xiao,   Y.   (2014).   Cloud   classiﬁcation   of   ground-based   images   using   texture-structure   features.      Journal      of      Atmospheric      and
+                                                                                         Oceanic      Technology,      31(1),   79 – 92.
+
+
+
+
+
+
+
+
+
+
+
+
+
+ZHANG   ET   AL.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         8672

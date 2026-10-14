@@ -1,0 +1,9 @@
+Class,Train,Validation,Test,Total
+1_cumulus,775,0,750,1525
+2_altocumulus,725,0,750,1475
+3_cirrus,1153,0,753,1906
+4_clearsky,2150,0,1589,3739
+5_stratocumulus,1846,0,1790,3636
+6_cumulonimbus,3003,0,2761,5764
+7_mixed,348,0,607,955
+Total,10000,0,9000,19000

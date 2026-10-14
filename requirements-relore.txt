@@ -1,0 +1,3 @@
+# Client, local development server, and Python code navigation.
+# Pin both client and server to the same upstream revision.
+relore[server,python] @ git+https://github.com/huggingface/relore.git@4d1794cd2ac69bbad8e52d6612fb4016c01f5168

@@ -1,0 +1,8 @@
+index,class,n_train,weight_inverse_freq
+0,1_cumulus,809,1.8511
+1,2_altocumulus,1027,1.4582
+2,3_cirrus,1511,0.9911
+3,4_clearsky,1669,0.8973
+4,5_stratocumulus,2187,0.6848
+5,6_cumulonimbus,2986,0.5015
+6,7_mixed,294,5.0938

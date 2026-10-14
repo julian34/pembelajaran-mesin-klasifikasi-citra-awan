@@ -1,0 +1,21 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+# Baseline transfer learning DenseNet-121 (bobot ImageNet, torchvision).
+# Backbone dimuat dari src/models/baseline.py build_model("densenet121", ...).
+name: exp_005_densenet121
+description: >
+  Baseline DenseNet-121 pra-latih ImageNet, classifier diganti ke 7 kelas
+  (transfer learning). Varian DenseNet yang bobot ImageNet-nya tersedia resmi
+  di torchvision.
+
+model:
+  architecture: densenet121
+  pretrained: imagenet          # bobot DenseNet121_Weights.IMAGENET1K_V1
+  source: torchvision
+  num_classes: 7
+  finetune: feature_extraction  # feature_extraction | full
+
+preprocess:
+  # Backbone ImageNet -> pakai normalisasi ImageNet, bukan statistik dataset.
+  normalize:
+    mean: [0.485, 0.456, 0.406]
+    std:  [0.229, 0.224, 0.225]

@@ -1,0 +1,809 @@
+=== HALAMAN PDF 1 ===
+1286                                                                                                                           JOURNAL        OF        ATMOSPHERIC        AND        OCEANIC        TECHNOLOGY                                                                           V                                                                                                                                            OLUME          28
+
+
+
+
+
+                         A            Hybrid            Thresholding            Algorithm            for            Cloud            Detection            on            Ground-Based
+                                                                                                                               Color            Images
+
+                                                                                                                                 QINGYONG         LI
+
+                                              School       of       Computer       and       Information       Technology,        Beijing       Jiaotong        University,       Beijing,       China
+
+                                                                                                             WEITAO         LU         AND         JUN         YANG
+                                           Institute       of       Atmospheric       Sounding,       Chinese       Academy       of       Meteorological        Sciences,       Beijing,       China
+
+
+                                                                           (Manuscript       received       12       January       2011,       in        ﬁnal       form       30       April       2011)
+
+                                                                                                                                       ABSTRACT
+
+                                   Cloud       detection       is       the       precondition      for       deriving       other      information      (e.g.,       cloud       cover)       in       ground-based       sky
+                              imager     applications.     This     paper     puts      forward     an      effective     cloud      detection      approach,      the     Hybrid      Thresholding
+                              Algorithm         (HYTA)         that          fully         exploits         the         beneﬁts         of          the         combination         of          ﬁxed         and          adaptive         thresholding
+                              methods.      First,      HYTA      transforms      an      input      color      cloud      image      into      a      normalized      blue/red     channel      ratio      image
+                              that     can     keep     a     distinct     contrast,     even     with     noise     and     outliers.     Then,     HYTA     identiﬁes     the     ratio     image     as     either
+                              unimodal      or       bimodal      according      to       its      standard      deviation,       and      the      unimodal      and      bimodal      images      are      handled
+                              by       ﬁxed       and      minimum      cross       entropy       (MCE)       thresholding      algorithms,       respectively.       The       experimental       results
+                              demonstrate      that      HYTA      shows      an      accuracy      of      88.53%,      which      is      far      higher      than      those      of      either      ﬁxed      or      MCE
+                              thresholding         alone.         Moreover,         HYTA         is         also         veriﬁed         to         outperform         other         state-of-the-art         cloud         detection
+                              approaches.
+
+
+
+1.                   Introduction                                                                                                                              Sky-imaging            systems            are            applied            in            automatic            cloud
+     Clouds,             which             cover             more             than             50%             of              the             globe’s   observation              using             new              hardware              technologies,             for              ex-
+surface,        play        an        important        role        in        the        hydrological        cycle                                        ample,       charge-coupled       devices       (CCDs)       and       digital       image
+and       the       energy       balance       of       the       atmosphere–earth       surface                                                         processing        techniques.        Currently,        there        are        two        types        of
+system       because       of       the       interaction       of       solar       and       terrestrial                                               frequently      referred      imager      systems:      one      is      the      whole-sky
+radiation      (Rossow      and      Schiffer      1991;      Carslaw      et      al.      2002;                                                        imager          (WSI)          series          developed          by          the          Scripps          Institute
+Stephens               2005).               Most               cloud-related               research               requires                               of          Oceanography,          University          of          California,          San          Diego.
+some        sort        of        cloud        observation,        such        as        the        amount        and                                    WSIs        measure        radiances        at        distinct        wavelength        bands
+type       of       clouds       in       sky.       These       macroscopic       parameters       are                                                  across       the       hemisphere       and       retrieve       cloud       characteristics
+observed         traditionally         by        human         observers.        Human        ob-                                                        (Voss      and      Zibordi      1989;      Shields      et      al.      1998;      Li      et      al.      2004;
+servation,            however,           is           somewhat           subjective           and           incon-                                       Kassianov           et           al.           2005).           The           other           imager           system           is           the
+sistent.       For       instance,       inconsistency       with       regards       to       cloud                                                     total-sky            imager            (TSI)            series,            which            are            manufactured
+amount        can        be        found        when        a        same        sky        condition        is        eval-                             by              Yankee              Environmental              Systems,              Inc.              (YES).              TSIs
+uated          by          distinct          observers           (Hoyt          1978).          The          shortcom-                                   provide            color            images            for            the            daytime            hemispheric            sky
+ings          of          human          observation,          therefore,          led           to          automatic                                   conditions       and        derive       fractional       sky        cover        and        other       use-
+cloud        observation       systems,       which       are        applied       to       capture                                                      ful          meteorological          information          (Long          et          al.          2006;          Calbo
+sky               conditions               and               to               analyze               cloud               parameters               with    and               Sabburg               2008;               Sylvio               et               al.               2010).               In               addition,               a
+digital         images.                                                                                                                                  number              of              other              ground-based              sky             imagers              have              also
+                                                                                                                                                         been          developed          in          some          other          countries          and          institutes,
+                                                                                                                                                         such              as              the              whole-sky              camera              (WSC;              see              Long              et              al.
+     Corresponding            author            address:            Qingyong            Li,            School            of            Com-              2006;          Calbo           and          Sabburg          2008;          Heinle          et          al.          2010)          and
+puter           and           Information           Technology,           Beijing          Jiaotong           University,                                the         all-sky         imager         (ASI;         see         Huo         and         Lu         2009;         Cazorla
+Beijing       100044,       China.                                                                                                                       et          al.          2008).          All          of          these          sky          imagers          capture          sky          condi-
+E-mail:       liqy@bjtu.edu.cn                                                                                                                           tions      with      red–green–blue      (RGB)      color      images.      Therefore,
+
+DOI:       10.1175/JTECH-D-11-00009.1
+
+/C2112011       American       Meteorological       Society
+                                                                                                                                                                                                                           Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 2 ===
+OCTOBER         2011                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        L     I                  E     T                  A     L     .                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1287
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                       FIG.      1.     The      histograms     of      (top)      cloud      and     (bottom)     sky      elements     according     to      (left     to      right)     the
+                                                                                                                             B/R       ratio,       EGD,       and       saturation       features.
+
+
+cloud           detection,           which           means           the           classiﬁcation           of           each                                                            patterns                  occupied                  separated                  loci                  on                  the                  RGB                  color
+pixel        in         a         cloud        image         into        either         ‘‘cloud’’        or         ‘‘sky’’        ele-                                                 space;          hence,          they          made          use          of          the          EGD          and         Bayesian
+ments,         becomes        a         fundamental         task         for        further         applica-                                                                            methods          to          distinguish          cloud          from          sky          pattern.          Because
+tion            of            sky            imagers,            because            it            is            the            precondition            for                              all      of      these      methods      detect      clouds      using      ﬁxed      thresholds,
+deriving           other            information,            such            as           cloud            cover,           cloud                                                        we                group                them                into                a                category                with                the                name                ﬁxed
+type,         and         cloud         brokenness         (Long         et         al.         2006).                                                                                  thresholding         methods.
+      At         present,        cloud         detection         is        mainly         based         on         thresh-                                                                     There                   are                   some                   challenges                   for                   ﬁxed                   thresholding
+olding          techniques,          in          which          a          RGB           cloud           image          is          trans-                                              methods.       First,       the       cloud       threshold,       in       the       strict       sense,       is
+formed      into     a      single      channel     feature     image,      and      then      each                                                                                     climate           and           camera           dependent           (Long           et           al.           2006).           For
+pixel     in     the      feature      image      is      classiﬁed      by      a      ﬁxed      threshold.                                                                            example,      if      we     simultaneously      take      an      image      of      a      sky     with
+There          are          three          reputable          features          for          cloud          detection.                                                                  two          digital          cameras          that          are          the          same          make          and          model,
+First,         the         ratio         of         the         red         channel         to         the         blue         channel         is                                      we      can       discern       color       differences       between       the       two       images.
+commonly      applied      in      most      WSIs,      TSIs,      and      WSCs      (Buch                                                                                             Second,           white            always           tints            the           blue            of           the            sky;           further-
+et       al.       1995;       Slater       et       al.       2001;       Long       et       al.       2006;       Calbo       and                                                    more,      this      process       is      complex      and      relates      to      many      factors,
+Sabburg             2008).             In             these             approaches,             the             pixels             whose                                                such        as        typical        aerosol        loading        and        pressure        depth        of        the
+red/blue      ratios      are       less      than      a      ﬁxed      threshold       are      labeled                                                                               atmosphere           at           a           given           location.           As           a           result,           cloud           ele-
+as       sky;       on        the       contrary,       the       pixels        with       greater       ratios       are                                                               ments           and           sky           elements           interweave           with           each           other           in
+labeled         as         cloud.         Note         that         most         TSI         algorithms         use         dif-                                                        feature         spaces         (e.g.,         R/B         ratio,         saturation,         and         EGD).
+ferent           thresholds           depending           upon           the           relative           position                                                                             Statistically,          there          is          always          considerable          overlap          be-
+between               pixels               and               the               sun               (Long               et               al.               2006).               As               atween        the        distribution        of        cloud        elements        and        that        of        sky
+variation,             Heinle             et             al.             (2010)             used             the             difference             be-                                 elements         in         most         feature         spaces.         We         manually         sampled
+tween       the       red       (R)       and       blue       (B)       channel       instead       of       the       R/                                                              cloud      patches      and      sky      patches      from      the      UTILITY      image
+B         ratio.        Second,         saturation        that        is        one        dimension        in        hue,                                                              set           (more           details           about           the           UTILITY           set           are           found           in
+saturation,             and             luminance             (HSL)             color             space             was             pro-                                                section      2),      and      computed      the      histograms       of      the      B/R      ratio,
+posed     to     assess      the      cloud      cover      (Souza-Echer      et      al.      2006).                                                                                   saturation,          and          EGD          for          cloud          and          sky          elements          sepa-
+This             approach             characterized             three             classes             (sky,             cloud,                                                          rately.        Figure        1        illustrates        the        distributions        of        cloud        and
+and         the         third         class         obtained         by         exclusion)         based         on         the                                                         sky              in              the              three              feature              spaces.              Overlap              between              the
+respective                        saturation                        thresholds.                        Finally,                        Euclidean                                        distributions        of        cloud        and        sky        can        be        discerned        in        Fig.        1
+geometric        distance        (EGD)        was        recently        put        forward        for                                                                                  for         all         three         feature         spaces.
+the        classiﬁcation        of        sky        and        cloud        patterns        (Sylvio        et        al.                                                                      The            overlap            implies            that            the            above-mentioned            ﬁxed
+2010).           Sylvio           et           al.           (2010)           observed           that           sky           and           cloud                                       thresholding      methods      inevitably      misclassify      some      pixels.
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                      Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 3 ===
+1288                                                                                                                           JOURNAL        OF        ATMOSPHERIC        AND        OCEANIC        TECHNOLOGY                                                                           V                                                                                                                                            OLUME          28
+
+In           practice,           the           ﬁxed           thresholding           methods           are           not           ca-                        can          be          regarded          as          possessing          reasonable          diversity          and
+pable      of      correctly      detecting      thin      clouds      (Sylvio      et      al.      2010).                                                   generalization.         In          addition,          a          number          of          images,          down-
+Alternatively,           the           adaptive          thresholding          method           based                                                         loaded         from         the         Internet,         are         added         in         order         to         further
+on           the           Otsu           algorithm           (Otsu           1979)           was           investigated           in                         increase         the         diversity         of         the         image         set.
+our                 previous                 work                and                 achieved                 better                performance                     Two        different        sets        of        images        were        constructed        for        anal-
+than       the       ﬁxed       B/R       ratio       thresholding       for       cumuliform       and                                                       ysis             and              evaluation.             First,             1000             images—680             from             the
+cirriform        cloud        images        (Yang        et        al.        2009).        The        adaptive                                               speciﬁc           source          and          320           from          the           general           source—were
+approach,       however,      does       not      perform      well      on       other      types                                                            selected        by        visual        screening.        Each        image        is        chosen        to        be
+of       cloud       genera,       such       as       stratiform       and       clear       sky       images.                                               a           typical           sample           of           certain           cloud           genus,           and           the           whole
+     This                 paper                 puts                 forward                 the                 Hybrid                  Thresholding         image          set          covers          the          following          four          categories:          cumuli-
+Algorithm        (HYTA)        for        cloud        detection.        This        algorithm                                                                form,      cirriform,      stratiform,      and      clear      sky.      This      image      set,
+combines              ﬁxed             and             adaptive             thresholding             methods             to                                   called         UTILITY,         is         used         to         analyze         the         statistical         char-
+achieve       better      accuracy       for       all       cloud       genera.      HYTA       ﬁrst                                                         acteristics        of        cloud        and        sky        elements,        and        also        is        used        to
+transforms               a               RGB               image               into               a               normalized               blue/red           estimate      the      parameters      of      HYTA      and      other      approaches.
+(B/R)       ratio       image,       which      can       keep       distinct       contrast       even                                                       Second,         32         images         are         chosen         from         UTILITY         and         man-
+with           noise           and          outliers.           Subsequently,          a           hybrid          thresh-                                    ually         converted         to         binary         mask         images         using         a         Voronoi
+olding         strategy,          integrating          ﬁxed          and         the         adaptive         min-                                            polygonal          region           generator.          In           the          mask           images,          cloud
+imum       cross       entropy       (Li       and       Lee       1993;       Li       and       Tam       1998)                                             and        sky        elements        are        marked        with        1        and        0,        respectively.
+thresholding         algorithms         is         applied.                                                                                                   These            images           compose           the            BENCHMARK           that           is           re-
+     The                HYTA                methodology                is                presented                in                the                next   garded            as             the             ground             truth,             which             is            used             to             evaluate
+section.          In          section          3,          we          demonstrate          the          experimental                                         the            detection           performance.            Note            that           BENCHMARK
+results.             Finally,             we             provide             the             conclusions             of             this             re-      covers           both           speciﬁc           and           general           sources           and           divides
+search         and         suggest         possible         future         investigations.                                                                    into      the      following      four      subs           ets:      cumuliform,      cirriform,
+                                                                                                                                                              stratiform,             and             clear             sky             (with             14,             9,             6,             and             3             images,
+                                                                                                                                                              respectively).
+2.                   Data          and          methods
+a.                  Experiment          setup          and          image          sets                                                                       b.                  The          hybrid          thresholding          algorithm
+     Images      used      for     development     and      evaluation      of     HYTA                                                                             1)                 OVERVIEW
+were       collected      from       two      sources:      a      speciﬁc       and      a      general                                                            Cloud           images,          according           to          their           statistical          character-
+source.           Images           from           the           speciﬁc           source           were           obtained                                    istics,         can         be          roughly         divided         into         two         groups:         unimodal
+from       the       WSCs,       which       were       located       in       Beijing       (39.808N,                                                        and         bimodal.         Unimodal         images         are         generally         made         up
+116.478E)       and       Conghua       (23.578N,       113.628E),       China.       The                                                                     of            single            elements            (i.e.,            cloud            or            sky),            while            bimodal
+WSCs,          developed          by          the          Institute          of          Atmospheric          Sound-                                         images       are       composed       of      both      cloud       and       sky       elements;       for
+ing            at            the            Chinese            Academy            of            Meteorological            Sciences,                           example,            clear            sky            and            most            stratiform            images            can            be
+are           based            on            commercially           available           components.            The                                            regarded           as           unimodal,           and           cumuliform           and           most           cirri-
+basic          component          is          a          digital          camera,          which         is          equipped                                 form           images           are           bimodal.           Statistically,           if           we           transform
+with         a         ﬁsheye        lens         to        provide         a         ﬁeld        of         view        larger         than                  color      images      into      certain      feature      images      (e.g.,      B/R      ratio)
+1808           and           is           enclosed           by           a           weather           protection           box.           The               and       investigate       their       histograms,       the       difference       between
+WSCs             are             programmed             to             acquire             images             at             ﬁxed             in-             unimodal                   and                   bimodal                   distributions                  is                   more                   readily
+tervals,           and           all           images           are           stored           in           RGB           color           JPEG                observed.            That            is,            the            histogram            of             a            unimodal            image
+format       with       a       resolution       of       13923       1040       pixels.       At present,                                                    always        has        a        single        peak        and        a        small        variance,        while        the
+we        focus        on        cloud        detection        in        the        normal        region        of        the                                 histogram      of      a      bimodal      image      may      have      two      or      more      peaks
+WSC         images,         avoiding         areas         near         the         sun         and         the         hori-                                 and        a        large        variance.        Figure                    2        illustrates        some        typical
+zon,              because             these             regions              are             too             complicated             to             be        unimodal      and      bimodal      cloud      images      and      their      histograms.
+automatically        handled        (Long        et        al.        2006;        Heinle        et        al.                                                      Unimodal      and      bimodal      images      show      big      differences      in
+2010;      Sylvio      et      al.      2010).      Therefore,      we      manually      cropped                                                             both               their               physical               and               statistical               characteristics.               Ac-
+proper         sections         of         a         whole         image.                                                                                     cordingly,            it            is            reasonable            to            treat            them            with            different
+     The        images        from        the        general        source         are        manually        ac-                                             algorithms.         Bimodal         images,         from         the         view         of         image
+quired        by        several        photographers        with        common        digital                                                                 processing,      are       more       accurately       processed       with      adaptive
+cameras.          These          images         were          taken         from          different         loca-                                             thresholding          algorithms,           although           these           algorithms           are
+tions        and        different        cameras,        whereas        the        speciﬁc        source                                                      not               applicable                to               process                unimodal               images                (Sezgin               and
+has             ﬁxed             locations             and             devices.             These             general             images                      Sanku      2004;      Yang      et      al.      2009).      Unimodal      images,however,
+
+
+
+
+
+
+                                                                                                                                                                                                                                  Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 4 ===
+OCTOBER         2011                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        L     I                  E     T                  A     L     .                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1289
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                        FIG.       2.        (top       to        bottom)       Typical       bimodal       and       two        unimodal       images       and       their       histograms.
+
+
+can           be            treated           well           with            ﬁxed           thresholding            because                                                                                                 2)                 THE         NORMALIZATION         OF         B/R          RATIO
+of                  the                  purity                  of                  sky                  conditions                  (Long                  et                  al.                  2006),                Normalization              of              the              B/R              ratio              is              necessary              to              im-
+whereas                 ﬁxed                 thresholding                 is                 not                 accurate                 for                 thin                                                  prove             visual             contrast             and             robustness             to             noise.             Mathe-
+clouds          and          most          cirriform          images.          HYTA          applies          sep-                                                                                                  matically,         the         B/R         ratio,         denoted         by        l         (l      5         b/r),         ranges
+arate              thresholding              schemes              to              unimodal              and              bimodal                                                                                    from      [0,      255]      where      0    #      b,      r    #      255.      Note      that      the      value      of
+cloud         images.                                                                                                                                                                                               r           is           increased           by           one           unit           if           it           equals           zero           to           avoid           di-
+       HYTA,             illustrated             in             Fig.             3,             includes             two             main             sub-                                                          viding      by      zero.      Statistical      analysis      results,      however,      show
+procedures:                     normalization                     of                    B/R                    ratios                     and                    hybrid                                             that             the             majority             of             pixels             in             cloud             images             fall             in             the
+thresholding.           First,           the           normalized           B/R           ratio           is           used           to                                                                            range        of        [0,        5]        (seen        in        the        ﬁrst        column        of        Fig.        1).        Pixels
+transform          color          images          into          ratio          images          to          improve          vi-                                                                                     with           large           ratio           l           can           be           regarded          as           outliers           or           noise.
+sual           contrast            and           robustness           to           noise.           Then,           the            hybrid                                                                           We      ﬁnd      that      these      pixels      always      dramatically      decline      the
+thresholding      procedure      is      carried      out      to      distinguish      clouds                                                                                                                      contrast            of           ratio            images            and            lead           to           difﬁculty            in            cloud
+from        sky.        In        this        procedure,        an        input        ratio        image        is        iden-                                                                                    detection.             For             example,             a             ratio             image             will             be             visually
+tiﬁed             as              either             unimodal             or              bimodal              according             to              the                                                            black          if          there          is          even          one          noise          pixel          with          l       5          255          and
+standard      deviation      of      the      ratio      image.     Subsequently,      ﬁxed                                                                                                                         the             other             pixels             with            l         ,             5.             Figure            4             shows             some            ex-
+and        minimum        cross        entropy       (MCE)        thresholding        are        ap-                                                                                                                amples       whose       B/R       ratio       images       are       indistinct       because       of
+plied        to        unimodal        and         bimodal         images,         respectively.                                                                                                                    noise         and         pixels         with         large         l.
+       In      terms       of       computation       cost,       HYTA       has       a       linear       com-                                                                                                            We         propose         the         normalized         B/R         ratio
+putation      complexity      because      it      scans      an      input      image      twice.
+It        is        a        kind        of        extremely        fast        algorithm,        as        ﬁxed        and        MCE
+thresholding         algorithms         are.                                                                                                                                                                                                                                    lN          5           (l2           1)/(l        1           1),                                                                                                                                                                                                           (1)
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                                                            Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 5 ===
+1290                                                                                                                           JOURNAL        OF        ATMOSPHERIC        AND        OCEANIC        TECHNOLOGY                                                                           V                                                                                                                                            OLUME          28
+
+                                                                                                                                                                            presents         the         summary         of         the         standard         deviations         of         the
+                                                                                                                                                                            normalized         ratio         images        according         to        the         four        cloud         cat-
+                                                                                                                                                                            egories        based        on         UTILITY.        The         standard        deviations        for
+                                                                                                                                                                            cumuliform      and      cirriform      clouds      are      larger      than      those      for
+                                                                                                                                                                            stratiform           cloud            and           clear            sky.            Cumuliform            clouds            are
+                                                                                                                                                                            distinctly       separated       from       stratiform       clouds       and       clear       sky
+                                                                                                                                                                            by              a              proper              threshold,              whereas              there              is              little              overlap
+                                                                                                                                                                            between      cirriform      clouds      and      stratiform      clouds–clear      sky.
+                                                                                                                                                                            In          our          experiments,          we          set          the          standard          deviation          thresh-
+                                                                                                                                                                            old              to            Ts         5            0.03.            An            image            with            a            standard            deviation
+                                                                                                                                                                            greater              than              Ts              is              considered              bimodal,              otherwise              it              is
+                                                                                                                                                                            unimodal.           After           an           input           ratio           image           is           categorized           as
+                                                                                                                                                                            either        unimodal        or        bimodal,       the        HYTA       algorithm        splits
+                                                                                                                                                                            into           two           branches—one           for           ﬁxed           thresholding           and           the
+                                                                                                                                                                            other         for         MCE         thresholding.
+                                                                                                                                                                                  In         the         ﬁrst         branch,        a         ﬁxed         threshold         is         statistically         es-
+                                                                                                                                                                            timated        and        used        for        the        unimodal        images.        Because        the
+                                                                                                                                                                            threshold       is       predeﬁned       and       global       for       the       whole       dataset,
+                                                                                                                                                                            some      experimental      or      statistical      methodologies,      like      those
+                                                                                                                                                                            presented      in      Long      et      al.      (2006)      and      Sylvio      et      al.     (2010),      can
+                                                                                                                                                                            be      applied      to       estimate      it.      In       our       experiments       we      manually
+                                                                                                                                                                            sampled      500     cloud      patches     from     UTILITY,     calculated      the
+                                                                                                                                                                            mean       m         and         the         standard         deviation    d         of         their         normalized
+                                                                                                                                                                            B/R      ratio      values,      and      set      the      threshold      Tf      as      Tf     5      m    1      3d.
+                                                                                                                                                                            We         ﬁnally         get         Tf       5         0.250.         Therefore,         the         pixels         in         a         un-
+                                                                                                                                                                            imodal             image             with            lN         ,             Tf             are             detected             as             cloud             ele-
+                                                                                                                                                                            ments,       otherwise      the       pixels       are       classiﬁed      as       sky       elements.
+      FIG.       3.        The       framework       of       the       hybrid       thresholding       algorithm.                                                                In          the          other           branch,          the           adaptive          MCE          thresholding
+                                                                                                                                                                            algorithm              is              applied              for              the              bimodal              images.              Thresh-
+                                                                                                                                                                            olding           is           one           of           the           fundamental           techniques           for           image
+where         l       5          b/r.         The         lN         is          a         nonlinear         monotonically         in-                                      segmentation,            and            many            thresholding            techniques            have
+creasing        function        of       l,       which        ranges        from        [21,        254/256].                                                              been      proposed      in      literature.      Comprehensive      surveys      can
+The       range      of      lN      is       evidently       narrower      than       that       of      l.      For                                                       be               found               in               Lee               et               al.               (1990)               and               Sezgin               and               Sanku
+instance,      the      interval      (5,      255]      for     l      is      compressed      into      the                                                               (2004).          The          MCE          thresholding          algorithm          is          adopted          in
+very                small               interval               (2/  3,               254/256]               for               lN.               As               a                conse-this         research         because         it         is         robust         and         unbiased         to         histo-
+quence,       the       normalized       ratio       image       has       distinct       contrast                                                                          grams         of         images         (Li         and         Lee         1993;         Li         and         Tam         1998).
+and              robustness              to              noise.              Figure              4              shows              comparisons                                    Let      F    5       f   f1,      f2,     ...           ,      fNg      and      G    5       fg1,      g2,     ...           ,      gNg      be      two
+between        B/R        ratio        images        and        normalized        ratio        images.                                                                      discrete                probability                distributions                on                a                set.                The                cross
+      Equation         (1)         can         be         rewritten         as                                                                                              entropy             between             F             and             G             is             an             information             theoretic
+                                                                                                                                                                            distance       between       the       two       distributions       and       is       deﬁned       by
+                                                 lN          5           (b2           r)/(b        1           r),                                                                                                                                                                                                              (2)
+
+                                                                                                                                                                                                                                                           N
+where        b        and        r        refer        to        the        values       of        the        blue        and        the        red                                                                   D(F  ,     G)        5             /C229
+channel,             respectively.             Equation             (2)             can             be             taken             as             a                                                                                                    i51     fi       log(    fi /gi ).                                                                                                                                                                           (3)
+normalization       of      the       difference       between      the       blue       and       red
+channel        that        is        applied        by        Heinle        et        al.        (2010).        However,                                                    The        MCE        thresholding        algorithm        selects        a        threshold        by
+lN          is          invariant          to          additive          lightness          variations;          in          other                                          minimizing      the      cross      entropy      between      the      original      image
+words,           lN           will            be           constant           if           the           values           of           b           and            r           areand         its         segmented         image.         It         can         be         interpreted         as         being
+changed         by         a         same         additive         constant.                                                                                                indicative         of         the         preservation         of         information.         Let         IN         be
+      3)                 HYBRID         THRESHOLDING         PROCEDURE                                                                                                      the       normalized       B/R       ratio       image       and       h(i)(i     5       1,       2,      ...           ,       L,
+                                                                                                                                                                            where               L               is               the               number               of               ratio               levels)               be               the               corre-
+      An        input        ratio         image        is         ﬁrst        identiﬁed         as        unimodal        or                                               sponding      histogram.      Then      the      segmented      image,      denoted
+bimodal                according               to               its                standard               deviation.               Table               1                    by         Bt         with         t         as         the         threshold         value,         is         constructed         by
+
+
+
+
+
+
+                                                                                                                                                                                                                                                      Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 6 ===
+OCTOBER         2011                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        L     I                  E     T                  A     L     .                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1291
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                FIG.        4.        (top        to        bottom)       Examples       of        ratio        images.        (a)       Original        images,       (b)        B/R        ratio,        (c)        B      2        R,        and
+                                                        (d)       normalized       B/R       ratio.       (top)       The       original       image       with       noise,       (middle)       pixels       with       high       pure       blue,       and
+                                                        (bottom)       a       randomly       selected       image.
+
+                                                                               /C26                                                                                                                                                                 where         m(a,     b)    5    /C229b
+                                 Bt  (x,     y)        5                                   m(1,         t),                                                                                                     IN   (x,     y)        ,           t(4)      After          the          optimal          threshold          t*          is          determined          accord-i5a ih(i).
+                                                                                      m(t      1       1,         L),                                 IN   (x,     y)   $     t                 ,
+                                                                                                                                                                                                                                                    ing            to            Eq.            (7),            it            is            used            to            distinguish            cloud            elements
+where      x      and      y      denote     the      coordinate     of     a      pixel      and      m(a,      b)                                                                                                                                 from      sky      elements.      Pixels      whose      normalized      ratio      values
+is        deﬁned        as                                                                                                                                                                                                                          are        less        than        t*        are        classiﬁed        as        clouds;        otherwise,        pixels
+                                                                                                                                                                                                                                                    are         sky.
+                                                                                                       b                           ,               b
+                                                       m(a,     b)        5             /C229                                                                                                                                                       3.                   Results          and          comparisons
+                                                                                                   i5a     ih(i)                                  /C229i5a     h(i).
+                                                                                                                                                                                                                                                    a.                  Evaluation          metrics          for          cloud          detection
+The         cross         entropy         between         IN         and         Bt         is         then         calculated                                                                                                                               Traditionally,             cloud             fraction,             deﬁned             as             the             ratio             of
+by                                                                                                                                                                                                                                                  the       detected       cloud       pixels       to       the       total       number       of       pixels       in
+
+                                   t                                       /C20/C21L                                                                                         /C20/C21an          image,          is          used          as          an          evaluation          metric          for          cloud          de-
+D(t)      5     /C229                                                                       i                   1              /C229                                                                    i                             .             tection,          and          fraction          values          estimated          by          observers          are
+                              i51     ih(i)     log                             m(1,     t)                               i5t11  ih(i)     log                                    m(t        1           1,     L)                                  used          as          references          (Souza-Echer          et          al.          2006).          This          type
+                                                                                                                                                                                                                            (5)                     of          evaluation          scheme          is          not          precise          enough          to          measure
+                                                                                                                                                                                                                                                    the            accuracy            of            a            cloud            detection            algorithm.            First,            the
+The          MCE          determines          the          optimal          threshold          t*          by          min-                                                                                                                         fraction         mixes         up         correctly         and         wrongly         detected         cloud
+imizing         the         cross         entropy         D(t).         That         is,                                                                                                                                                            elements.                   After                   all,                   there                   are                   some                   pixels                   that                   are
+
+                                                                          t*        5           arg     mint                        [D(t)].                                                                                                                                                                                                                                (6)TABLE       1.      The      summary      of       standard      deviation      of       the      normalized
+                                                                                                                                                                                                                                                    B/R        ratio        corresponding        to        cumuliform,        cirriform,        stratiform,       and
+Eliminating      the      constant      terms      in      D(t)      of      Eq.      (5),      Eq.      (6)                                                                                                                                        clear       sky       based       on       the       UTILITY       set.
+can         be         simpliﬁed         to                                                                                                                                                                                                                                          Cumuliform                                                            Cirriform                                                            Stratiform                                                            Clear       sky
+
+                                                                                                                                                                                                                                                    Min                                                                                                     0.0862                                                                                                                    0.0300                                                                                                         0.0018                                                                                                        0.0015
+                                         t*   5           arg     mint                           f2m(1,     t)     log[m(1,     t)]                                                                                                                 Max                                                                                                 0.4138                                                                                                                    0.3822                                                                                                         0.0799                                                                                                        0.0521
+                                                            2           m(t        1           1,     L)     log[m(t        1           1,     L)]g,                                                                                    (7)         Avg                                                                                                    0.1526                                                                                                                    0.1150                                                                                                         0.0309                                                                                                        0.0282
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                          Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 7 ===
+1292                                                                                                                           JOURNAL        OF        ATMOSPHERIC        AND        OCEANIC        TECHNOLOGY                                                                           V                                                                                                                                            OLUME          28
+
+                             TABLE        2.        Confusion       matrix       of        cloud       detection.                                                                                                             The         four         outcomes         can         be         formulated         in         a         2       3     2con-
+                                Truth                                                                                                                                                                                 fusion        matrix        as        in        Table        2.        The        confusion        matrix        can        be
+Detected                                                                                                                                                                                                                                                                                                                                          Cloud                                                                                                                                                                                                                                                     Skyused             to             derive             several             evaluation             metrics             (Kohavi             and
+               Cloud                                                                                                                                                                                                                                                                                                                                     TP                                                                                                                                                                                                                                                                             FPProvost             1998).              This              paper              adopts              precision               (Pr),              recall
+               Sky                                                                                                                                                                                                                                                                                                                                                                   FN                                                                                                                                                                                                                                                                         TN(Rc),        and        accuracy       (Ac).       Precision        is       the        probability        that
+                                                                                                                                                                                                                      a         detected        cloud         element         is        true;        recall         is        the         probability
+                                                                                                                                                                                                                      that       a        true        cloud       element       is       detected;        and        accuracy       is        the
+detected          as          cloud           but           are          sky          in          fact,          and          vice          versa.          Sec-                                                      probability         of         both         correctly        detected         cloud         and        sky         ele-
+ond,           the           reference           fractions           do           not           give           the           ground           truth                                                                   ments.         Respectively,         Pr,         Rc,         and        Ac         are         deﬁned        as
+about          the          type          of          each          pixel          in          an          image.          This          work          eval-                                                                                Pr        5           TP/(TP        1           FP),
+uates               detection               performance               with               three               metrics               derived
+from          the          confusion          matrix,          based          on          BENCHMARK.                                                                                                                                      Rc        5           TP/(TP        1           FN),
+        The           confusion           matrix           is           used           in           the           pattern           recogni-                                                                                             Ac        5           (TP        1           TN)/(TP        1           FP        1           TN        1           FN).                                                  (8)
+tion               and               machine               learning               communities               (Kohavi               and                                                                                 Accuracy           is           widely           used           as           a           metric           for           the           evaluation
+Provost              1998;              Fawcett              2006).              There              are              four              possible                                                                       of           classiﬁcation            systems;           higher           accuracy            means            better
+outcomes         from         a         cloud         detection         method,         as         follows:                                                                                                           performance.      Precision      and      recall      are      often      used      together
+
+
+
+d                a                true                positive                (TP)                denotes                a                correct                outcome                in                            to       evaluate       image        segmentation        algorithms        (Estrada        and
+       which         the         detected         pixel         is         cloud,                                                                                                                                     Jepson            2009).           There            is           an           inverse           relationship           between
+
+d                a          false         positive         (FP)          denotes         an         incorrect          outcome         in                                                                             precision        and        recall.        That        is,        it       is       possible        to       increase       one
+       which         the         detected         pixel         is         sky,                                                                                                                                       at            the             cost            of             reducing             the             other.             For             example,             a             high
+
+d                a              true              negative              (TN)              denotes              a              correct              outcome              in                                            threshold            can             cause            high             recall            but            low            precision;             con-
+       which         the         detected         pixel         is         sky,         and                                                                                                                           versely,     a     low     threshold     can      lead      to     high      precision     and     low
+
+d                a        false       negative        (FN)        denotes        an        incorrect        outcome        in                                                                                         recall.       A       classiﬁcation       system       should       provide       a       justiﬁable
+       which         the         detected         pixel         is         cloud.                                                                                                                                     trade-off        between         precision         and         recall.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                        FIG.      5.      (top      to      bottom)      Examples      of      the      detection      results.      (a)      Original      images,      (b)      the      ground      truth      for
+                                                 detection,      (c)      ﬁxed      thresholding      of      normalized      B/R      ratio      with      Tf    5      0.250,      (d)      MCE,      (e)      HYTA,      (f)      EGD
+                                                 with     Tf   5     55.43,    (g)     saturation    with     Tf   5     0.2512,    and     (h)     R2B    with     Tf   5     0.5755.    Clouds    are     marked    in     white
+                                                 and       skies       are       black       except       that       clouds       are       colored       in       white       and       skies       in        blue       for       (e).
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                                                                  Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 8 ===
+OCTOBER         2011                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        L     I                  E     T                  A     L     .                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1293
+
+        TABLE               3.               Performance               results               of               cloud               detection               based               on                                                                              are                   complementary.                   For                  example,                  ﬁxed                  thresholding
+BENCHMARK     for     the     ﬁxed     thresholding,     MCE     thresholding,     and                                                                                                                                                                        outperforms            MCE           thresholding            for            stratiform/clear           sky
+HYTA          algorithms.          The          number          of          images          for          cumuliform,          cirri-                                                                                                                          as      displayed      in      the      last      two      rows;      nevertheless,      it      is      mostly
+form,       stratiform,       and       clear       sky       are       14,       9,       6,        and       3,       respectively.                                                                                                                         worse       than       MCE      for       cumuliform       and      cirriform       (the      ﬁrst,
+
+                                         Cloud       categories                                                   Precision                                                   Recall                                                   Accuracy               third,         and         fourth         rows         in         Fig.         5).         Second,         HYTA         shows
+Fixed                                                                                                  Cumuliform                                                                                                 0.8917                                                                     0.8216                                                                      0.8596the           cooperative           effect           of           ﬁxed           and           MCE           thresholding.
+                                                  Cirriform                                                                                                                                  0.5850                                                                     0.8035                                                                      0.5669The       detection       results       of       HYTA,       displayed       in       Fig.       5e,       are
+                                                  Stratiform                                                                                                                        0.9880                                                                     0.9989                                                                      0.9870obviously            more            attractive            than            those            of            ﬁxed            or            MCE
+                                                  Clear       sky                                                                                                                                    0                                                                                                                                     0                                                                                                                                      0.9997thresholding        alone.        As        for        the        images        in        the        second        and
+                                                  Whole       set                                                                                                                            0.7399                                                                     0.7727                                                                      0.8143last            rows,            HYTA            does            not            coincide            with            ﬁxed            thresh-
+MCE                                                                                                    Cumuliform                                                                                                 0.9410                                                                     0.7961                                                                      0.9040
+                                                  Cirriform                                                                                                                                  0.8681                                                                     0.7189                                                                      0.8401olding,           which           leads           to           the           best           results,           because           certain
+                                                  Stratiform                                                                                                                        0.9992                                                                     0.6750                                                                      0.6793parts      of      the      images      (e.g.,      the      left      top      zone      of      the      image      in
+                                                  Clear       sky                                                                                                                                    0                                                                                                                                     0                                                                                                                                      0.6804the           second           row,           and           right           side           of           the           image           in           the           last
+                                                  Whole       set                                                                                                                            0.8432                                                                     0.6771                                                                      0.8230row)       are        whitened       by       the       sun       and       lead       to       an       abnormally
+HYTA                                                                               Cumuliform                                                                                                 0.9410                                                                     0.7961                                                                      0.9040low             ratio             value             for             a             sky             element             in             these             regions.             A
+                                                  Cirriform                                                                                                                                  0.8681                                                                     0.7189                                                                      0.8401
+                                                  Stratiform                                                                                                                        0.9957                                                                     0.9171                                                                      0.9163methodology      to      eliminate      the      inﬂuence      of      the      sun      will      be
+                                                  Clear       sky                                                                                                                                    0                                                                                                                                     0                                                                                                                                      0.8712researched         in         the         future.
+                                                  Whole       set                                                                                                                            0.8425                                                                     0.7224                                                                      0.8853The      superiority      of      HYTA      can      be      further      veriﬁed      through
+                                                                                                                                                                                                                                                              the            quantitative            evaluation            based            on            BENCHMARK.
+b.                  The          performance          of          HYTA                                                                                                                                                                                        BENCHMARK      is      further      divided      into      four      subsets,      that
+                                                                                                                                                                                                                                                              is,               cumuliform,               cirriform,               stratiform,               and               clear               sky,               in
+         HYTA          integrates          ﬁxed          and          MCE          thresholding,          so                                                                                                                                                  order           to           probe           into          the           speciﬁcity          of           each          method.           The
+the        performances        of        ﬁxed        and        MCE        thresholding        are                                                                                                                                                            average          precision,          recall,          and          accuracy          values          are          calcu-
+separately            presented             at             the             same             time             for             comparison.                                                                                                                      lated          according          to          these          four          subsets          and          the          whole          set.
+Note                    that                    the                    threshold                    of                    ﬁxed                    thresholding                    takes                                                                       Table           3           presents           the           detailed           performance           results.           Two
+the              same              value              as              that             of             HYTA,              that              is,              Tf          5               0.025.                                                                clear      facts       can      be      found       in      Table      3.      First,      HYTA      achieves
+Figures            5a–e            shows           the            ground           truth           and            the            detection                                                                                                                    the       best       performance,       with      an      accuracy       of      88.53%      for       the
+results             for             six             examples,             which             cover             three             classes:             cu-                                                                                                      whole           set;           furthermore,           it           comes           out            with           a            reasonable
+muliform,             cirriform,             or             stratiform–clear             sky.             Odd             rows                                                                                                                                trade-off          between          precision          and          recall.          Second,          it          is          fur-
+demonstrate              the              best              results              for              HYTA              in              each              class,                                                                                                  ther                 conﬁrmed                that                ﬁxed                and                 MCE                 thresholding                 are
+while        even        rows       show        the        worst        results.        Two        facts        can        be                                                                                                                                 complementary.              MCE             thresholding              shows              better              accu-
+observed    after    visually     comparing     the     detection     results                                                                                                                                                                                 racy       for       cumuliform       and       cirriform       images       compared       with
+of       the      three       methods.      First,      ﬁxed      and      MCE      thresholding                                                                                                                                                              ﬁxed               thresholding;               nonetheless,               it               fails               with               stratiform
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                     FIG.           6.           The           distributions           of           thresholds           and           deviations           of           accuracy           for           HYTA           and           MCE
+                                                                             compared         with        the         ﬁxed        thresholding.         (a)        Thresholds        of         MCE,         (b)        deviations        of         accuracy        of
+                                                                             MCE,       (c)       thresholds       of        HYTA,       and       (d)       deviations       of       accuracy       of       HYTA.
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                                         Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 9 ===
+1294                                                                                                                           JOURNAL        OF        ATMOSPHERIC        AND        OCEANIC        TECHNOLOGY                                                                           V                                                                                                                                            OLUME          28
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                FIG.        7.        (left       to        right)        Some       detection        results       by        HYTA       on        the       UTILITY       set:        labeled       as        (a)       good,       (b)
+                                                        medium,        or        (c)        bad.        Top        rows        in        each        set        contain        the        original        images        and        bottom        rows        denote        the        de-
+                                                        tection       results,       in        which       clouds       are       colored       in       white       and       skies       in        blue.
+
+
+
+clouds       and       clear       sky.       HYTA       combines       the       merits       of       both                                                                                                                                      clouds,         clear         sky,        and         stratiform         clouds,         respectively.         In
+ﬁxed           and           MCE          thresholding           and          presents          a           robust           per-                                                                                                                 Fig.         6a,         the          thresholds          of         MCE         for          the         cirriform          clouds
+formance       for       all       of       the       cloud       categories.       Note       that       values                                                                                                                                  scatter                on                both                sides                of                the                baseline;                however,                their
+of           precision           and           recall           for           clear           sky           take           0           because           the                                                                                      deviations                 of                 accuracy                 are                 positive                 (i.e.,                 better                 than
+number        of        TP        for         clear        sky        is        0.                                                                                                                                                                reference)        as        in        Fig.        6b.        On        the        contrary,        the        thresholds
+         Next,              we              investigate              the              distributions              of              thresholds                                                                                                       of         MCE         for         clear         sky         are         greater         than         Tf,         and         those         for
+and          the          deviations          of          accuracy          for          MCE          and          HYTA          in                                                                                                               stratiform        clouds        are        lower        than        Tf,        but        their        deviations
+BENCHMARK.          Figures          6a,c          display          the          thresholds          of
+MCE             and             HYTA             for             each             image             in             BENCHMARK,                                                                                                                     TABLE    4.     Performance    results    of    cloud    detection    on    BENCHMARK
+with              the              ﬁxed              threshold                              Tf               acting               as               the              baseline.                                                                                                               for       the       R2B,       saturation,       EGD       and       HYTA.
+Figures                6b,d                illustrate                the                deviations                of                accuracy                for
+MCE                and                HYTA                with                the                accuracy                of                ﬁxed               thresh-                                                                                                                                                     Precision                                                                                                                            Recall                                                                                                                            Accuracy
+olding              as              reference.              Note              that              the              x              axis              denotes              the                                                                        R2B                                                                                                                                                                                                                      0.7200                                                                                                                                              0.7919                                                                                                                                               0.7992
+index             of             each             image             in             BENCHMARK;             furthermore,                                                                                                                            Saturation                                                                                                                                             0.7323                                                                                                                                              0.7786                                                                                                                                               0.8020
+the          four          image          index          intervals          [1,          14],          [15,          23],          [24,          26],                                                                                             EGD                                                                                                                                                                                                           0.6607                                                                                                                                              0.8539                                                                                                                                               0.6033
+and           [27,           32]           represent           cumuliform           clouds,           cirriform                                                                                                                                   HYTA                                                                                                                                                                                      0.8425                                                                                                                                              0.7224                                                                                                                                               0.8853
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                                                                                                          Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 10 ===
+OCTOBER         2011                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        L     I                  E     T                  A     L     .                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                1295
+
+of         accuracy         are         negative         (i.e.,         worse         than         reference).         In                                                                         Table        4        further        presents        th     e        detection        performances
+most               cases,               HYTA               takes               the               thresholds               of               MCE               for                           of              the              four              methods.              HYTA              shows              the              best              perfor-
+cumuliform                         and                         cirriform                         clouds                         and                         derives                         themance               according               to               average               accuracy               on               the               whole
+thresholds        from        ﬁxed        thresholding        for        stratiform        clouds                                                                                          BENCHMARK.             Furthermore,             HYTA             also             shows             the
+and         clear         sky         as         in         Fig.         6c,         and         HYTA         shows         better         ac-                                             best           precision           for           cloud           element           detection,           though           the
+curacy          in          Fig.          6d          as          a          result.          In          short,          preferred          thresh-                                       EGD      algorithm      has      the      best      recall.       Taking      accuracy      into
+olds            for            cumuliform            and            cirriform            clouds            scatter            in            an                                             consideration,                  saturation                  and                  R2B                  rank                  second                  and
+interval           so           that          MCE           is           a           better           choice,           whereas           those                                            third              place,              while              EGD              shows              the              worst              results.              This
+for         stratiform         clouds         and         clear         sky         can         be         ﬁxed.                                                                           result         is         not         surprising         if         we         delve         into         the         distributions
+       We             tested             HYTA              on             the              UTILITY             set             and              had             an                         of              the              features.              From              a              statistical              viewpoint,              a              larger
+expert       visually       evaluate       the       detection       results       because       it      is                                                                                overlap         between         the         distribution         of        cloud         elements         and
+too          laborious          to         construct          the          ground          truth          for          the          1000                                                   that              of              sky              elements              means              a              larger              misclassiﬁcation,
+im ages              in              U TILITY.              The              detection             resul ts              are              sub-                                             leading              to              a              worse              detection              performance              for              a              ﬁxed
+jectively           grouped           into           one           of           the           following           three           cate-                                                    thresholding         method.         Figure         1         illustrates         that         the         EGD
+gories:         good,         medium,         and         bad.         We         obtained         707         good,                                                                       has        the        largest        overlap        compared        with        the        B/R        ratio        (its
+241            medium,            and            52            bad            images            in            this            way.             Figure            7                         inverse             is             the             R2B             ratio),             and             saturation.             In             contrast,
+presents             some             representatives             in             the             three             categories.                                                             HYTA              selects              an              adaptive              threshold              according              to              an
+Our               evaluation               results               demonstrate               that               HYTA               ad-                                                       individual             image,             rather             than             a             ﬁxed             one;             as             a             conse-
+dresses                 most                  images                 well,                 even                  for                 thin                  clouds,                  as     quence,           it           achieves           a           better           performance.           In           summary,
+shown          in          Fig.          7a.          We          also          have          to          note          that          HYTA          is                                     HYTA           outperforms           these           state-of-the-art           cloud           detec-
+not         perfect        for        the        images        that        are        tinted        by        the        sun        as                                                     tion      approaches      based      on      BENCHMARK      because      of      its
+shown         in         Figs.         7b,c.                                                                                                                                               hybrid         thresholding         strategy.
+c.                  Comparison          to          related          work
+       We        compare        our        HYTA        with        the        following        reputable                                                                                   4.                   Conclusions
+methodologies:                                                                                                                                                                                    We               have               proposed               the               Hybrid               Thresholding               Algo-
+                                                                                                                                                                                           rithm                 (HYTA)                for                 cloud                 detection                on                ground-based
+
+d                The           ﬁxed           R/B           ratio           (R2B)           considers           the           ratio           of           the                             color                images,                aiming                at                complementing                ﬁxed                thresh-
+      red               channel               and               the               blue               channel               of               a               color               cloud      olding                     and                     adaptive                     thresholding                     algorithms.                     Fixed
+      image,         and         sets         an         predeﬁned         threshold         to         determine                                                                          thresholding      methods      are      weak      for      bimodal      images      (e.g.,
+      cloud         and         sky         elements         (Long         et         al.         2006).                                                                                   thin              cloud,              cirriform)              and              MCE              fails              to              address              most
+
+d                The             saturation             method             takes             the             saturation             compo-                                                 unimodal           images.           HYTA           integrates           ﬁxed           thresholding
+      nent            of            HSL            color            space            into            account,            and            classiﬁes                                          and                minimum                cross                entropy                (MCE)                thresholding                to-
+      pixels         with          a          ﬁxed          saturation         threshold         (Souza-Echer                                                                              gether,              so              it              can              be              competent              when              applied              to              both
+      et         al.         2006).                                                                                                                                                        unimodal           and           bimodal           cloud           images.           Our           experiments
+
+d                EGD      applies      the      distance      of      the      RGB      vector      of      a      pixel                                                                   demonstrate      that      HYTA      outperforms      not      only      ﬁxed      and
+      to          the          main          diagonal          of          the          RGB          cube          to          distinguish                                                 MCE               thresholding               alone,               but               also               other               state-of-the-
+      cloud        elements        from        sky        elements        (Sylvio        et        al.        2010).                                                                       art              approaches,              that              is,              R/B              ratio              thresholding              (Long
+                                                                                                                                                                                           et         al.         2006),         saturation         thresholding         (Souza-Echer         et         al.
+       Note        that        all        of        the        ﬁxed        thresholds        (Tf)        for        the        listed                                                      2006),            and            Euclidean            geometric            distance            (Sylvio            et            al.
+three             methods             are             derived             from             UTILITY             set             by             the                                          2010).
+statistical       approach,       as        discussed       in        section       2b,        and       have                                                                                     There         are         some         challenges         to         HYTA         that         need         to         be
+T  R2Bf                                    5     0:5755,                   T  Saturationf                                                                                 5     0:2512,                   and                   T  EGDf                                           5     55:43.investigated           in           the           future.           First,           one           possible           improve-
+Note            that            these            thresholds            here            are            not            identical            with                                             ment           for          HYTA           is          to           explore          a           more          elaborate          cl assi-
+those       used       in        the       original        literature       because       the        training                                                                              ﬁcation             method             for             unimodal             and             bimodal             images.
+images         are         different.         They,         however,         are         better         choices                                                                            Second,            an            intelligent            treatment            for            the            area            near            the
+for         BENCHMARK         in         our         experiments.                                                                                                                          sun            and            horizon            should            be            studied,            such            as            the            use            of
+       Figures           5e–h           shows           some           representative           examples                                                                                   local         thresholding         methodologies.
+of            detection            results            for            the            four            methodologies.            We
+observe        that        the        HYTA       is        more        accurate        than        the        other                                                                               Acknowledgments.                        The                        authors                        acknowledge                        the
+three      approaches,      though      the      HYTA      is      weakened      by      the                                                                                               support         from          the         National         Natural          Science          Foundation
+whitening            of            the            sun,            as            shown            in            the            second            and            last                        of                China                (Grant                60805041),                Basic                Research                Fund                of
+rows.                                                                                                                                                                                      Chinese              Academy              of              Meteorological              Sciences              (Grant
+
+
+
+
+
+
+                                                                                                                                                                                                                                                                         Unauthenticated | Downloaded 10/12/26 05:27 AM UTC
+
+=== HALAMAN PDF 11 ===
+1296                                                                                                                           JOURNAL        OF        ATMOSPHERIC        AND        OCEANIC        TECHNOLOGY                                                                           V                                                                                                                                            OLUME          28
+
+2007Z001),                  and                   Special                  Technical                   D&R                  Project                   for             Li,           C.           H.,           and           C.           K.           Lee,           1993:           Minimum           cross           entropy           thresh-
+Scientiﬁc                     Academies                     or                     Institutes                     of                     China                     (Grant         olding.       Pattern       Recognit.,        26,       617–625.
+NCSTE-2006-JKZX-303).              They              thank              Ying              Ma,              Wen                                                        ——,         and         P.         K.         S.         Tam,         1998:         An         iterative         algorithm         for         mini-
+Yao,           Yang            Zhang,           and           Hongbo           Cui           for            their           work            on                                    mum     cross     entropy     thresholding.               Pattern     Recognit.     Lett.,              18,
+                                                                                                                                                                                  771–776.
+cloud      image      collection,      and      they      would      also      like      to      thank                                                                Li,Z.,M.C.Cribb,F.L.Chang,andA.P.Trishchenko,2004:
+James          Z.          Wang         and          the         anonymous          reviewers          for          their                                                         Validation     of     MODIS-retrieved     cloud     fractions      using     whole
+constructive         comments.                                                                                                                                                    sky       imager       measurements       at       the       three       arm       sites.             Proc.       14th
+                                                                                                                                                                                  ARM     Science     Team     Meeting,            Albuquerque,     NM,     ARM,     1–6.
+                                                                                                                                                                      Long,     C.     N.,     J.     M.     Sabburg,    J.     Calbo,     and     D.     Pages,    2006:     Retrieving
+                                                           REFERENCES                                                                                                             cloud      characteristics      from      ground-based      daytime      color      all-sky
+                                                                                                                                                                                  images.       J.       Atmos.       Oceanic       Technol.,        23,       633–652.
+Buch,        K.        A.,        J.        C.-H.        Sun,        and        L.        R.        Thorne,        1995:        Cloud        classiﬁ-                 Otsu,        N.,        1979:        A        threshold        selection        method        from        gray        level        his-
+           cation        using        whole-sky        imager        data.         Proc.         Fifth         Atmospheric                                                        tograms.       IEEE       Trans.       Syst.       Man       Cybern.,        9,       62–66.
+           Radiation            Measurement             Science            Team            Meeting,            San            Diego,                                  Rossow,        W.        B.,        and        R.        A.        Schiffer,        1991:        ISCCP        cloud        data        prod-
+           CA,       ARM,       35–39.                                                                                                                                            ucts.       Bull.        Amer.       Meteor.       Soc.,        72,       2–20.
+Calbo,      J.,      and      J.      Sabburg,      2008:      Feature      extraction      from      whole-sky                                                       Sezgin,          M.,          and          B.          Sanku,          2004:          Survey          over          image          thresholding
+           ground-based             images             for             cloud-type            recognition.             J.             Atmos.                                       techniques        and        quantitative        performance        evaluation.        J.        Elec-
+           Oceanic        Technol.,        25,       3–14.                                                                                                                        tron.       Imaging,        131,       146–165.
+Carslaw,        K.        S.,        R.        G.        Harrison,        and        J.        Kirkby,        2002:        Cosmic        rays,                        Shields,         J.         E.,         R.         W.         Johnson,         M.         E.         Karr,         and         J.         L.         Wertz,         1998:
+           clouds,       and       climate.       Science,        298,       1732–1737.                                                                                           Automated        day/night        whole        sky        imagers        for        ﬁeld        assessment
+Cazorla,      A.,      J.      Olmo,      and      L.      Alados-Arboledas,      2008:      Development                                                                          of        cloud        cover        distribution        and        radiances        distributions.         Proc.
+           of    a    sky    imager    for     cloud    cover    assessment.    J.    Opt.    Soc.    Amer.    A,                                                                 10th             Symp.             on             Meteorological             Observation             and             Instrumen-
+           25,       29–39.                                                                                                                                                       tation,       Phoenix,        AZ,       Amer.       Meteor.       Soc.,       165–170.
+Estrada,        F.         J.,        and         A.        D.        Jepson,        2009:        Benchmarking        image        seg-                               Slater,     D.     W.,     C.     N.     Long,     and     T.     P.     Tooman,     2001:     Total     sky     imager/
+           mentation       algorithms.        Int.       J.       Comput.       Vision,        85,       167–181.                                                                 whole        sky        imager        cloud        fraction        comparison.        Proc.        11th        ARM
+Fawcett,        T.,        2006:        An        introduction        to        ROC        analysis.        Pattern        Rec-                                                   Science       Team       Meeting       Proc.,       Atlanta,        GA,        ARM,        1–11.
+           ognit.       Lett.,        27,       861–874.                                                                                                              Souza-Echer,        M.        P.,        E.        B.        Pereira,        L.        S.        Bins,        and        M.        A.        R.        Andrade,
+Heinle,         A.,         A.         Macke,         and         A.         Srivastav,         2010:         Automatic         cloud         clas-                               2006:      A      simple      method     for      the      assessment      of     the      cloud      cover      state
+           siﬁcation        of        whole        sky        images.Atmos.        Meas.        Tech.,3,       557–567.                                                           in         high-latitude         regions         by         a         ground-based         digital         camera.J.         At-
+Hoyt,         D.         V.,         1978:         Interannual         cloud-cover        variations         in         the         con-                                          mos.        Oceanic        Technol.,23,       437–447.
+           tiguous       United       States.       J.       Appl.       Meteor.,        17,       354–357.                                                           Stephens,          G.         L.,         2005:         Cloud         feedbacks          in         the         climate         system:         A
+Huo,      J.,      and      D.      R.      Lu,      2009:      Cloud      determination      of      all-sky      images                                                         critical       review.       J.       Climate,        18,       237–273.
+           under           low-visibility           conditions.           J.           Atmos.           Oceanic           Technol.,                                   Sylvio,L.M.N.,A.V.Wangenheim,E.B.Pereira,andE.Comunello,
+           26,       2172–2181.                                                                                                                                                   2010:            The            use            of            Euclidean            geometric            distance            on            RGB            color
+Kassianov,       E.,       C.        N.       Long,       and       M.        Ovtchinnikov,       2005:       Cloud       sky                                                     space           for          the          classiﬁcation          of          sky          and          cloud          patterns.J.          Atmos.
+           cover           versus           cloud           fraction:           Whole-sky           simulations           and           ob-                                       Oceanic         Technol.,27,       1504–1517.
+           servations.        J.       Appl.        Meteor.,        44,       86–98.                                                                                  Voss,             J.             K.,             and             G.             Zibordi,             1989:             Radiometric             and             geometric
+Kohavi,        R.,        and        F.        Provost,        1998:        Glossary        of        terms:        Special        issue                                          calibration      of      a      visible      spectral      electro-optic      ‘‘ﬁsheye’’      camera
+           on          applications         of          machine          learning          and          the          knowledge          dis-                                      radiance          distribution          system.          J.          Atmos.          Oceanic          Technol.,           6,
+           covery       process.        Mach.       Learn.,        30,       271–274.                                                                                             652–662.
+Lee,        S.        U.,        S.       Y.       Chung,        and       R.       H.       Park,       1990:        A        comparative        per-                Yang,        J.,        L.        Weitao,        M.        Ying,        Y.        Wen,        and        L.        Qingyong,        2009:
+           formance        study         of         several         global         thresholding         techniques         for                                                    An       automatic       ground-based       cloud       detection       method       based
+           segmentation.           Comput.           Vision          Graphics           Image           Process.,           52,                                                   on     adaptive     threshold     (in     Chinese).               J.     Appl.     Meteor.     Sci.,        20,
+           171–190.                                                                                                                                                               713–721.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                                                                                                              Unauthenticated | Downloaded 10/12/26 05:27 AM UTC

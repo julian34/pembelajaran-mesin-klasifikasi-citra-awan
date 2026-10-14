@@ -1,0 +1,9 @@
+Aspect,Status,Finding
+Class distribution,Warning,"Rasio terbesar/terkecil tertinggi 8,63 pada Train (6_cumulonimbus 3.003 vs 7_mixed 348)"
+Image dimensions,OK,Semua citra 512 x 512
+Corrupted images,OK,"0 tidak terbaca, 0 berkas 0 byte, 0 berkas non-citra"
+Duplicate files,Warning,159 pasangan citra identik; 0 dengan label berbeda
+Cross-split leakage,Warning,156 pasangan identik lintas split; 36 kandidat near-duplicate lintas split; 0 nama file sama
+Channel consistency,OK,Semua citra RGB 3 channel
+Image quality,OK,"117 citra hampir seragam (contrast < 2,55 dari 255), 1 sangat gelap, 0 sangat terang"
+Split availability,Warning,Split tidak tersedia: Validation

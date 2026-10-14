@@ -1,0 +1,20 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+# Baseline transfer learning AlexNet (bobot ImageNet, torchvision).
+# Backbone dimuat dari src/models/baseline.py build_model("alexnet", ...).
+name: exp_006_alexnet
+description: >
+  Baseline AlexNet pra-latih ImageNet, lapisan classifier[6] diganti ke 7 kelas
+  (transfer learning). Model pembanding yang jauh lebih ringan dari DenseNet.
+
+model:
+  architecture: alexnet
+  pretrained: imagenet          # bobot AlexNet_Weights.IMAGENET1K_V1
+  source: torchvision
+  num_classes: 7
+  finetune: feature_extraction  # feature_extraction | full
+
+preprocess:
+  # Backbone ImageNet -> pakai normalisasi ImageNet, bukan statistik dataset.
+  normalize:
+    mean: [0.485, 0.456, 0.406]
+    std:  [0.229, 0.224, 0.225]

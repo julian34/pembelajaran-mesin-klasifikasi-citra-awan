@@ -1,0 +1,162 @@
+{
+  "root": "data/raw/CCSN_v2",
+  "images": 2543,
+  "non_image_files": [],
+  "total_bytes": 104175593,
+  "splits": [
+    ""
+  ],
+  "classes": [
+    "Ac",
+    "As",
+    "Cb",
+    "Cc",
+    "Ci",
+    "Cs",
+    "Ct",
+    "Cu",
+    "Ns",
+    "Sc",
+    "St"
+  ],
+  "class_dirs_per_split": {
+    "": [
+      "Ac",
+      "As",
+      "Cb",
+      "Cc",
+      "Ci",
+      "Cs",
+      "Ct",
+      "Cu",
+      "Ns",
+      "Sc",
+      "St"
+    ]
+  },
+  "counts": {
+    "": {
+      "Ac": 221,
+      "As": 188,
+      "Cb": 242,
+      "Cc": 268,
+      "Ci": 139,
+      "Cs": 287,
+      "Ct": 200,
+      "Cu": 182,
+      "Ns": 274,
+      "Sc": 340,
+      "St": 202
+    }
+  },
+  "split_totals": {
+    "": 2543
+  },
+  "imbalance_ratio_max_over_min": {
+    "": 2.45
+  },
+  "unreadable": [],
+  "format": {
+    "JPEG": 2543
+  },
+  "mode": {
+    "RGB": 2543
+  },
+  "channels": {
+    "3": 2543
+  },
+  "resolution": {
+    "400x400": 2332,
+    "256x256": 211
+  },
+  "extension": {
+    ".jpg": 2543
+  },
+  "with_exif_orientation": 0,
+  "file_bytes": {
+    "min": 5310,
+    "median": 44419,
+    "max": 124119
+  },
+  "zero_byte_files": [],
+  "duplicates_identical_bytes": {
+    "groups": 17,
+    "files_in_groups": 34,
+    "redundant_files": 17,
+    "groups_across_splits": 0,
+    "groups_across_classes": 3
+  },
+  "duplicates_identical_pixels": {
+    "groups": 17,
+    "files_in_groups": 34,
+    "redundant_files": 17,
+    "groups_across_splits": 0,
+    "groups_across_classes": 3
+  },
+  "near_duplicates_across_splits": {
+    "method": "dHash 16x16, jarak Hamming <= 10 dari 256 bit",
+    "pairs": 0,
+    "pairs_distance_0": 0,
+    "pairs_same_class": 0,
+    "pairs_by_class_a": {},
+    "distinct_files_involved": {
+      "a": 0,
+      "b": 0
+    }
+  },
+  "filename_prefix_mismatch": [],
+  "filename_unparsed": [
+    "Ac/Ac-N001.jpg",
+    "Ac/Ac-N002.jpg",
+    "Ac/Ac-N003.jpg",
+    "Ac/Ac-N004.jpg",
+    "Ac/Ac-N005.jpg",
+    "Ac/Ac-N006.jpg",
+    "Ac/Ac-N007.jpg",
+    "Ac/Ac-N008.jpg",
+    "Ac/Ac-N009.jpg",
+    "Ac/Ac-N010.jpg",
+    "Ac/Ac-N011.jpg",
+    "Ac/Ac-N012.jpg",
+    "Ac/Ac-N013.jpg",
+    "Ac/Ac-N014.jpg",
+    "Ac/Ac-N015.jpg",
+    "Ac/Ac-N016.jpg",
+    "Ac/Ac-N017.jpg",
+    "Ac/Ac-N018.jpg",
+    "Ac/Ac-N019.jpg",
+    "Ac/Ac-N020.jpg",
+    "Ac/Ac-N021.jpg",
+    "Ac/Ac-N022.jpg",
+    "Ac/Ac-N023.jpg",
+    "Ac/Ac-N024.jpg",
+    "Ac/Ac-N025.jpg",
+    "Ac/Ac-N026.jpg",
+    "Ac/Ac-N027.jpg",
+    "Ac/Ac-N028.jpg",
+    "Ac/Ac-N029.jpg",
+    "Ac/Ac-N030.jpg",
+    "Ac/Ac-N031.jpg",
+    "Ac/Ac-N032.jpg",
+    "Ac/Ac-N033.jpg",
+    "Ac/Ac-N034.jpg",
+    "Ac/Ac-N035.jpg",
+    "Ac/Ac-N036.jpg",
+    "Ac/Ac-N037.jpg",
+    "Ac/Ac-N038.jpg",
+    "Ac/Ac-N039.jpg",
+    "Ac/Ac-N040.jpg",
+    "Ac/Ac-N041.jpg",
+    "Ac/Ac-N042.jpg",
+    "Ac/Ac-N043.jpg",
+    "Ac/Ac-N044.jpg",
+    "Ac/Ac-N045.jpg",
+    "Ac/Ac-N046.jpg",
+    "Ac/Ac-N047.jpg",
+    "Ac/Ac-N048.jpg",
+    "Ac/Ac-N049.jpg",
+    "Ac/Ac-N050.jpg"
+  ],
+  "filenames_reused": 0,
+  "numbering": {}
+}

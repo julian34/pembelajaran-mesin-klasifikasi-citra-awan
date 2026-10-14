@@ -1,0 +1,6 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+name: exp_001_baseline
+description: Model dasar tanpa augmentasi, sebagai pembanding untuk eksperimen berikutnya.
+
+model:
+  architecture: null   # TODO: tentukan arsitektur baseline

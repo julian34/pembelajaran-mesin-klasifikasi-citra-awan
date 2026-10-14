@@ -1,0 +1,7 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+name: exp_002_augmentation
+description: Baseline ditambah augmentasi data.
+
+augmentation:
+  enabled: true
+  # TODO: daftar transformasi ditentukan setelah EDA

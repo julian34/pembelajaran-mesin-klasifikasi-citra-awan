@@ -1,0 +1,56 @@
+{
+  "seed": 42,
+  "val_fraction_of_clean_train": 0.15,
+  "stratified": true,
+  "grouped_keep_together_edges": 3,
+  "counts": {
+    "clean_train": 9811,
+    "train": 8340,
+    "val": 1471,
+    "test": 9000
+  },
+  "per_class": {
+    "1_cumulus": {
+      "train": 659,
+      "val": 116,
+      "val_pct": 14.97
+    },
+    "2_altocumulus": {
+      "train": 617,
+      "val": 108,
+      "val_pct": 14.9
+    },
+    "3_cirrus": {
+      "train": 980,
+      "val": 173,
+      "val_pct": 15.0
+    },
+    "4_clearsky": {
+      "train": 1669,
+      "val": 294,
+      "val_pct": 14.98
+    },
+    "5_stratocumulus": {
+      "train": 1568,
+      "val": 278,
+      "val_pct": 15.06
+    },
+    "6_cumulonimbus": {
+      "train": 2553,
+      "val": 450,
+      "val_pct": 14.99
+    },
+    "7_mixed": {
+      "train": 294,
+      "val": 52,
+      "val_pct": 15.03
+    }
+  },
+  "checks": {
+    "train_val_disjoint": true,
+    "union_equals_clean_train": true,
+    "near_dup_pairs_not_split": true,
+    "test_untouched": true
+  },
+  "note": "test resmi tidak dibagi ulang; data/raw/ tidak diubah."
+}

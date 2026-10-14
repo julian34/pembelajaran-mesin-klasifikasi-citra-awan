@@ -1,0 +1,9 @@
+class,test,train,total
+1_cumulus,750,775,1525
+2_altocumulus,750,725,1475
+3_cirrus,753,1153,1906
+4_clearsky,1589,2150,3739
+5_stratocumulus,1790,1846,3636
+6_cumulonimbus,2761,3003,5764
+7_mixed,607,348,955
+TOTAL,9000,10000,19000

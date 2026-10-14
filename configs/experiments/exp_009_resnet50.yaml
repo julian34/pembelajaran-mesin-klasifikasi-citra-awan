@@ -1,0 +1,20 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+# Baseline transfer learning ResNet-50 (bobot ImageNet, torchvision).
+# Backbone dimuat dari src/models/baseline.py build_model("resnet50", ...).
+name: exp_009_resnet50
+description: >
+  Baseline ResNet-50 pra-latih ImageNet, head model.fc diganti ke 7 kelas
+  (transfer learning). Model residual 50 lapis sebagai pembanding utama.
+
+model:
+  architecture: resnet50
+  pretrained: imagenet          # bobot ResNet50_Weights.IMAGENET1K_V1
+  source: torchvision
+  num_classes: 7
+  finetune: feature_extraction  # feature_extraction | full
+
+preprocess:
+  # Backbone ImageNet -> pakai normalisasi ImageNet, bukan statistik dataset.
+  normalize:
+    mean: [0.485, 0.456, 0.406]
+    std:  [0.229, 0.224, 0.225]

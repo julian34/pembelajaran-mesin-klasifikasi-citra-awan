@@ -1,0 +1,21 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+# Baseline transfer learning DenseNet-264 (bobot ImageNet via timm "densenet264d").
+# torchvision TIDAK punya bobot DenseNet-264; butuh paket timm (pip install timm).
+# Backbone dimuat dari src/models/baseline.py build_model("densenet264", ...).
+name: exp_007_densenet264
+description: >
+  Baseline DenseNet-264 pra-latih ImageNet via timm, classifier diganti ke 7
+  kelas (transfer learning). Arsitektur DenseNet terdalam pada rencana baseline.
+
+model:
+  architecture: densenet264
+  pretrained: imagenet          # dibangun via timm "densenet264d" (pretrained)
+  source: timm                  # torchvision tak punya bobotnya
+  num_classes: 7
+  finetune: feature_extraction  # feature_extraction | full
+
+preprocess:
+  # Backbone ImageNet -> pakai normalisasi ImageNet, bukan statistik dataset.
+  normalize:
+    mean: [0.485, 0.456, 0.406]
+    std:  [0.229, 0.224, 0.225]

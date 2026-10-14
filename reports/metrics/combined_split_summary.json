@@ -1,0 +1,53 @@
+{
+  "seed": 42,
+  "val_fraction_of_pool": 0.15,
+  "mapping": {
+    "Cu": "1_cumulus",
+    "Ac": "2_altocumulus",
+    "Cc": "2_altocumulus",
+    "Ci": "3_cirrus",
+    "Cs": "3_cirrus",
+    "Ct": "3_cirrus",
+    "Sc": "5_stratocumulus",
+    "St": "5_stratocumulus",
+    "As": "5_stratocumulus",
+    "Cb": "6_cumulonimbus",
+    "Ns": "6_cumulonimbus"
+  },
+  "ccsn_raw": 2543,
+  "ccsn_dedup": {
+    "dropped_internal_duplicate": 14,
+    "dropped_ambiguous_label": 6
+  },
+  "ccsn_duplicate_with_gcd": 0,
+  "ccsn_leakage_with_gcd_test": 0,
+  "ccsn_kept": 2523,
+  "counts": {
+    "train": 10483,
+    "val": 1851,
+    "test": 9000
+  },
+  "source_per_split": {
+    "train": {
+      "GCD": 8338,
+      "CCSN": 2145
+    },
+    "val": {
+      "GCD": 1473,
+      "CCSN": 378
+    },
+    "test": {
+      "GCD": 9000
+    }
+  },
+  "train_class_distribution": {
+    "1_cumulus": 809,
+    "2_altocumulus": 1027,
+    "3_cirrus": 1511,
+    "4_clearsky": 1669,
+    "5_stratocumulus": 2187,
+    "6_cumulonimbus": 2986,
+    "7_mixed": 294
+  },
+  "note": "test = GCD resmi saja; CCSN hanya menambah train/val; data/raw/ tidak diubah."
+}

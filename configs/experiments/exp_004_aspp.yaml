@@ -1,0 +1,6 @@
+# Hanya nilai yang berbeda dari configs/base.yaml.
+name: exp_004_aspp
+description: Model dengan modul ASPP (Atrous Spatial Pyramid Pooling).
+
+model:
+  architecture: null   # TODO: varian ASPP dari arsitektur baseline

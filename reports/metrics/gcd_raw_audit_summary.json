@@ -1,0 +1,225 @@
+{
+  "root": "data/raw/GCD",
+  "images": 19000,
+  "non_image_files": [],
+  "total_bytes": 198811777,
+  "splits": [
+    "test",
+    "train"
+  ],
+  "classes": [
+    "1_cumulus",
+    "2_altocumulus",
+    "3_cirrus",
+    "4_clearsky",
+    "5_stratocumulus",
+    "6_cumulonimbus",
+    "7_mixed"
+  ],
+  "class_dirs_per_split": {
+    "test": [
+      "1_cumulus",
+      "2_altocumulus",
+      "3_cirrus",
+      "4_clearsky",
+      "5_stratocumulus",
+      "6_cumulonimbus",
+      "7_mixed"
+    ],
+    "train": [
+      "1_cumulus",
+      "2_altocumulus",
+      "3_cirrus",
+      "4_clearsky",
+      "5_stratocumulus",
+      "6_cumulonimbus",
+      "7_mixed"
+    ]
+  },
+  "counts": {
+    "test": {
+      "1_cumulus": 750,
+      "2_altocumulus": 750,
+      "3_cirrus": 753,
+      "4_clearsky": 1589,
+      "5_stratocumulus": 1790,
+      "6_cumulonimbus": 2761,
+      "7_mixed": 607
+    },
+    "train": {
+      "1_cumulus": 775,
+      "2_altocumulus": 725,
+      "3_cirrus": 1153,
+      "4_clearsky": 2150,
+      "5_stratocumulus": 1846,
+      "6_cumulonimbus": 3003,
+      "7_mixed": 348
+    }
+  },
+  "split_totals": {
+    "test": 9000,
+    "train": 10000
+  },
+  "imbalance_ratio_max_over_min": {
+    "test": 4.55,
+    "train": 8.63
+  },
+  "unreadable": [],
+  "format": {
+    "JPEG": 19000
+  },
+  "mode": {
+    "RGB": 19000
+  },
+  "channels": {
+    "3": 19000
+  },
+  "resolution": {
+    "512x512": 19000
+  },
+  "extension": {
+    ".jpg": 19000
+  },
+  "with_exif_orientation": 0,
+  "file_bytes": {
+    "min": 5025,
+    "median": 8650,
+    "max": 44045
+  },
+  "zero_byte_files": [],
+  "duplicates_identical_bytes": {
+    "groups": 159,
+    "files_in_groups": 318,
+    "redundant_files": 159,
+    "groups_across_splits": 156,
+    "groups_across_classes": 0
+  },
+  "duplicates_identical_pixels": {
+    "groups": 159,
+    "files_in_groups": 318,
+    "redundant_files": 159,
+    "groups_across_splits": 156,
+    "groups_across_classes": 0
+  },
+  "near_duplicates_across_splits": {
+    "method": "dHash 16x16, jarak Hamming <= 10 dari 256 bit",
+    "pairs": 602527,
+    "pairs_distance_0": 112707,
+    "pairs_same_class": 290206,
+    "pairs_by_class_a": {
+      "4_clearsky": 389652,
+      "5_stratocumulus": 129086,
+      "6_cumulonimbus": 61726,
+      "2_altocumulus": 10916,
+      "3_cirrus": 9245,
+      "7_mixed": 1303,
+      "1_cumulus": 599
+    },
+    "distinct_files_involved": {
+      "a": 1184,
+      "b": 1439
+    }
+  },
+  "filename_prefix_mismatch": [],
+  "filename_unparsed": [],
+  "filenames_reused": 0,
+  "numbering": {
+    "test/1_cumulus": {
+      "min": 776,
+      "max": 1525,
+      "count": 750,
+      "gaps": 0
+    },
+    "test/2_altocumulus": {
+      "min": 726,
+      "max": 1475,
+      "count": 750,
+      "gaps": 0
+    },
+    "test/3_cirrus": {
+      "min": 1154,
+      "max": 1906,
+      "count": 753,
+      "gaps": 0
+    },
+    "test/4_clearsky": {
+      "min": 2151,
+      "max": 3739,
+      "count": 1589,
+      "gaps": 0
+    },
+    "test/5_stratocumulus": {
+      "min": 1847,
+      "max": 3636,
+      "count": 1790,
+      "gaps": 0
+    },
+    "test/6_cumulonimbus": {
+      "min": 3004,
+      "max": 5764,
+      "count": 2761,
+      "gaps": 0
+    },
+    "test/7_mixed": {
+      "min": 349,
+      "max": 955,
+      "count": 607,
+      "gaps": 0
+    },
+    "train/1_cumulus": {
+      "min": 1,
+      "max": 775,
+      "count": 775,
+      "gaps": 0
+    },
+    "train/2_altocumulus": {
+      "min": 1,
+      "max": 725,
+      "count": 725,
+      "gaps": 0
+    },
+    "train/3_cirrus": {
+      "min": 1,
+      "max": 1153,
+      "count": 1153,
+      "gaps": 0
+    },
+    "train/4_clearsky": {
+      "min": 1,
+      "max": 2150,
+      "count": 2150,
+      "gaps": 0
+    },
+    "train/5_stratocumulus": {
+      "min": 1,
+      "max": 1846,
+      "count": 1846,
+      "gaps": 0
+    },
+    "train/6_cumulonimbus": {
+      "min": 1,
+      "max": 3003,
+      "count": 3003,
+      "gaps": 0
+    },
+    "train/7_mixed": {
+      "min": 1,
+      "max": 348,
+      "count": 348,
+      "gaps": 0
+    }
+  },
+  "zip_check": {
+    "zip": "data/raw/GCD.zip",
+    "zip_bytes": 183747585,
+    "zip_sha256": "8c1a1ab93dcac62247e34965f1f118089a4cf21ab12f7c626c54d13662950bd1",
+    "image_members": 19000,
+    "non_image_members": [],
+    "matched_crc_and_size": 19000,
+    "mismatched": 0,
+    "in_zip_not_extracted": 0,
+    "in_zip_not_extracted_examples": [],
+    "extracted_not_in_zip": 0,
+    "extracted_not_in_zip_examples": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "manifest": "reports/tables/gcd_raw_manifest.csv",
+  "split_priority": [
+    "test",
+    "val",
+    "validation",
+    "train"
+  ],
+  "dedup_splits": [
+    "train",
+    "val"
+  ],
+  "cross_split_leakage": {
+    "total_excluded": 156,
+    "excluded_by_split": {
+      "train": 156
+    },
+    "excluded_by_split_class": {
+      "train/4_clearsky": 155,
+      "train/7_mixed": 1
+    },
+    "test_images_with_copy_elsewhere": 156
+  },
+  "within_split_duplicates": {
+    "excluded": 1,
+    "excluded_by_split_class": {
+      "train/7_mixed": 1
+    },
+    "recorded_not_excluded": 2,
+    "recorded_by_split_class": {
+      "test/1_cumulus": 1,
+      "test/5_stratocumulus": 1
+    }
+  },
+  "note": "data/raw/ tidak diubah; daftar ini dibaca saat preprocessing."
+}

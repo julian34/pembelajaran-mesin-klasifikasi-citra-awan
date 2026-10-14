@@ -1,0 +1,78 @@
+# Konfigurasi dasar untuk semua eksperimen CitraAwan.
+# Berkas di configs/experiments/ hanya menuliskan nilai yang BERBEDA dari berkas ini.
+# EDA & penanganan kualitas selesai; split, preprocess/normalize, imbalance, dan evaluation
+# sudah diisi dari hasilnya. `model` masih perlu diputuskan (lihat docs/ARSITEKTUR_BASELINE.md).
+
+seed: 42
+
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  train_dir: data/train
+  val_dir: data/val
+  test_dir: data/test
+  # Skema 7 kelas dataset GCD/TJNU (Li dkk., Sensors 2023, Tabel 1).
+  # Sesuaikan jika dataset yang dipakai berbeda.
+  num_classes: 7
+  class_names: [Cu, Ac, Ci, Cl, Sc, Cb, Mi]
+  image_size: 224
+  split:
+    # GCD: test resmi tetap (9.000, tidak dibagi ulang). Validation dibuat dari
+    # train resmi bersih via scripts/make_split.py (stratified, seed di atas).
+    # Manifest: reports/tables/gcd_raw_split_{train,val,test}_manifest.csv.
+    val_fraction_of_train: 0.15 # GCD-only: train 8.340 / val 1.471 / test 9.000
+    stratified: true
+    keep_near_duplicate_groups_together: true
+    # Gabungan GCD+CCSN (opsional): reports/tables/combined_{train,val,test}_manifest.csv
+    # (train 10.483 / val 1.851 / test 9.000); lihat docs/PENGGABUNGAN_DATASET.md.
+
+model:
+  architecture: null # belum diputuskan; diisi di berkas eksperimen
+  pretrained: null
+
+preprocess:
+  # Pipeline di memori saat pemuatan; citra tidak ditulis ulang (semua sumber 512x512 RGB).
+  decode: RGB
+  resize: 224 # ke data.image_size
+  interpolation: bilinear
+  # Normalisasi dari SPLIT TRAIN FINAL GCD (8.340 citra), skala 0-1. Jangan pakai statistik test/val.
+  # Jika memakai bobot pra-latih ImageNet, pakai mean/std ImageNet (lihat docs/ARSITEKTUR_BASELINE.md).
+  normalize:
+    mean: [0.4885, 0.6170, 0.7650]
+    std: [0.1918, 0.1297, 0.1403]
+  stats_file: reports/tables/gcd_raw_norm_stats.csv
+
+augmentation:
+  enabled: false
+
+training:
+  epochs: 50 #update ke 200
+  batch_size: 32 #uji 16, 32, 64, 128; batch_size besar lebih stabil untuk imbalance
+  optimizer: adam #uji adam, adamw, sgd;
+  learning_rate: 0.001 # uji 0.0001, 0.001, 0.01; lr besar lebih cepat konvergen tapi bisa overfit
+  weight_decay: 0.0
+  scheduler: null
+  num_workers: 0 # num_workers > 0 untuk pemuatan paralel; 0 untuk debugging (lebih mudah baca traceback)
+  # Penanganan ketidakseimbangan kelas (EDA: rasio train 8,63; lihat docs/DATASET_QUALITY_SUMMARY.md 2.3).
+  # Bobot dihitung dari TRAIN BERSIH (setelah leakage & duplikat dibuang), bukan dari test.
+  imbalance: class_weights # class_weights | weighted_sampler | none
+  class_weights_file: reports/tables/gcd_raw_class_weights.csv # kolom weight_inverse_freq, urut index kelas
+  # Untuk dataset gabungan GCD+CCSN, pakai reports/tables/combined_class_weights.csv.
+
+checkpoint:
+  dir: checkpoints
+  monitor: val_macro_f1 # test set tidak pernah dipakai untuk memilih checkpoint
+  mode: max
+  save_best_only: true
+
+evaluation:
+  # Dataset tidak seimbang: accuracy saja menyesatkan. Metrik utama macro-F1.
+  primary_metric: macro_f1
+  metrics: [macro_f1, balanced_accuracy, accuracy]
+  per_class_metrics: true # precision, recall, F1 per kelas
+  confusion_matrix: true
+
+output:
+  experiments_dir: experiments
+  logs_dir: logs
+  reports_dir: reports

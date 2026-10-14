@@ -1,0 +1,46 @@
+file_a,split_a,class_a,file_b,split_b,class_b,method,location,hamming
+train/4_clearsky/4_clearsky_000898.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003196.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_000919.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003230.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_000922.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003237.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_000930.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003248.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_000931.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003249.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_000937.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003260.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_000942.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003272.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001063.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003410.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001066.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003413.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001067.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003416.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001099.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003427.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001104.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003434.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001268.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003508.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001871.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003250.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001881.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003261.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001887.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003271.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001908.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003300.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001912.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003304.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001915.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003307.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001933.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003327.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001967.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003356.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001970.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003359.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001975.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003364.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001979.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003368.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001985.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003374.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001987.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003376.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001989.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003378.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001991.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003380.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001999.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003389.jpg,test,4_clearsky,dHash 16x16,train-test,0
+train/4_clearsky/4_clearsky_001070.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003419.jpg,test,4_clearsky,dHash 16x16,train-test,1
+train/4_clearsky/4_clearsky_001106.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003436.jpg,test,4_clearsky,dHash 16x16,train-test,1
+train/4_clearsky/4_clearsky_001101.jpg,train,4_clearsky,test/4_clearsky/4_clearsky_003430.jpg,test,4_clearsky,dHash 16x16,train-test,2
+test/1_cumulus/1_cumulus_001303.jpg,test,1_cumulus,test/1_cumulus/1_cumulus_001430.jpg,test,1_cumulus,dHash 16x16,dalam test,3
+train/2_altocumulus/2_altocumulus_000401.jpg,train,2_altocumulus,train/5_stratocumulus/5_stratocumulus_001437.jpg,train,5_stratocumulus,dHash 16x16,dalam train,4
+test/1_cumulus/1_cumulus_001287.jpg,test,1_cumulus,test/1_cumulus/1_cumulus_001417.jpg,test,1_cumulus,dHash 16x16,dalam test,5
+train/1_cumulus/1_cumulus_000164.jpg,train,1_cumulus,train/1_cumulus/1_cumulus_000167.jpg,train,1_cumulus,dHash 16x16,dalam train,5
+train/5_stratocumulus/5_stratocumulus_001758.jpg,train,5_stratocumulus,test/5_stratocumulus/5_stratocumulus_003282.jpg,test,5_stratocumulus,dHash 16x16,train-test,6
+test/4_clearsky/4_clearsky_003304.jpg,test,4_clearsky,test/5_stratocumulus/5_stratocumulus_002763.jpg,test,5_stratocumulus,dHash 16x16,dalam test,7
+train/4_clearsky/4_clearsky_001912.jpg,train,4_clearsky,test/5_stratocumulus/5_stratocumulus_002763.jpg,test,5_stratocumulus,dHash 16x16,train-test,7
+test/6_cumulonimbus/6_cumulonimbus_005553.jpg,test,6_cumulonimbus,test/6_cumulonimbus/6_cumulonimbus_005555.jpg,test,6_cumulonimbus,dHash 16x16,dalam test,8
+train/3_cirrus/3_cirrus_000759.jpg,train,3_cirrus,test/3_cirrus/3_cirrus_001696.jpg,test,3_cirrus,dHash 16x16,train-test,8
+train/7_mixed/7_mixed_000073.jpg,train,7_mixed,train/7_mixed/7_mixed_000266.jpg,train,7_mixed,dHash 16x16,dalam train,8
+train/4_clearsky/4_clearsky_000975.jpg,train,4_clearsky,test/5_stratocumulus/5_stratocumulus_002777.jpg,test,5_stratocumulus,dHash 16x16,train-test,9
+test/4_clearsky/4_clearsky_002167.jpg,test,4_clearsky,test/5_stratocumulus/5_stratocumulus_002763.jpg,test,5_stratocumulus,dHash 16x16,dalam test,10
+test/7_mixed/7_mixed_000635.jpg,test,7_mixed,test/7_mixed/7_mixed_000776.jpg,test,7_mixed,dHash 16x16,dalam test,10

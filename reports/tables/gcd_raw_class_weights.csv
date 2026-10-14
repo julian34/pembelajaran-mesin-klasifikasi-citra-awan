@@ -1,0 +1,8 @@
+index,class_dir,class_name,n_train_clean,weight_inverse_freq,sampler_weight_per_image
+0,1_cumulus,Cu,775,1.8085,0.00129
+1,2_altocumulus,Ac,725,1.9332,0.001379
+2,3_cirrus,Ci,1153,1.2156,0.000867
+3,4_clearsky,Cl,1963,0.714,0.000509
+4,5_stratocumulus,Sc,1846,0.7592,0.000542
+5,6_cumulonimbus,Cb,3003,0.4667,0.000333
+6,7_mixed,Mi,346,4.0508,0.00289

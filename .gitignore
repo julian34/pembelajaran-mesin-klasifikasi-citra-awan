@@ -1,0 +1,51 @@
+# Lingkungan Python
+.venv/
+.venv-relore/
+.relore/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Dataset: isi folder tidak dilacak, hanya strukturnya (.gitkeep)
+data/**
+!data/**/
+!data/**/.gitkeep
+
+# Checkpoint dan bobot model
+checkpoints/**
+!checkpoints/**/
+!checkpoints/**/.gitkeep
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+
+# Log pelatihan
+logs/**
+!logs/**/
+!logs/**/.gitkeep
+*.log
+events.out.tfevents.*
+wandb/
+mlruns/
+runs/
+
+# Keluaran audit yang besar (dapat dibuat ulang dengan scripts/audit_dataset.py)
+reports/tables/*_near_duplicates_across_splits.csv
+
+# Editor dan sistem operasi
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Rahasia
+.env
+
+#agent
+AGENTS.md 
+.claude/agents
