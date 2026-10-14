@@ -47,5 +47,5 @@ Thumbs.db
 .env
 
 #agent
-AGENTS.md 
-.claude/agents
+AGENTS.md
+.claude/
