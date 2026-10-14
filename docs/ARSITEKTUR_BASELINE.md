@@ -15,7 +15,7 @@ Dokumen ini menyiapkan arsitektur **baseline awal**: klasifikasi citra awan mema
 | Arsitektur | DenseNet-264 |
 | Strategi | Transfer Learning (bobot pra-latih ImageNet) |
 | Perubahan | Ganti `classifier` → `Linear(in_features, 7)` |
-| Input | 224 × 224 RGB (resize dari 512 × 512, lihat `preprocess`) |
+| Input | 512 × 512 RGB (resolusi asli; sumber sudah 512×512, lihat `preprocess`) |
 | Framework | PyTorch + torchvision |
 | Loss | `CrossEntropyLoss` dengan bobot kelas (lihat `training.imbalance`) |
 | Metrik utama | macro-F1 (lihat `evaluation`) |
@@ -52,6 +52,8 @@ Langkah inti:
 Rekomendasi baseline: mulai dengan **feature extraction** sebagai titik acuan, lalu bandingkan dengan **fine-tuning penuh**.
 
 ### Normalisasi saat memakai bobot pra-latih
+
+> **Pembaruan (praproses baseline).** Pelatihan baseline proyek ini memakai normalisasi **bagi /255 → [0, 1]** (bukan mean/std ImageNet); lihat [`PERSIAPAN_PELATIHAN.md`](PERSIAPAN_PELATIHAN.md). Panduan mean/std di bawah hanya berlaku bila sengaja memilih standardisasi ImageNet.
 
 Karena backbone dilatih di ImageNet, **gunakan normalisasi ImageNet**, bukan statistik dataset:
 
@@ -179,7 +181,7 @@ Nilai ini titik awal; untuk fine-tuning penuh, pertimbangkan learning rate lebih
 
 ## 9. Baseline tambahan (transfer learning ImageNet)
 
-Ditambahkan beberapa arsitektur baseline untuk perbandingan. Semua memakai pola transfer learning yang sama (Bagian 3): muat bobot ImageNet → ganti classifier ke `Linear(in_features, 7)` → pilih mode `feature_extraction` (bekukan backbone) atau `full` (fine-tuning). Gunakan **normalisasi ImageNet** (mean `[0.485, 0.456, 0.406]`, std `[0.229, 0.224, 0.225]`).
+Ditambahkan beberapa arsitektur baseline untuk perbandingan. Semua memakai pola transfer learning yang sama (Bagian 3): muat bobot ImageNet → ganti classifier ke `Linear(in_features, 7)` → pilih mode `feature_extraction` (bekukan backbone) atau `full` (fine-tuning). Praproses pelatihan baseline: input **512 × 512** dan normalisasi **bagi /255 → [0, 1]** (tanpa mean/std); lihat [`PERSIAPAN_PELATIHAN.md`](PERSIAPAN_PELATIHAN.md).
 
 | Arsitektur | Classifier (head) | in_features | Sumber bobot ImageNet |
 |---|---|---:|---|
@@ -225,3 +227,9 @@ Catatan:
 | exp_009 | [`exp_009_resnet50.yaml`](../configs/experiments/exp_009_resnet50.yaml) | resnet50 | torchvision |
 
 Semua meng-override `model` dan `preprocess.normalize` (ke statistik ImageNet) terhadap `configs/base.yaml`, dan dibandingkan sebagai alternatif baseline — dari AlexNet/ResNet-18 yang ringan hingga DenseNet-264 yang terdalam.
+
+### Dataset baseline: combined_balanced
+
+Kelima eksperimen baseline (exp_005–009) memakai **train seimbang** `data/combined_balanced/train/` (3.000 citra/kelas = 21.000; GCD+CCSN, lihat [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md)), dengan **val/test combined apa adanya** (`combined_val`/`combined_test`, 1.851 / 9.000; tidak diseimbangkan). Karena train sudah seimbang, `training.imbalance: none` — tidak dipadukan dengan `class_weights` agar tidak terjadi koreksi ganda. Blok `data` dan `training.imbalance` ini ditulis di tiap config exp_005–009.
+
+Dokumen baseline per arsitektur (rinci): **AlexNet** → [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md).

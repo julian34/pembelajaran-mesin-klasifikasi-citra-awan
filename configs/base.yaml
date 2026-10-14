@@ -15,7 +15,7 @@ data:
   # Sesuaikan jika dataset yang dipakai berbeda.
   num_classes: 7
   class_names: [Cu, Ac, Ci, Cl, Sc, Cb, Mi]
-  image_size: 224
+  image_size: 512   # pelatihan pada resolusi asli 512x512 (sumber sudah 512x512 RGB)
   split:
     # GCD: test resmi tetap (9.000, tidak dibagi ulang). Validation dibuat dari
     # train resmi bersih via scripts/make_split.py (stratified, seed di atas).
@@ -33,14 +33,14 @@ model:
 preprocess:
   # Pipeline di memori saat pemuatan; citra tidak ditulis ulang (semua sumber 512x512 RGB).
   decode: RGB
-  resize: 224 # ke data.image_size
+  resize: 512 # ke data.image_size; sumber sudah 512x512 -> tanpa penskalaan
   interpolation: bilinear
-  # Normalisasi dari SPLIT TRAIN FINAL GCD (8.340 citra), skala 0-1. Jangan pakai statistik test/val.
-  # Jika memakai bobot pra-latih ImageNet, pakai mean/std ImageNet (lihat docs/ARSITEKTUR_BASELINE.md).
+  # Normalisasi: bagi tiap nilai piksel dengan 255 -> rentang [0, 1]. TANPA standardisasi mean/std.
+  # (scale 255 lalu mean 0 / std 1 = identitas, sehingga hasil akhir tetap [0,1]).
   normalize:
-    mean: [0.4885, 0.6170, 0.7650]
-    std: [0.1918, 0.1297, 0.1403]
-  stats_file: reports/tables/gcd_raw_norm_stats.csv
+    scale: 255
+    mean: [0.0, 0.0, 0.0]
+    std: [1.0, 1.0, 1.0]
 
 augmentation:
   enabled: false

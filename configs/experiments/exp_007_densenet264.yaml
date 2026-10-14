@@ -14,8 +14,17 @@ model:
   num_classes: 7
   finetune: feature_extraction  # feature_extraction | full
 
-preprocess:
-  # Backbone ImageNet -> pakai normalisasi ImageNet, bukan statistik dataset.
-  normalize:
-    mean: [0.485, 0.456, 0.406]
-    std:  [0.229, 0.224, 0.225]
+data:
+  # Train: set SEIMBANG 3.000/kelas (21.000 citra) hasil penyetaraan combined
+  # (GCD+CCSN), sudah dimaterialisasi di data/combined_balanced/train/.
+  # Lihat docs/PENYETARAAN_SAMPEL.md.
+  train_dir: data/combined_balanced/train
+  train_manifest: reports/tables/combined_balanced_train_manifest.csv
+  # Val/test: combined APA ADANYA (distribusi nyata; TIDAK diseimbangkan).
+  val_manifest: reports/tables/combined_val_manifest.csv
+  test_manifest: reports/tables/combined_test_manifest.csv
+
+training:
+  imbalance: none   # train sudah seimbang; jangan koreksi ganda (PENYETARAAN_SAMPEL.md §2.3)
+
+# Praproses diwarisi dari configs/base.yaml: input 512x512, normalisasi /255 -> [0,1].
