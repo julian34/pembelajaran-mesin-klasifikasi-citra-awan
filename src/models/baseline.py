@@ -57,6 +57,12 @@ def build_model(
     Returns:
         nn.Module dengan lapisan classifier terakhir berukuran `num_classes`.
 
+    Catatan Dropout: AlexNet torchvision SUDAH memuat `Dropout(p=0.5)` pada dua
+    lapisan fully-connected tersembunyi (`classifier[0]` sebelum FC-6 dan
+    `classifier[3]` sebelum FC-7); ini regularisasi bawaan desain AlexNet dan
+    tetap aktif saat `train()` (mati saat `eval()`). Tidak ada dropout tambahan
+    yang disisipkan sebelum head keluaran.
+
     Raises:
         ValueError: arsitektur/mode tidak dikenal, atau kombinasi
             pretrained yang tidak tersedia.
@@ -115,7 +121,11 @@ def build_model(
 
 
 def _replace_classifier(model: nn.Module, arch: str, num_classes: int) -> None:
-    """Ganti lapisan classifier terakhir sesuai arsitektur."""
+    """Ganti lapisan classifier terakhir sesuai arsitektur.
+
+    Untuk AlexNet hanya `classifier[6]` (lapisan keluaran) yang diganti; dua
+    Dropout(0.5) bawaan di `classifier[0]`/`classifier[3]` tetap utuh.
+    """
     if arch == "alexnet":
         # classifier AlexNet adalah nn.Sequential; lapisan terakhir indeks 6.
         in_features = model.classifier[6].in_features

@@ -119,6 +119,10 @@ def main() -> None:
     )
     ap.add_argument("--base", type=Path, default=Path("configs/base.yaml"))
     ap.add_argument("--epochs", type=int, default=None, help="override training.epochs.")
+    ap.add_argument(
+        "--batch-size", type=int, default=None,
+        help="override training.batch_size (mis. 16 untuk 512x512 di GPU 8 GB).",
+    )
     ap.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
     ap.add_argument(
         "--dry-run", action="store_true",
@@ -129,6 +133,8 @@ def main() -> None:
     config = load_config(args.config, args.base)
     if args.epochs is not None:
         config.setdefault("training", {})["epochs"] = args.epochs
+    if args.batch_size is not None:
+        config.setdefault("training", {})["batch_size"] = args.batch_size
     set_seed(int(config.get("seed", 42)))
 
     name = config.get("name") or args.config.stem

@@ -39,10 +39,24 @@ class ManifestImageDataset(Dataset):
 
     def __getitem__(self, index: int) -> tuple[torch.Tensor, int]:
         sample = self.samples[index]
-        with Image.open(sample.path) as im:
-            image = im.convert("RGB")
-            tensor = self.transform(image)
+        tensor = self._load_image(sample.path)
         return tensor, sample.label
+
+    # Dataset berada di drive USB eksternal yang kadang mengalami read-error
+    # transien (lihat memori proyek disk-hardware-error-venv); coba ulang baca
+    # beberapa kali sebelum menyerah agar run panjang tidak gagal karena 1 glitch.
+    def _load_image(self, path, retries: int = 3, backoff: float = 0.3) -> torch.Tensor:
+        import time
+
+        last_exc: Exception | None = None
+        for attempt in range(retries):
+            try:
+                with Image.open(path) as im:
+                    return self.transform(im.convert("RGB"))
+            except OSError as exc:  # IOError baca / file terkunci sesaat
+                last_exc = exc
+                time.sleep(backoff * (attempt + 1))
+        raise OSError(f"gagal membaca {path} setelah {retries} percobaan: {last_exc}")
 
 
 def build_transforms(

@@ -3,13 +3,13 @@
 Dataset train: **combined_balanced** (GCD+CCSN, 3.000/kelas = 21.000 citra). Framework: **PyTorch / torchvision**.
 Tanggal: 14 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md), [`PENGGABUNGAN_DATASET.md`](PENGGABUNGAN_DATASET.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md).
 
-Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Status: **pipa pelatihan sudah ditulis, belum dijalankan** (`torch`/`torchvision` belum terpasang di lingkungan ini). Kode:
+Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Regularisasi **Dropout(0.5)** adalah bawaan desain AlexNet pada **dua lapisan fully-connected tersembunyi** (FC-6 & FC-7). Status: **pipa pelatihan siap dijalankan** — `torch`/`torchvision` build CUDA **cu121 sudah terpasang** (GPU RTX 4060 Laptop, `cuda` aktif) dan notebook pemantau tersedia; **pelatihan penuh belum dijalankan** (dipantau sendiri oleh pengguna). Kode:
 
 - Model: [`src/models/baseline.py`](../src/models/baseline.py) (`build_model`).
 - Data: [`src/datasets/manifest.py`](../src/datasets/manifest.py) (resolusi path/label) + [`src/datasets/cloud_dataset.py`](../src/datasets/cloud_dataset.py) (`Dataset`/`DataLoader` + transform /255).
-- Pelatihan: [`src/training/trainer.py`](../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`).
+- Pelatihan: [`src/training/trainer.py`](../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`; opsi `progress=True` → progress bar per-epoch gaya Keras via `pkbar`).
 - Evaluasi: [`src/evaluation/metrics.py`](../src/evaluation/metrics.py).
-- Config: [`configs/experiments/exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../scripts/train.py).
+- Config: [`configs/experiments/exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../scripts/train.py); notebook pemantau: [`notebooks/04_baseline_training.ipynb`](../notebooks/04_baseline_training.ipynb).
 
 Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipeline.py`](../tests/test_pipeline.py) dan resolusi path diverifikasi terhadap manifes nyata (train 21.000 / val 1.851 / test 9.000, 0 file hilang).
 
@@ -23,6 +23,7 @@ Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipel
 | Strategi | Transfer learning, bobot pra-latih ImageNet |
 | Bobot | `torchvision` `AlexNet_Weights.IMAGENET1K_V1` |
 | Perubahan head | `classifier[6]`: `Linear(4096, 1000)` → `Linear(4096, 7)` |
+| Regularisasi | Dropout(0.5) bawaan pada 2 FC tersembunyi (`classifier[0]` sebelum FC-6, `classifier[3]` sebelum FC-7) |
 | Train | combined_balanced, 3.000/kelas (21.000 citra) |
 | Val / test | combined apa adanya (1.851 / 9.000) — **tidak diseimbangkan** |
 | Ketidakseimbangan | `imbalance: none` (train sudah seimbang; tak ada koreksi ganda) |
@@ -73,7 +74,7 @@ Jumlah neuron FC (4.096) dan head 1000-kelas **sama**, sehingga penggantian head
 Pola sama dengan [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md) Bagian 3:
 
 1. Muat AlexNet dengan bobot ImageNet.
-2. Ganti **lapisan terakhir** `model.classifier[6]` (sebuah `nn.Linear(4096, 1000)`) menjadi `nn.Linear(4096, 7)`.
+2. Ganti **lapisan terakhir** `model.classifier[6]` (sebuah `nn.Linear(4096, 1000)`) menjadi `nn.Linear(4096, 7)`. Lapisan lain — termasuk kedua `Dropout(0.5)` — dibiarkan utuh.
 3. Pilih mode: `feature_extraction` (bekukan backbone, latih head saja) atau `full` (fine-tuning seluruh lapisan).
 
 ```python
@@ -81,8 +82,23 @@ from src.models.baseline import build_model, count_parameters
 
 # classifier[6] (Linear 4096 -> 1000) diganti -> Linear(4096, 7)
 model = build_model("alexnet", num_classes=7, pretrained=True, finetune="full")
-print(count_parameters(model))  # (total, trainable)
+print(model.classifier[0])     # Dropout(p=0.5) — sebelum FC-6
+print(model.classifier[3])     # Dropout(p=0.5) — sebelum FC-7
+print(model.classifier[6])     # Linear(4096, 7) — head keluaran
+print(count_parameters(model)) # (total, trainable)
 ```
+
+### 3.1 Dropout(0.5)
+
+Dropout(0.5) adalah **regularisasi bawaan AlexNet**, diterapkan pada **dua lapisan fully-connected tersembunyi pertama** (FC-6 dan FC-7). Di `torchvision.models.alexnet` ia berada di `classifier[0]` (sebelum FC-6) dan `classifier[3]` (sebelum FC-7); tidak ada dropout sebelum lapisan keluaran.
+
+Mekanisme:
+
+- **Forward pass:** pada tiap iterasi, **50% neuron** pada lapisan tersebut dimatikan secara acak (keluarannya dinolkan); neuron yang bertahan diskalakan `1/(1−p)` (inverted dropout) agar ekspektasi aktivasi tetap. Ini mencegah ko-adaptasi antar-neuron sehingga model tidak bergantung pada fitur tunggal.
+- **Backpropagation:** gradien hanya mengalir mundur melalui **neuron yang aktif** pada iterasi itu; neuron yang dimatikan menerima gradien 0 sehingga bobotnya tidak diperbarui pada langkah tersebut.
+- **Train vs eval:** dropout **hanya aktif saat `model.train()`**. Saat `model.eval()` (validasi/test/inferensi) dropout **mati** — seluruh neuron dipakai tanpa penskalaan acak — sehingga prediksi deterministik. `trainer.fit`/`evaluate` sudah mengatur `train()`/`eval()` otomatis.
+
+Dropout tidak punya parameter yang dipelajari, jadi memuat bobot ImageNet tidak mengubah perilakunya. Untuk baseline ini penempatannya **tidak diubah**; regularisasi tambahan (mis. weight decay) diatur lewat `configs/base.yaml`.
 
 Normalisasi memakai **pembagian /255 ke rentang [0, 1]** (tanpa mean/std); lihat [`PERSIAPAN_PELATIHAN.md`](PERSIAPAN_PELATIHAN.md). Catatan: bobot pra-latih ImageNet aslinya dilatih dengan standardisasi mean/std ImageNet, jadi penggunaan [0,1] adalah pilihan praproses eksplisit proyek ini.
 
@@ -116,6 +132,7 @@ model:
   source: torchvision
   num_classes: 7
   finetune: feature_extraction  # feature_extraction | full
+  # Dropout(0.5) bawaan AlexNet (FC-6 & FC-7); tak perlu disetel — lihat §3.1.
 
 data:
   train_dir: data/combined_balanced/train
@@ -129,22 +146,29 @@ training:
   imbalance: none
 ```
 
-Hyperparameter awal dari `configs/base.yaml`: epochs 50, batch_size 32, optimizer adam, lr 0,001 (untuk fine-tuning penuh pertimbangkan lr lebih kecil, mis. 1e-4). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih).
+Hyperparameter awal dari `configs/base.yaml`: epochs 50, batch_size 32, optimizer adam, lr 0,001 (untuk fine-tuning penuh pertimbangkan lr lebih kecil, mis. 1e-4). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih). Catatan VRAM: input 512×512 di GPU 8 GB (RTX 4060 Laptop) nyaman di **batch 8** — notebook memakai default itu.
 
 ### 5.1 Menjalankan
 
+**Lingkungan sudah siap:** `torch 2.1.1+cu121` / `torchvision 0.16.1+cu121` terpasang di `.venv`, `pkbar` terpasang, dan GPU terdeteksi (`torch.cuda.is_available() == True`).
+
+**Opsi A — notebook (pantau sendiri, disarankan untuk eksplorasi):** buka [`notebooks/04_baseline_training.ipynb`](../notebooks/04_baseline_training.ipynb), jalankan sel atas→bawah. Sel 5 melatih dengan **progress bar per-epoch (pkbar)** dan Sel 5b menampilkan tabel + grafik riwayat. Untuk uji cepat set `EPOCHS=1`.
+
+**Opsi B — runner terminal (lebih cepat, pemuatan paralel):**
 ```powershell
-# 1) Pasang dependensi (butuh disk sehat; torch/torchvision belum terpasang di env ini).
+# 1) (Sekali) pasang dependensi bila di lingkungan baru:
 pip install -r requirements.txt
 
 # 2) Validasi config + manifes + file tanpa membangun model/melatih:
 python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml --dry-run
 
 # 3) Latih baseline (artefak -> experiments/exp_006_alexnet/, checkpoint -> checkpoints/exp_006_alexnet/best.pt):
-python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml
+python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml --batch-size 8
 ```
 
-`--epochs N` meng-override jumlah epoch; `--device cpu|cuda|auto` memilih perangkat.
+`--epochs N` meng-override jumlah epoch; `--batch-size N` meng-override batch; `--device cpu|cuda|auto` memilih perangkat.
+
+**Soal kecepatan (I/O-bound, bukan GPU-bound).** Citra dibaca sebagai JPEG 512×512 dari disk USB eksternal secara serial; komputasi GPU hanya ~4% waktu. Dengan `num_workers=0` (default aman di Jupyter Windows): ~18 menit/epoch, ~15 jam untuk 50 epoch. Untuk jauh lebih cepat, naikkan `training.num_workers` (mis. 4) dan latih lewat **runner terminal** (Opsi B) — `DataLoader` worker >0 sering tidak stabil di dalam notebook Windows.
 
 ---
 
@@ -160,5 +184,6 @@ python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml
 
 - Bobot pra-latih yang dipakai adalah **varian torchvision** AlexNet (64/192 channel, tanpa LRN), bukan rancangan dua-GPU asli pada §2 — dicatat agar laporan akurat.
 - AlexNet relatif dangkal/klasik; berguna sebagai **baseline ringan** pembanding terhadap DenseNet/ResNet pada data dan metrik yang sama.
-- Train seimbang (21.000) berisi ~50% citra augmentasi; variasi augmentasi untuk kelas minoritas (mis. Mi ~10×) terbatas — perhatikan risiko overfitting pola augmentasi (lihat `PENYETARAAN_SAMPEL.md` §4.3).
-- Belum dijalankan: perlu `torch`/`torchvision` terpasang.
+- Train seimbang (21.000) berisi ~50% citra augmentasi; variasi augmentasi untuk kelas minoritas (mis. Mi ~10×) terbatas — perhatikan risiko overfitting pola augmentasi (lihat `PENYETARAAN_SAMPEL.md` §4.3). **Dropout(0.5) bawaan** pada FC-6/FC-7 (§3.1) membantu meredam: meski pada `feature_extraction` bobot FC-6/FC-7 beku, dropout tetap bekerja di *forward pass* mode latih sehingga fitur yang sampai ke head tetap teregularisasi. Karena hanya head yang belajar, pantau selisih train vs val macro-F1 sebagai indikator overfitting.
+- Lingkungan: `torch`/`torchvision` build **cu121 (GPU)** terpasang; pelatihan **I/O-bound** pada disk USB (~15 jam/50 epoch, `num_workers=0`) — lihat §5.1 untuk mempercepat lewat runner terminal + `num_workers`.
+- Pelatihan penuh **belum dijalankan**; dijalankan & dipantau sendiri oleh pengguna via notebook (progress bar pkbar per epoch).

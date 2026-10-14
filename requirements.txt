@@ -17,3 +17,6 @@ matplotlib==3.8.2
 
 # Konfigurasi (pemuatan configs/*.yaml oleh src/utils/config.py)
 PyYAML==6.0.1
+
+# Progress bar pelatihan gaya Keras per-epoch (dipakai trainer fit(progress=True))
+pkbar==0.5
