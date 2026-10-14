@@ -3,7 +3,15 @@
 Dataset train: **combined_balanced** (GCD+CCSN, 3.000/kelas = 21.000 citra). Framework: **PyTorch / torchvision**.
 Tanggal: 14 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md), [`PENGGABUNGAN_DATASET.md`](PENGGABUNGAN_DATASET.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md).
 
-Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Status: **persiapan** — kode training belum dijalankan (`torch`/`torchvision` belum terpasang). Kode pembuatan model sudah ada di [`src/models/baseline.py`](../src/models/baseline.py); konfigurasi di [`configs/experiments/exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml).
+Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Status: **pipa pelatihan sudah ditulis, belum dijalankan** (`torch`/`torchvision` belum terpasang di lingkungan ini). Kode:
+
+- Model: [`src/models/baseline.py`](../src/models/baseline.py) (`build_model`).
+- Data: [`src/datasets/manifest.py`](../src/datasets/manifest.py) (resolusi path/label) + [`src/datasets/cloud_dataset.py`](../src/datasets/cloud_dataset.py) (`Dataset`/`DataLoader` + transform /255).
+- Pelatihan: [`src/training/trainer.py`](../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`).
+- Evaluasi: [`src/evaluation/metrics.py`](../src/evaluation/metrics.py).
+- Config: [`configs/experiments/exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../scripts/train.py).
+
+Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipeline.py`](../tests/test_pipeline.py) dan resolusi path diverifikasi terhadap manifes nyata (train 21.000 / val 1.851 / test 9.000, 0 file hilang).
 
 ---
 
@@ -112,7 +120,9 @@ model:
 data:
   train_dir: data/combined_balanced/train
   train_manifest: reports/tables/combined_balanced_train_manifest.csv
+  val_dir: data/combined/val      # file fisik val (manifes val mencatat path sumber)
   val_manifest: reports/tables/combined_val_manifest.csv
+  test_dir: data/combined/test
   test_manifest: reports/tables/combined_test_manifest.csv
 
 training:
@@ -120,6 +130,21 @@ training:
 ```
 
 Hyperparameter awal dari `configs/base.yaml`: epochs 50, batch_size 32, optimizer adam, lr 0,001 (untuk fine-tuning penuh pertimbangkan lr lebih kecil, mis. 1e-4). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih).
+
+### 5.1 Menjalankan
+
+```powershell
+# 1) Pasang dependensi (butuh disk sehat; torch/torchvision belum terpasang di env ini).
+pip install -r requirements.txt
+
+# 2) Validasi config + manifes + file tanpa membangun model/melatih:
+python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml --dry-run
+
+# 3) Latih baseline (artefak -> experiments/exp_006_alexnet/, checkpoint -> checkpoints/exp_006_alexnet/best.pt):
+python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml
+```
+
+`--epochs N` meng-override jumlah epoch; `--device cpu|cuda|auto` memilih perangkat.
 
 ---
 

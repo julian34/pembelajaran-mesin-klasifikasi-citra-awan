@@ -2,7 +2,7 @@
 
 Klasifikasi citra awan berbasis darat dengan deep learning (PyTorch).
 
-Status: dua dataset tersedia (**GCD** dan **CCSN_v2**). EDA, penanganan kualitas, pembagian split, dan penggabungan sudah selesai (berbasis manifest di `reports/`); kode pelatihan belum ditulis.
+Status: dua dataset tersedia (**GCD** dan **CCSN_v2**). EDA, penanganan kualitas, pembagian split, dan penggabungan sudah selesai (berbasis manifest di `reports/`). Pipa pelatihan+evaluasi baseline sudah ditulis (`src/`, `scripts/train.py`; baseline pertama: AlexNet exp_006, lihat [docs/BASELINE_ALEXNET.md](docs/BASELINE_ALEXNET.md)) tetapi **belum dijalankan** — `torch`/`torchvision` belum terpasang.
 
 ## Menyiapkan lingkungan
 

@@ -20,7 +20,12 @@ data:
   train_dir: data/combined_balanced/train
   train_manifest: reports/tables/combined_balanced_train_manifest.csv
   # Val/test: combined APA ADANYA (distribusi nyata; TIDAK diseimbangkan).
+  # Catatan: kolom rel_path di manifes val/test mencatat lokasi SUMBER asli
+  # (val berprefiks train/); file fisik ada di val_dir/test_dir di bawah
+  # (pola <split_dir>/<class>/<filename>). Lihat src/datasets/manifest.py.
+  val_dir: data/combined/val
   val_manifest: reports/tables/combined_val_manifest.csv
+  test_dir: data/combined/test
   test_manifest: reports/tables/combined_test_manifest.csv
 
 training:
