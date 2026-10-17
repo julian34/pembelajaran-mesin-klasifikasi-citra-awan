@@ -1,0 +1,78 @@
+seed: 42
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  train_dir: data/combined_balanced/train
+  val_dir: data/combined/val
+  test_dir: data/combined/test
+  num_classes: 7
+  class_names:
+  - Cu
+  - Ac
+  - Ci
+  - Cl
+  - Sc
+  - Cb
+  - Mi
+  image_size: 512
+  split:
+    val_fraction_of_train: 0.15
+    stratified: true
+    keep_near_duplicate_groups_together: true
+  train_manifest: reports/tables/combined_balanced_train_manifest.csv
+  val_manifest: reports/tables/combined_val_manifest.csv
+  test_manifest: reports/tables/combined_test_manifest.csv
+model:
+  architecture: alexnet
+  pretrained: imagenet
+  source: torchvision
+  num_classes: 7
+  finetune: feature_extraction
+preprocess:
+  decode: RGB
+  resize: 512
+  interpolation: bilinear
+  normalize:
+    scale: 255
+    mean:
+    - 0.0
+    - 0.0
+    - 0.0
+    std:
+    - 1.0
+    - 1.0
+    - 1.0
+augmentation:
+  enabled: false
+training:
+  epochs: 200
+  batch_size: 8
+  optimizer: adamw
+  learning_rate: 0.0001
+  weight_decay: 0.0
+  scheduler: null
+  num_workers: 0
+  imbalance: none
+  class_weights_file: reports/tables/gcd_raw_class_weights.csv
+checkpoint:
+  dir: checkpoints
+  monitor: val_macro_f1
+  mode: max
+  save_best_only: true
+evaluation:
+  primary_metric: macro_f1
+  metrics:
+  - macro_f1
+  - balanced_accuracy
+  - accuracy
+  per_class_metrics: true
+  confusion_matrix: true
+output:
+  experiments_dir: experiments
+  logs_dir: logs
+  reports_dir: reports
+name: exp_006_alexnet
+description: 'Baseline AlexNet pra-latih ImageNet, lapisan classifier[6] diganti ke
+  7 kelas (transfer learning). Model pembanding yang jauh lebih ringan dari DenseNet.
+
+  '

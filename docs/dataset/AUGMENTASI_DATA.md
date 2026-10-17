@@ -1,6 +1,6 @@
 # Augmentasi Data — Dataset GCD
 
-Tanggal: 13 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`DATASET_SPLIT.md`](DATASET_SPLIT.md), [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md).
+Tanggal: 13 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](../pelatihan/ARSITEKTUR_BASELINE.md), [`DATASET_SPLIT.md`](DATASET_SPLIT.md), [`TRAINING_GUIDE.md`](../pelatihan/TRAINING_GUIDE.md).
 
 Dokumen ini mendokumentasikan strategi augmentasi data untuk memperbanyak jumlah dan kompleksitas sampel train, mengikuti teknik yang dipakai pada literatur GCD: **transformasi geometri spasial** (translasi, flipping, rotasi) dan **transformasi warna** (color enhancement, contrast enhancement, brightness enhancement).
 

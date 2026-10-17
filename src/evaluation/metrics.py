@@ -1,4 +1,4 @@
-"""Metrik evaluasi klasifikasi 7 kelas (selaras docs/EXPERIMENT_PLAN §5 & §8).
+"""Metrik evaluasi klasifikasi 7 kelas (selaras docs/pelatihan/EXPERIMENT_PLAN §5 & §8).
 
 Metrik utama macro-F1; dilengkapi balanced accuracy, accuracy, laporan per kelas
 (precision/recall/F1 + support), dan confusion matrix 7x7. Semua pakai

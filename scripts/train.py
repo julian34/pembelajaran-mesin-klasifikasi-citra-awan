@@ -3,8 +3,8 @@
 Merangkai config -> data -> model -> pelatihan -> evaluasi test, lalu menulis
 artefak eksperimen ke `experiments/<nama>/` dan checkpoint terbaik ke
 `checkpoints/<nama>/best.pt`. Test dievaluasi SEKALI di akhir memakai checkpoint
-terbaik (dipilih dari val), bukan untuk memilih model. Lihat docs/BASELINE_ALEXNET.md
-Bagian 6 dan docs/TRAINING_GUIDE.md.
+terbaik (dipilih dari val), bukan untuk memilih model. Lihat docs/pelatihan/BASELINE_ALEXNET.md
+Bagian 6 dan docs/pelatihan/TRAINING_GUIDE.md.
 
 Contoh:
     python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml
@@ -29,7 +29,7 @@ from src.utils.config import load_config, resolve_device, set_seed  # noqa: E402
 
 
 def write_outputs(exp_dir: Path, config: dict, result, test_metrics: dict, y_true, y_pred) -> None:
-    """Tulis seluruh artefak evaluasi ke `exp_dir` (docs/BASELINE_ALEXNET.md §6)."""
+    """Tulis seluruh artefak evaluasi ke `exp_dir` (docs/pelatihan/BASELINE_ALEXNET.md §6)."""
     import yaml
 
     from src.evaluation.metrics import classification_report_text, save_confusion_matrix

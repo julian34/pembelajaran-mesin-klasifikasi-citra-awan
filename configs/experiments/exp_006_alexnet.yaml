@@ -13,12 +13,12 @@ model:
   num_classes: 7
   finetune: feature_extraction  # feature_extraction | full
   # Dropout(0.5) sudah bawaan AlexNet pada 2 FC tersembunyi (classifier[0] & [3]);
-  # tidak perlu disetel di sini. Lihat docs/BASELINE_ALEXNET.md Bagian 3.
+  # tidak perlu disetel di sini. Lihat docs/pelatihan/BASELINE_ALEXNET.md Bagian 3.
 
 data:
   # Train: set SEIMBANG 3.000/kelas (21.000 citra) hasil penyetaraan combined
   # (GCD+CCSN), sudah dimaterialisasi di data/combined_balanced/train/.
-  # Lihat docs/PENYETARAAN_SAMPEL.md.
+  # Lihat docs/dataset/PENYETARAAN_SAMPEL.md.
   train_dir: data/combined_balanced/train
   train_manifest: reports/tables/combined_balanced_train_manifest.csv
   # Val/test: combined APA ADANYA (distribusi nyata; TIDAK diseimbangkan).

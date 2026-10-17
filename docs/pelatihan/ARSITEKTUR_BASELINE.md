@@ -1,7 +1,7 @@
 # Arsitektur Baseline — DenseNet-264 (Transfer Learning)
 
 Dataset: GCD, 7 kelas (Cu, Ac, Ci, Cl, Sc, Cb, Mi). Framework: **PyTorch / torchvision**.
-Tanggal: 13 Oktober 2026. Terkait: [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md), [`DATASET_SPLIT.md`](DATASET_SPLIT.md).
+Tanggal: 13 Oktober 2026. Terkait: [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md), [`DATASET_SPLIT.md`](../dataset/DATASET_SPLIT.md).
 
 Dokumen ini menyiapkan arsitektur **baseline awal**: klasifikasi citra awan memakai **Transfer Learning** dengan bobot pra-latih **ImageNet**, lalu mengganti lapisan terakhir (*classifier*) agar keluaran = **7 kelas**. Arsitektur target: **DenseNet-264**.
 
@@ -113,7 +113,7 @@ Konsekuensi: butuh data/epoch lebih banyak dan biasanya kalah dari transfer lear
 |---|---|---|
 | Sumber data (GCD-only) | `reports/tables/gcd_raw_split_{train,val,test}_manifest.csv` atau folder `data/{train,val,test}/` | train 8.340 / val 1.471 / test 9.000 |
 | Sumber data (gabungan GCD+CCSN) | `reports/tables/combined_{train,val,test}_manifest.csv` (kolom `rel_path` relatif ke `data/raw/<dataset>`) | train 10.483 / val 1.851 / test 9.000 |
-| Input size | `configs/base.yaml` `data.image_size` / `preprocess.resize` | 224 |
+| Input size | `configs/base.yaml` `data.image_size` / `preprocess.resize` | 512 |
 | Normalisasi | lihat Bagian 3 | ImageNet (pra-latih) atau statistik dataset (dari nol) |
 | Ketidakseimbangan | `configs/base.yaml` `training.imbalance` + `gcd_raw_class_weights.csv` (GCD) / `combined_class_weights.csv` (gabungan) | `CrossEntropyLoss(weight=...)` |
 | Pemilihan model | `configs/base.yaml` `checkpoint.monitor` | `val_macro_f1` (bukan test) |
@@ -144,7 +144,7 @@ import pandas as pd
 w = pd.read_csv("reports/tables/gcd_raw_class_weights.csv")["weight_inverse_freq"].to_numpy()
 class_weight = torch.tensor(w, dtype=torch.float32)
 criterion = nn.CrossEntropyLoss(weight=class_weight)
-# 3) Optimizer sesuai configs/base.yaml (adam, lr 1e-3)
+# 3) Optimizer sesuai configs/base.yaml (adamw, lr 1e-4)
 # 4) Loop: train -> validasi -> pilih checkpoint by val_macro_f1
 # 5) Evaluasi akhir sekali pada test (macro-F1 + per kelas)
 ```
@@ -155,17 +155,17 @@ Catatan: `torch`/`torchvision` tercantum di `requirements.txt` tetapi **belum te
 
 ## 7. Hyperparameter awal (dari `configs/base.yaml`)
 
-| Parameter | Nilai awal |
+| Parameter | Nilai saat ini |
 |---|---|
-| epochs | 50 |
+| epochs | 200 |
 | batch_size | 32 |
-| optimizer | adam |
-| learning_rate | 0,001 |
+| optimizer | adamw |
+| learning_rate | 0,0001 (1e-4) |
 | weight_decay | 0,0 |
 | scheduler | null |
 | monitor checkpoint | val_macro_f1 (mode max) |
 
-Nilai ini titik awal; untuk fine-tuning penuh, pertimbangkan learning rate lebih kecil (mis. 1e-4) dan/atau scheduler.
+Nilai ini berlaku untuk semua baseline exp_005–009 (diwarisi dari `configs/base.yaml`). Rasional pemilihannya untuk AlexNet dibahas di [`rasional-alexnet-hyperparameter/`](rasional-alexnet-hyperparameter/README.md).
 
 ---
 
@@ -195,7 +195,7 @@ Perhatikan **nama head berbeda antar keluarga**: DenseNet memakai `model.classif
 
 ### Implementasi
 
-Pabrik model ada di [`src/models/baseline.py`](../src/models/baseline.py) — fungsi `build_model(architecture, num_classes=7, pretrained=True, finetune="feature_extraction")`:
+Pabrik model ada di [`src/models/baseline.py`](../../src/models/baseline.py) — fungsi `build_model(architecture, num_classes=7, pretrained=True, finetune="feature_extraction")`:
 
 ```python
 from src.models.baseline import build_model, count_parameters
@@ -220,16 +220,16 @@ Catatan:
 
 | Eksperimen | Config | Arsitektur | Sumber |
 |---|---|---|---|
-| exp_005 | [`exp_005_densenet121.yaml`](../configs/experiments/exp_005_densenet121.yaml) | densenet121 | torchvision |
-| exp_006 | [`exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml) | alexnet | torchvision |
-| exp_007 | [`exp_007_densenet264.yaml`](../configs/experiments/exp_007_densenet264.yaml) | densenet264 | timm |
-| exp_008 | [`exp_008_resnet18.yaml`](../configs/experiments/exp_008_resnet18.yaml) | resnet18 | torchvision |
-| exp_009 | [`exp_009_resnet50.yaml`](../configs/experiments/exp_009_resnet50.yaml) | resnet50 | torchvision |
+| exp_005 | [`exp_005_densenet121.yaml`](../../configs/experiments/exp_005_densenet121.yaml) | densenet121 | torchvision |
+| exp_006 | [`exp_006_alexnet.yaml`](../../configs/experiments/exp_006_alexnet.yaml) | alexnet | torchvision |
+| exp_007 | [`exp_007_densenet264.yaml`](../../configs/experiments/exp_007_densenet264.yaml) | densenet264 | timm |
+| exp_008 | [`exp_008_resnet18.yaml`](../../configs/experiments/exp_008_resnet18.yaml) | resnet18 | torchvision |
+| exp_009 | [`exp_009_resnet50.yaml`](../../configs/experiments/exp_009_resnet50.yaml) | resnet50 | torchvision |
 
 Semua meng-override `model` dan `preprocess.normalize` (ke statistik ImageNet) terhadap `configs/base.yaml`, dan dibandingkan sebagai alternatif baseline — dari AlexNet/ResNet-18 yang ringan hingga DenseNet-264 yang terdalam.
 
 ### Dataset baseline: combined_balanced
 
-Kelima eksperimen baseline (exp_005–009) memakai **train seimbang** `data/combined_balanced/train/` (3.000 citra/kelas = 21.000; GCD+CCSN, lihat [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md)), dengan **val/test combined apa adanya** (`combined_val`/`combined_test`, 1.851 / 9.000; tidak diseimbangkan). Karena train sudah seimbang, `training.imbalance: none` — tidak dipadukan dengan `class_weights` agar tidak terjadi koreksi ganda. Blok `data` dan `training.imbalance` ini ditulis di tiap config exp_005–009.
+Kelima eksperimen baseline (exp_005–009) memakai **train seimbang** `data/combined_balanced/train/` (3.000 citra/kelas = 21.000; GCD+CCSN, lihat [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md)), dengan **val/test combined apa adanya** (`combined_val`/`combined_test`, 1.851 / 9.000; tidak diseimbangkan). Karena train sudah seimbang, `training.imbalance: none` — tidak dipadukan dengan `class_weights` agar tidak terjadi koreksi ganda. Blok `data` dan `training.imbalance` ini ditulis di tiap config exp_005–009.
 
 Dokumen baseline per arsitektur (rinci): **AlexNet** → [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md).

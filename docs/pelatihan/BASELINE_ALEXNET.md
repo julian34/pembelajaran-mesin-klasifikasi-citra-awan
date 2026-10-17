@@ -1,17 +1,17 @@
 # Baseline AlexNet — Klasifikasi Citra Awan (Transfer Learning ImageNet)
 
 Dataset train: **combined_balanced** (GCD+CCSN, 3.000/kelas = 21.000 citra). Framework: **PyTorch / torchvision**.
-Tanggal: 14 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md), [`PENGGABUNGAN_DATASET.md`](PENGGABUNGAN_DATASET.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md).
+Tanggal: 14 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`ANALISIS_BASELINE_ALEXNET.md`](ANALISIS_BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md), [`PENGGABUNGAN_DATASET.md`](../dataset/PENGGABUNGAN_DATASET.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md).
 
-Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Regularisasi **Dropout(0.5)** adalah bawaan desain AlexNet pada **dua lapisan fully-connected tersembunyi** (FC-6 & FC-7). Status: **pipa pelatihan siap dijalankan** — `torch`/`torchvision` build CUDA **cu121 sudah terpasang** (GPU RTX 4060 Laptop, `cuda` aktif) dan notebook pemantau tersedia; **pelatihan penuh belum dijalankan** (dipantau sendiri oleh pengguna). Kode:
+Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Regularisasi **Dropout(0.5)** adalah bawaan desain AlexNet pada **dua lapisan fully-connected tersembunyi** (FC-6 & FC-7). Status: **pelatihan penuh (200 epoch) sudah dijalankan** — `torch`/`torchvision` build CUDA cu121 terpasang (GPU RTX 4060 Laptop). Hasil: best epoch 63, **test macro-F1 0,5042** (artefak di `experiments/exp_006_alexnet/`); analisis lengkap (waktu latih, semua metrik, F1 per kelas, confusion matrix) di **[`ANALISIS_BASELINE_ALEXNET.md`](ANALISIS_BASELINE_ALEXNET.md)**. Kode:
 
-- Model: [`src/models/baseline.py`](../src/models/baseline.py) (`build_model`).
-- Data: [`src/datasets/manifest.py`](../src/datasets/manifest.py) (resolusi path/label) + [`src/datasets/cloud_dataset.py`](../src/datasets/cloud_dataset.py) (`Dataset`/`DataLoader` + transform /255).
-- Pelatihan: [`src/training/trainer.py`](../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`; opsi `progress=True` → progress bar per-epoch gaya Keras via `pkbar`).
-- Evaluasi: [`src/evaluation/metrics.py`](../src/evaluation/metrics.py).
-- Config: [`configs/experiments/exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../scripts/train.py); notebook pemantau: [`notebooks/04_baseline_training.ipynb`](../notebooks/04_baseline_training.ipynb).
+- Model: [`src/models/baseline.py`](../../src/models/baseline.py) (`build_model`).
+- Data: [`src/datasets/manifest.py`](../../src/datasets/manifest.py) (resolusi path/label) + [`src/datasets/cloud_dataset.py`](../../src/datasets/cloud_dataset.py) (`Dataset`/`DataLoader` + transform /255).
+- Pelatihan: [`src/training/trainer.py`](../../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`; opsi `progress=True` → progress bar per-epoch gaya Keras via `pkbar`).
+- Evaluasi: [`src/evaluation/metrics.py`](../../src/evaluation/metrics.py).
+- Config: [`configs/experiments/exp_006_alexnet.yaml`](../../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../../scripts/train.py); notebook pemantau: [`notebooks/04_baseline_training.ipynb`](../../notebooks/04_baseline_training.ipynb).
 
-Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipeline.py`](../tests/test_pipeline.py) dan resolusi path diverifikasi terhadap manifes nyata (train 21.000 / val 1.851 / test 9.000, 0 file hilang).
+Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipeline.py`](../../tests/test_pipeline.py) dan resolusi path diverifikasi terhadap manifes nyata (train 21.000 / val 1.851 / test 9.000, 0 file hilang).
 
 ---
 
@@ -123,7 +123,7 @@ Prinsip (lihat [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md)):
 
 ## 5. Konfigurasi & hyperparameter
 
-Config: [`configs/experiments/exp_006_alexnet.yaml`](../configs/experiments/exp_006_alexnet.yaml) (override terhadap `configs/base.yaml`).
+Config: [`configs/experiments/exp_006_alexnet.yaml`](../../configs/experiments/exp_006_alexnet.yaml) (override terhadap `configs/base.yaml`).
 
 ```yaml
 model:
@@ -146,13 +146,13 @@ training:
   imbalance: none
 ```
 
-Hyperparameter awal dari `configs/base.yaml`: epochs 50, batch_size 32, optimizer adam, lr 0,001 (untuk fine-tuning penuh pertimbangkan lr lebih kecil, mis. 1e-4). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih). Catatan VRAM: input 512×512 di GPU 8 GB (RTX 4060 Laptop) nyaman di **batch 8** — notebook memakai default itu.
+Hyperparameter efektif (diwarisi dari `configs/base.yaml`): epochs 200, batch_size 32, optimizer adamw, lr 0,0001 (1e-4), weight_decay 0,0, scheduler null. Rasional pemilihan kombinasi ini dibahas rinci di [`rasional-alexnet-hyperparameter/`](rasional-alexnet-hyperparameter/README.md). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih). Catatan VRAM: input 512×512 di GPU 8 GB (RTX 4060 Laptop) nyaman di **batch 8** — notebook memakai default itu.
 
 ### 5.1 Menjalankan
 
 **Lingkungan sudah siap:** `torch 2.1.1+cu121` / `torchvision 0.16.1+cu121` terpasang di `.venv`, `pkbar` terpasang, dan GPU terdeteksi (`torch.cuda.is_available() == True`).
 
-**Opsi A — notebook (pantau sendiri, disarankan untuk eksplorasi):** buka [`notebooks/04_baseline_training.ipynb`](../notebooks/04_baseline_training.ipynb), jalankan sel atas→bawah. Sel 5 melatih dengan **progress bar per-epoch (pkbar)** dan Sel 5b menampilkan tabel + grafik riwayat. Untuk uji cepat set `EPOCHS=1`.
+**Opsi A — notebook (pantau sendiri, disarankan untuk eksplorasi):** buka [`notebooks/04_baseline_training.ipynb`](../../notebooks/04_baseline_training.ipynb), jalankan sel atas→bawah. Sel 5 melatih dengan **progress bar per-epoch (pkbar)** dan Sel 5b menampilkan tabel + grafik riwayat. Untuk uji cepat set `EPOCHS=1`.
 
 **Opsi B — runner terminal (lebih cepat, pemuatan paralel):**
 ```powershell

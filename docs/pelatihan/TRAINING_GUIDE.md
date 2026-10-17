@@ -2,7 +2,7 @@
 
 Panduan ini menjelaskan di mana setiap bagian pekerjaan pelatihan model klasifikasi citra awan disimpan dan aturan yang harus diikuti agar hasil eksperimen dapat diulang dan dibandingkan.
 
-Kode pelatihan belum ditulis. Dokumen ini menetapkan kerangkanya lebih dulu.
+Pipa pelatihan+evaluasi sudah ditulis di `src/` dan `scripts/train.py` (baseline pertama: AlexNet exp_006). Dokumen ini menetapkan kerangka dan aturannya.
 
 ## 1. Tujuan struktur folder
 
@@ -27,7 +27,7 @@ Struktur ini memisahkan empat hal yang sering tercampur: data, kode, konfigurasi
 | `src/training/` | Loop pelatihan, optimizer, scheduler, penyimpanan checkpoint. | Ya |
 | `src/evaluation/` | Perhitungan metrik, confusion matrix, classification report. | Ya |
 | `src/utils/` | Fungsi bantu: seed, pembacaan konfigurasi, logging. | Ya |
-| `notebook/` | Notebook eksplorasi dan pelaporan, bernomor urut. | Ya |
+| `notebooks/` | Notebook eksplorasi dan pelaporan, bernomor urut. | Ya |
 | `experiments/` | Hasil tiap eksperimen (konfigurasi, metrik, grafik). | Ya |
 | `checkpoints/` | Bobot model tiap eksperimen. | Tidak |
 | `logs/` | Log pelatihan tiap eksperimen. | Tidak |
@@ -41,16 +41,16 @@ Notebook hanya memanggil fungsi dari `src/`. Logika yang dipakai lebih dari seka
 
 ## 3. Dataset: raw dan processed
 
-- **`data/raw/`** menyimpan dataset asli. Folder ini hanya dibaca. Jika ada citra yang rusak atau salah label, perbaikannya dilakukan di tahap praproses dan dicatat di [DATASET_DOCUMENTATION.md](DATASET_DOCUMENTATION.md), bukan dengan mengedit berkas di `raw/`.
+- **`data/raw/`** menyimpan dataset asli. Folder ini hanya dibaca. Jika ada citra yang rusak atau salah label, perbaikannya dilakukan di tahap praproses dan dicatat di [DATASET_DOCUMENTATION.md](../dataset/DATASET_DOCUMENTATION.md), bukan dengan mengedit berkas di `raw/`.
 - **`data/processed/`** menyimpan hasil praproses. Isinya harus dapat dibuat ulang seluruhnya dari `data/raw/` dengan menjalankan skrip praproses.
 
 ## 4. Pembagian train, validation, dan test
 
-- Pembagian bawaan: **70% train, 15% validation, 15% test**, diatur di `configs/base.yaml` (`data.split`).
-- Pembagian bersifat **terstratifikasi**: proporsi tiap kelas sama di ketiga bagian.
+- Pembagian yang berlaku: **test resmi GCD tetap utuh (9.000)**; validation dibentuk dari train resmi bersih sebesar **0,15** (`data.split.val_fraction_of_train: 0.15` di `configs/base.yaml`). GCD-only: train 8.340 / val 1.471 / test 9.000. Gabungan GCD+CCSN: train 10.483 / val 1.851 / test 9.000. Rincian: [DATASET_SPLIT.md](../dataset/DATASET_SPLIT.md).
+- Pembagian bersifat **terstratifikasi**: proporsi tiap kelas dijaga saat membentuk validation dari train.
 - Pembagian dilakukan **satu kali** dengan seed tetap, lalu dipakai oleh semua eksperimen. Eksperimen yang memakai pembagian berbeda tidak dapat dibandingkan.
 - Satu citra hanya boleh berada di satu bagian. Citra duplikat atau hampir sama (misalnya bingkai berurutan dari kamera yang sama) harus masuk ke bagian yang sama agar tidak terjadi kebocoran data.
-- Jika dataset yang dipakai sudah menyediakan pembagian resmi, pakai pembagian resmi itu dan catat di [DATASET_DOCUMENTATION.md](DATASET_DOCUMENTATION.md).
+- Karena GCD menyediakan pembagian resmi, test resmi dipakai apa adanya dan tidak dibagi ulang; lihat [DATASET_DOCUMENTATION.md](../dataset/DATASET_DOCUMENTATION.md).
 - Augmentasi hanya diterapkan pada `data/train/`. Statistik normalisasi (rata-rata dan simpangan baku) dihitung hanya dari `data/train/`.
 
 Peran tiap bagian:
@@ -104,13 +104,13 @@ Setiap eksperimen minimal menyimpan hal-hal berikut.
 | Config lengkap (gabungan `base.yaml` dan berkas eksperimen) | `experiments/<nama>/config.yaml` |
 | Arsitektur model (ringkasan lapisan dan jumlah parameter) | `experiments/<nama>/model_architecture.txt` |
 | Random seed, optimizer, learning rate, batch size, jumlah epoch | tercatat di `config.yaml` |
-| Training loss, validation loss, validation accuracy, validation macro F1 per epoch | `experiments/<nama>/history.csv` |
-| Test accuracy dan test macro F1 | `experiments/<nama>/test_metrics.json` |
+| Training loss, validation loss, validation macro F1 per epoch (tanpa metrik test) | `experiments/<nama>/training_history.csv` |
+| Metrik validation/test (test ditandai `not_evaluated` sebelum evaluasi akhir) | `experiments/<nama>/metrics.json` |
 | Confusion matrix | `experiments/<nama>/confusion_matrix.png` dan `.csv` |
 | Classification report | `experiments/<nama>/classification_report.txt` |
 | Checkpoint terbaik | `checkpoints/<nama>/best.pt` |
 
-`test_metrics.json`, confusion matrix, dan classification report pada test set baru dibuat pada tahap evaluasi akhir (lihat bagian 11). Selama pemilihan model, yang diisi hanya metrik validation.
+Metrik test di `metrics.json` (serta `test_classification_report.txt` dan `test_confusion_matrix.png`) baru diisi pada tahap evaluasi akhir (lihat bagian 11); lihat kontrak keluaran lengkap di [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md) §8. Selama pemilihan model, yang diisi hanya metrik validation.
 
 ## 8. Aturan reproducibility
 
@@ -139,7 +139,7 @@ Sebuah eksperimen dianggap dapat diulang jika orang lain dapat memperoleh angka 
 - Hyperparameter yang wajib ada: arsitektur model, seed, optimizer, learning rate, weight decay, batch size, jumlah epoch, scheduler, ukuran citra masukan, dan pengaturan augmentasi.
 - Penyetelan hyperparameter hanya memakai validation set.
 
-Nilai di `base.yaml` saat ini adalah nilai awal dan perlu ditinjau setelah dataset tersedia dan EDA selesai.
+Nilai di `base.yaml` sudah diisi dari hasil EDA (epochs 200, optimizer adamw, lr 1e-4, dll.); rasional kombinasi untuk baseline AlexNet ada di [rasional-alexnet-hyperparameter/](rasional-alexnet-hyperparameter/README.md).
 
 ## 11. Penyimpanan checkpoint terbaik
 

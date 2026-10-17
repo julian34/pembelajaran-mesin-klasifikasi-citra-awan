@@ -214,11 +214,11 @@ Normalisasi: bila memakai bobot **pra-latih ImageNet**, gunakan statistik ImageN
 
 ## 5. Rujukan
 
-- Laporan lengkap EDA (GCD): [`reports/EDA_INITIAL_REPORT.md`](../reports/EDA_INITIAL_REPORT.md)
+- Laporan lengkap EDA (GCD): [`reports/EDA_INITIAL_REPORT.md`](../../reports/EDA_INITIAL_REPORT.md)
 - Penggabungan dataset (GCD + CCSN_v2): [`docs/PENGGABUNGAN_DATASET.md`](PENGGABUNGAN_DATASET.md)
 - Hasil split (GCD-only): [`docs/DATASET_SPLIT.md`](DATASET_SPLIT.md)
 - Dokumentasi dataset: [`docs/DATASET_DOCUMENTATION.md`](DATASET_DOCUMENTATION.md)
-- Rencana eksperimen: [`docs/EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md)
+- Rencana eksperimen: [`docs/pelatihan/EXPERIMENT_PLAN.md`](../pelatihan/EXPERIMENT_PLAN.md)
 - Notebook sumber: `notebooks/01_dataset_analysis.ipynb`, `notebooks/02_preprocessing.ipynb`
 - Tabel bukti GCD: `reports/tables/gcd_raw_eda_quality_summary.csv`, `..._cross_split_leakage.csv`, `..._duplicate_pairs.csv`, `..._near_duplicate_candidates.csv`, `..._class_distribution.csv`
 - Tabel bukti gabungan: `reports/tables/combined_{train,val,test}_manifest.csv`, `combined_class_mapping.csv`, `combined_class_weights.csv`, `reports/metrics/combined_split_summary.json`

@@ -15,7 +15,7 @@ Arsitektur yang didukung:
 
 Catatan normalisasi: karena backbone dilatih di ImageNet, pakai mean/std ImageNet
 (IMAGENET_MEAN/IMAGENET_STD di bawah), bukan statistik dataset. Lihat
-docs/ARSITEKTUR_BASELINE.md Bagian 3.
+docs/pelatihan/ARSITEKTUR_BASELINE.md Bagian 3.
 """
 from __future__ import annotations
 
@@ -154,7 +154,7 @@ def _build_densenet264_timm(num_classes: int, finetune: str) -> nn.Module:
         raise ImportError(
             "densenet264 pra-latih memerlukan paket 'timm'. Pasang dengan "
             "`pip install timm`, atau pakai pretrained=False untuk DenseNet-264 "
-            "dari nol via torchvision (lihat docs/ARSITEKTUR_BASELINE.md Bagian 4)."
+            "dari nol via torchvision (lihat docs/pelatihan/ARSITEKTUR_BASELINE.md Bagian 4)."
         ) from exc
 
     model = timm.create_model(

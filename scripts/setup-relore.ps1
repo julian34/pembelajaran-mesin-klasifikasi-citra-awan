@@ -13,4 +13,4 @@ if ($LASTEXITCODE -ne 0) { throw 'Instalasi Relore gagal.' }
 if ($LASTEXITCODE -ne 0) { throw 'Migrasi database Relore gagal.' }
 & $relorePython -m pip check
 if ($LASTEXITCODE -ne 0) { throw 'Pemeriksaan dependensi gagal.' }
-Write-Output 'Relore siap. Lihat docs/RELORE.md untuk server dan pengindeksan GitHub.'
+Write-Output 'Relore siap. Lihat docs/referensi/RELORE.md untuk server dan pengindeksan GitHub.'

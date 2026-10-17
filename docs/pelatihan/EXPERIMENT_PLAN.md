@@ -7,7 +7,7 @@ Status: rencana, belum dieksekusi. EDA, penanganan kualitas data, pembentukan sp
 
 Membangun dan mengevaluasi klasifikasi single-label citra awan GCD dengan 7 kelas dan input RGB 224 x 224. Ukur pengaruh augmentasi, dilated convolution, dan ASPP melalui eksperimen terkontrol yang masing-masing dibandingkan langsung terhadap baseline. Hasil utama adalah kualitas klasifikasi per kelas dan macro F1, disertai accuracy serta biaya model.
 
-Menurut [audit dataset](DATASET_DOCUMENTATION.md), GCD tersedia di `data/raw/GCD/`: 19.000 citra JPEG RGB 512 x 512, dengan train resmi 10.000 dan test resmi 9.000, tanpa validation. Rencana hyperparameter di bawah adalah pilihan awal yang eksplisit, bukan hasil tuning atau bukti performa. Tidak ada target accuracy numerik yang dijanjikan dari hasil paper pada dataset lain.
+Menurut [audit dataset](../dataset/DATASET_DOCUMENTATION.md), GCD tersedia di `data/raw/GCD/`: 19.000 citra JPEG RGB 512 x 512, dengan train resmi 10.000 dan test resmi 9.000, tanpa validation. Rencana hyperparameter di bawah adalah pilihan awal yang eksplisit, bukan hasil tuning atau bukti performa. Tidak ada target accuracy numerik yang dijanjikan dari hasil paper pada dataset lain.
 
 Prasyarat sebelum tahap implementasi/training:
 
@@ -63,7 +63,7 @@ Catat juga majority-class baseline sebagai pemeriksaan kewajaran: kelas mayorita
 
 ### 2.1 Pembentukan validation (sudah dilaksanakan)
 
-**Terlaksana (85/15, bukan 80/20 pada rancangan awal di bawah).** Validation dibentuk dari train bersih: **train 8.340 / validation 1.471 / test 9.000**, stratified per kelas, seed 42, grup near-duplicate dijaga satu sisi; manifest di `reports/tables/gcd_raw_split_{train,val,test}_manifest.csv`. Rincian: [DATASET_SPLIT.md](DATASET_SPLIT.md). Rancangan dan estimasi di bawah dipertahankan sebagai catatan usulan awal.
+**Terlaksana (85/15, bukan 80/20 pada rancangan awal di bawah).** Validation dibentuk dari train bersih: **train 8.340 / validation 1.471 / test 9.000**, stratified per kelas, seed 42, grup near-duplicate dijaga satu sisi; manifest di `reports/tables/gcd_raw_split_{train,val,test}_manifest.csv`. Rincian: [DATASET_SPLIT.md](../dataset/DATASET_SPLIT.md). Rancangan dan estimasi di bawah dipertahankan sebagai catatan usulan awal.
 
 Alasan: GCD resmi hanya menyediakan train dan test. Pemilihan checkpoint dan hyperparameter memerlukan data yang bukan test, sehingga validation harus diambil dari train resmi.
 
@@ -92,7 +92,7 @@ Keterbatasan: validation kelas Mixed hanya sekitar 70 citra, sehingga F1 kelas i
 
 ### 2.2 Penanganan citra identik train-test (sudah dilaksanakan)
 
-**Terlaksana.** 156 citra train identik dengan test dikeluarkan dari train/validation (ditambah 32 near-duplicate lintas split terkonfirmasi lewat tinjauan visual); test resmi tetap 9.000. Rincian: [DATASET_QUALITY_SUMMARY.md](DATASET_QUALITY_SUMMARY.md) §2.1–§2.2. Uraian di bawah adalah usulan awal.
+**Terlaksana.** 156 citra train identik dengan test dikeluarkan dari train/validation (ditambah 32 near-duplicate lintas split terkonfirmasi lewat tinjauan visual); test resmi tetap 9.000. Rincian: [DATASET_QUALITY_SUMMARY.md](../dataset/DATASET_QUALITY_SUMMARY.md) §2.1–§2.2. Uraian di bawah adalah usulan awal.
 
 Audit menemukan 156 citra test resmi yang juga ada di train resmi dengan label yang sama (155 clear sky, 1 mixed).
 
@@ -189,7 +189,7 @@ Perbedaan yang perlu diselaraskan pada tahap berikutnya:
 
 - `configs/base.yaml`: split 70/15/15 **sudah diganti** menjadi `data.split.val_fraction_of_train: 0.15` (rancangan bagian 2.1 terlaksana); `train_dir`/`val_dir`/`test_dir` kini **berisi** split GCD final (8.340/1.471/9.000, via `scripts/materialize_split.py`), bukan folder kosong; `preprocess.normalize`, `training.imbalance`, dan `evaluation` sudah diisi dari hasil EDA. `class_names` ([Cu…Mi]) tetap perlu dipetakan ke nama folder (`1_cumulus`…`7_mixed`); learning rate 0.001, weight decay 0, num_workers 2 masih nilai awal (rencana 0.0001/0.0001/0).
 - **Arsitektur baseline:** ditetapkan **DenseNet-264** (transfer learning ImageNet), selaras dengan [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md). Sebelum eksperimen: isi `model.architecture` (`densenet264` via `timm`, atau `densenet201` sebagai fallback) dan tambahkan `timm` ke `requirements.txt`.
-- **Dataset kedua:** CCSN_v2 telah digabung ke skema 7 kelas GCD ([`PENGGABUNGAN_DATASET.md`](PENGGABUNGAN_DATASET.md)); eksperimen dapat memakai set **GCD-only** (`gcd_raw_split_*`) atau **gabungan** (`combined_*`).
+- **Dataset kedua:** CCSN_v2 telah digabung ke skema 7 kelas GCD ([`PENGGABUNGAN_DATASET.md`](../dataset/PENGGABUNGAN_DATASET.md)); eksperimen dapat memakai set **GCD-only** (`gcd_raw_split_*`) atau **gabungan** (`combined_*`).
 - `configs/experiments/*.yaml`: architecture masih null dan rincian modifikasi belum ditulis.
 - `docs/TRAINING_GUIDE.md`: memakai nama `history.csv`/`test_metrics.json`. Untuk keluaran baru gunakan kontrak bagian 8, yaitu `training_history.csv` dan `metrics.json` dengan pemisahan split; dokumen panduan lama belum diedit pada tahap ini.
 - `docs/TRAINING_GUIDE.md` bagian 4 menyebut pembagian bawaan 70/15/15; yang berlaku adalah split resmi GCD + validasi 0,15 dari train (bagian 2.1, **sudah dibuat**).

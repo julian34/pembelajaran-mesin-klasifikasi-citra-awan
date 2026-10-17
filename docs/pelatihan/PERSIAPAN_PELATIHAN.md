@@ -1,8 +1,8 @@
 # Persiapan Pelatihan — Baseline Model (Klasifikasi Citra Awan)
 
-Tanggal: 14 Oktober 2026. Framework: PyTorch / torchvision. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md), [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md).
+Tanggal: 14 Oktober 2026. Framework: PyTorch / torchvision. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md), [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md).
 
-Dokumen ini menetapkan **persiapan pelatihan** untuk **baseline model** klasifikasi citra awan 7 kelas. Status: **persiapan** — `torch`/`torchvision` belum terpasang, pelatihan belum dijalankan. Model dibangun dari [`src/models/baseline.py`](../src/models/baseline.py); konfigurasi di `configs/base.yaml` + `configs/experiments/exp_005…009`.
+Dokumen ini menetapkan **persiapan pelatihan** untuk **baseline model** klasifikasi citra awan 7 kelas. Status: **siap** — `torch`/`torchvision` build CUDA cu121 sudah terpasang (GPU RTX 4060 Laptop); pelatihan penuh belum dijalankan (dipantau sendiri oleh pengguna). Model dibangun dari [`src/models/baseline.py`](../../src/models/baseline.py); konfigurasi di `configs/base.yaml` + `configs/experiments/exp_005…009`.
 
 ---
 
@@ -43,13 +43,13 @@ Implementasi pipeline (torchvision): `ToTensor()` sudah membagi /255 ke [0,1]; *
 | Validation | 1.851 (distribusi nyata, tidak diseimbangkan) | `reports/tables/combined_val_manifest.csv` |
 | Test | 9.000 (distribusi nyata) | `reports/tables/combined_test_manifest.csv` |
 
-Karena train sudah seimbang → `training.imbalance: none` (jangan dipadukan `class_weights`). Val/test tetap apa adanya. Lihat [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md).
+Karena train sudah seimbang → `training.imbalance: none` (jangan dipadukan `class_weights`). Val/test tetap apa adanya. Lihat [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md).
 
 ---
 
 ## 3. Baseline model
 
-Dibangun via `build_model(architecture, num_classes=7, pretrained=True, finetune=...)` di [`src/models/baseline.py`](../src/models/baseline.py); semua memakai **bobot ImageNet** dan mengganti classifier ke 7 kelas.
+Dibangun via `build_model(architecture, num_classes=7, pretrained=True, finetune=...)` di [`src/models/baseline.py`](../../src/models/baseline.py); semua memakai **bobot ImageNet** dan mengganti classifier ke 7 kelas.
 
 | Config | Arsitektur | Head diganti | Sumber bobot |
 |---|---|---|---|
@@ -67,10 +67,10 @@ Mode: `feature_extraction` (bekukan backbone) atau `full` (fine-tuning) per conf
 
 | Parameter | Nilai | Catatan |
 |---|---|---|
-| epochs | 50 | catatan tuning di config (hingga 200) |
-| batch_size | 32 | **lihat §5** — pada 512×512 kemungkinan perlu diturunkan |
-| optimizer | adam | |
-| learning_rate | 0.001 | fine-tuning penuh: pertimbangkan 1e-4 |
+| epochs | 200 | |
+| batch_size | 32 | **lihat §5** — pada 512×512 dipakai 8 (GPU 8 GB) |
+| optimizer | adamw | |
+| learning_rate | 0.0001 (1e-4) | |
 | weight_decay | 0.0 | |
 | imbalance | none | train sudah seimbang (override di exp_005…009) |
 | monitor checkpoint | val_macro_f1 (max) | test tak dipakai memilih |

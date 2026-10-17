@@ -15,7 +15,7 @@ Semua angka di bagian 3, 4, dan 6 adalah **hasil pengukuran lokal** oleh `script
 
 ## 1. Dataset Overview
 
-Dataset utama: **TJNU Ground-based Cloud Dataset (GCD)**, dataset klasifikasi single-label citra awan berbasis darat dengan 7 kelas — menjadi **skema acuan** untuk pelatihan, pemilihan, dan pengujian eksperimen di [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md). Dataset kedua **CCSN_v2** (11 genera WMO) dipetakan ke skema 7 kelas GCD dan ditambahkan ke train/validation; test tetap test resmi GCD (lihat [PENGGABUNGAN_DATASET.md](PENGGABUNGAN_DATASET.md)).
+Dataset utama: **TJNU Ground-based Cloud Dataset (GCD)**, dataset klasifikasi single-label citra awan berbasis darat dengan 7 kelas — menjadi **skema acuan** untuk pelatihan, pemilihan, dan pengujian eksperimen di [EXPERIMENT_PLAN.md](../pelatihan/EXPERIMENT_PLAN.md). Dataset kedua **CCSN_v2** (11 genera WMO) dipetakan ke skema 7 kelas GCD dan ditambahkan ke train/validation; test tetap test resmi GCD (lihat [PENGGABUNGAN_DATASET.md](PENGGABUNGAN_DATASET.md)).
 
 | Butir | Hasil audit lokal |
 |---|---|
@@ -128,7 +128,7 @@ Tidak ada resize, konversi, augmentasi, atau resampling yang dilakukan pada taha
 - **Train dan test berasal dari dataset resmi.** Keduanya sudah terpisah di dalam arsip. Penomoran berkas mendukung hal ini: di setiap kelas, train bernomor 1 sampai N dan test melanjutkan dari N+1 tanpa nomor yang hilang atau berulang.
 - **Validation tidak disediakan** oleh dataset.
 - **Tidak ada split baru yang dibuat** pada tahap audit. Train dan test resmi dipertahankan apa adanya.
-- Validation harus diambil dari **train resmi**, tidak pernah dari test. Rancangannya ada di [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md) bagian 2 dan baru dijalankan setelah disetujui.
+- Validation harus diambil dari **train resmi**, tidak pernah dari test. Rancangannya ada di [EXPERIMENT_PLAN.md](../pelatihan/EXPERIMENT_PLAN.md) bagian 2 dan baru dijalankan setelah disetujui.
 - `configs/base.yaml` `data.split` sudah diperbarui: `val_fraction_of_train: 0.15` (test resmi tidak dibagi ulang), bukan lagi 70/15/15.
 - Validation **sudah dibuat** dari train resmi bersih (stratified, seed 42) — train 8.340 / val 1.471 / test 9.000. Rincian: [DATASET_SPLIT.md](DATASET_SPLIT.md). Folder `data/train/`, `data/val/`, `data/test/` sudah diisi hasil split (`scripts/materialize_split.py`); manifest sumber kebenaran di `reports/tables/gcd_raw_split_*`.
 
@@ -182,7 +182,7 @@ Kandidat citra mirip tetapi tidak identik antar split (dHash 16 x 16, jarak Hamm
 10. **Salinan sebagian di `data/processed/GCD/`** dapat terbaca sebagai dataset oleh skrip yang menunjuk ke `data/processed/`.
 11. **Perbedaan karakteristik antardataset.** Hanya ada satu dataset lokal, sehingga tidak ada perbandingan yang dapat diukur. Angka dari paper yang memakai CCSN, SWIMCAT, HBMCD, atau GCD versi 12.000 citra tidak dapat dibandingkan langsung dengan hasil di dataset ini.
 
-Tidak ada masalah di atas yang diperbaiki secara otomatis. Usulan penanganan untuk butir 1, 5, dan 6 ada di [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md) dan menunggu keputusan.
+Tidak ada masalah di atas yang diperbaiki secara otomatis. Usulan penanganan untuk butir 1, 5, dan 6 ada di [EXPERIMENT_PLAN.md](../pelatihan/EXPERIMENT_PLAN.md) dan menunggu keputusan.
 
 ## 8. Dataset Usage Policy
 

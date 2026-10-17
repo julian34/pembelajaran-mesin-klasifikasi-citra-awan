@@ -16,7 +16,7 @@ model:
 data:
   # Train: set SEIMBANG 3.000/kelas (21.000 citra) hasil penyetaraan combined
   # (GCD+CCSN), sudah dimaterialisasi di data/combined_balanced/train/.
-  # Lihat docs/PENYETARAAN_SAMPEL.md.
+  # Lihat docs/dataset/PENYETARAAN_SAMPEL.md.
   train_dir: data/combined_balanced/train
   train_manifest: reports/tables/combined_balanced_train_manifest.csv
   # Val/test: combined APA ADANYA (distribusi nyata; TIDAK diseimbangkan).

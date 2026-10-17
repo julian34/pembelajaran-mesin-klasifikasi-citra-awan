@@ -1,7 +1,7 @@
 # Konfigurasi dasar untuk semua eksperimen CitraAwan.
 # Berkas di configs/experiments/ hanya menuliskan nilai yang BERBEDA dari berkas ini.
 # EDA & penanganan kualitas selesai; split, preprocess/normalize, imbalance, dan evaluation
-# sudah diisi dari hasilnya. `model` masih perlu diputuskan (lihat docs/ARSITEKTUR_BASELINE.md).
+# sudah diisi dari hasilnya. `model` masih perlu diputuskan (lihat docs/pelatihan/ARSITEKTUR_BASELINE.md).
 
 seed: 42
 
@@ -24,7 +24,7 @@ data:
     stratified: true
     keep_near_duplicate_groups_together: true
     # Gabungan GCD+CCSN (opsional): reports/tables/combined_{train,val,test}_manifest.csv
-    # (train 10.483 / val 1.851 / test 9.000); lihat docs/PENGGABUNGAN_DATASET.md.
+    # (train 10.483 / val 1.851 / test 9.000); lihat docs/dataset/PENGGABUNGAN_DATASET.md.
 
 model:
   architecture: null # belum diputuskan; diisi di berkas eksperimen
@@ -53,7 +53,7 @@ training:
   weight_decay: 0.0
   scheduler: null
   num_workers: 0 # num_workers > 0 untuk pemuatan paralel; 0 untuk debugging (lebih mudah baca traceback)
-  # Penanganan ketidakseimbangan kelas (EDA: rasio train 8,63; lihat docs/DATASET_QUALITY_SUMMARY.md 2.3).
+  # Penanganan ketidakseimbangan kelas (EDA: rasio train 8,63; lihat docs/dataset/DATASET_QUALITY_SUMMARY.md 2.3).
   # Bobot dihitung dari TRAIN BERSIH (setelah leakage & duplikat dibuang), bukan dari test.
   imbalance: class_weights # class_weights | weighted_sampler | none
   class_weights_file: reports/tables/gcd_raw_class_weights.csv # kolom weight_inverse_freq, urut index kelas
