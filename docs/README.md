@@ -24,6 +24,7 @@ Indeks dokumentasi proyek klasifikasi citra awan 7 kelas (GCD + CCSN_v2, PyTorch
 | [PERSIAPAN_PELATIHAN.md](pelatihan/PERSIAPAN_PELATIHAN.md) | Keputusan praproses (512×512, /255) & hyperparameter awal |
 | [BASELINE_ALEXNET.md](pelatihan/BASELINE_ALEXNET.md) | Baseline AlexNet exp_006 (detail arsitektur, data, konfigurasi, run) |
 | [ANALISIS_BASELINE_ALEXNET.md](pelatihan/ANALISIS_BASELINE_ALEXNET.md) | **Analisis hasil** exp_006 (waktu latih, semua metrik, F1 per kelas, confusion matrix) |
+| [arsitektur-exp006.html](pelatihan/arsitektur-exp006.html) | **Diagram arsitektur animasi** pipeline exp_006 (buka di browser; dibuat dengan dashmotion) |
 | [rasional-alexnet-hyperparameter/](pelatihan/rasional-alexnet-hyperparameter/README.md) | **Mengapa** kombinasi AlexNet + hyperparameter yang dipakai |
 
 ## referensi/ — tooling & rujukan

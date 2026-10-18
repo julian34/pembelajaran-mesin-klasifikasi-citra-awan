@@ -5,11 +5,12 @@ Analisis hasil pelatihan **transfer learning AlexNet** (bobot ImageNet, mode
 membahas **waktu pelatihan**, **seluruh metrik evaluasi**, dan **F1 per kelas**.
 
 - Eksperimen: `exp_006_alexnet` · tanggal artefak **17 Oktober 2026**
-- Sumber (nyata, bukan perkiraan): [`experiments/exp_006_alexnet/`](../../../experiments/exp_006_alexnet/)
+- Sumber (nyata, bukan perkiraan): [`experiments/exp_006_alexnet/`](../../experiments/exp_006_alexnet/)
   — `metrics.json`, `classification_report.txt`, `training_history.csv`,
   `confusion_matrix.png`, `config.yaml`, `notes.md`; checkpoint
-  [`checkpoints/exp_006_alexnet/best.pt`](../../../checkpoints/exp_006_alexnet/best.pt).
+  [`checkpoints/exp_006_alexnet/best.pt`](../../checkpoints/exp_006_alexnet/best.pt).
 - Rasional pilihan arsitektur + hyperparameter: [rasional-alexnet-hyperparameter/](rasional-alexnet-hyperparameter/README.md).
+- Diagram alur arsitektur (animasi, buka di browser): [`arsitektur-exp006.html`](arsitektur-exp006.html).
   Detail setup baseline: [BASELINE_ALEXNET.md](BASELINE_ALEXNET.md).
 
 ---
@@ -118,6 +119,10 @@ Sumber: `training_history.csv` (kolom `train_loss`, `val_loss`, `val_macro_f1`,
    → **200 epoch mubazir**; early stopping (mis. patience 30–40) akan berhenti
    ~epoch 70–100 dan memangkas waktu latih drastis tanpa kehilangan kualitas.
 
+![Kurva loss per epoch](../../experiments/exp_006_alexnet/plot_loss.png)
+
+![Metrik validasi per epoch](../../experiments/exp_006_alexnet/plot_val_metrics.png)
+
 ---
 
 ## 5. Evaluasi test — penjelasan semua metrik
@@ -176,10 +181,13 @@ Diurutkan dari F1 tertinggi. Sumber: `metrics.json → test.per_class`.
   (0,26 / 0,20 / 0,18): mayoritas sampel kelas ini **"bocor" ke Cb/Cl**. Sc paling
   parah meski support-nya besar (1.790).
 
+![Precision / recall / F1 per kelas](../../experiments/exp_006_alexnet/plot_per_class_f1.png)
+
 ### 5.4 Confusion matrix
 
-Berkas: [`confusion_matrix.png`](../../../experiments/exp_006_alexnet/confusion_matrix.png).
 Baris = kelas sebenarnya, kolom = prediksi (urutan Cu, Ac, Ci, Cl, Sc, Cb, Mi).
+
+![Confusion matrix test](../../experiments/exp_006_alexnet/confusion_matrix.png)
 
 | True \ Pred | Cu | Ac | Ci | Cl | Sc | **Cb** | Mi |
 |---|---|---|---|---|---|---|---|
@@ -242,7 +250,7 @@ Baris = kelas sebenarnya, kolom = prediksi (urutan Cu, Ac, Ci, Cl, Sc, Cb, Mi).
   (seed 42). Waktu pelatihan adalah estimasi dari mtime berkas (§3).
 - Evaluasi ulang test dari checkpoint:
   `python scripts/train.py --config configs/experiments/exp_006_alexnet.yaml`
-  (atau jalankan Sel 6 di [`notebooks/04_baseline_training.ipynb`](../../../notebooks/04_baseline_training.ipynb)).
+  (atau jalankan Sel 6 di [`notebooks/04_baseline_training.ipynb`](../../notebooks/04_baseline_training.ipynb)).
 - Protokol split, kontrak keluaran, dan aturan eksperimen:
   [TRAINING_GUIDE.md](TRAINING_GUIDE.md); rencana lengkap:
   [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md).
