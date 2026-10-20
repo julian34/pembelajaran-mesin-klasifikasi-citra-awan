@@ -75,9 +75,9 @@ Sumber: `training_history.csv` (kolom `train_loss`, `val_loss`, `val_macro_f1`,
 | **best** | TBD | TBD | **TBD** | **terbaik → checkpoint** |
 | 200 | TBD | TBD | TBD | akhir |
 
-_(Sisipkan grafik setelah run:)_
-<!-- ![Kurva loss per epoch](../../../experiments/exp_005_densenet121/plot_loss.png) -->
-<!-- ![Metrik validasi per epoch](../../../experiments/exp_005_densenet121/plot_val_metrics.png) -->
+![Kurva loss per epoch](../../../experiments/exp_005_densenet121/plot_loss.png)
+
+![Metrik validasi per epoch](../../../experiments/exp_005_densenet121/plot_val_metrics.png)
 
 ---
 
@@ -110,14 +110,13 @@ Sumber: `metrics.json → test.per_class`.
 | Cb | TBD | TBD | TBD | 2.761 |
 | Mi | TBD | TBD | TBD | 607 |
 
-_(Sisipkan grafik setelah run:)_
-<!-- ![Precision / recall / F1 per kelas](../../../experiments/exp_005_densenet121/plot_per_class_f1.png) -->
+![Precision / recall / F1 per kelas](../../../experiments/exp_005_densenet121/plot_per_class_f1.png)
 
 ### 5.3 Confusion matrix
 
 Baris = kelas sebenarnya, kolom = prediksi (urutan Cu, Ac, Ci, Cl, Sc, Cb, Mi).
 
-<!-- ![Confusion matrix test](../../../experiments/exp_005_densenet121/confusion_matrix.png) -->
+![Confusion matrix test](../../../experiments/exp_005_densenet121/confusion_matrix.png)
 
 ---
 
