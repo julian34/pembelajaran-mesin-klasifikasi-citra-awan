@@ -164,22 +164,21 @@ Checkpoint menyimpan state_dict, optimizer state, epoch, validation metrics, con
 | Komponen | Fakta saat audit / keputusan |
 |---|---|
 | Seed training | Rencana awal 42; konfirmasi 42, 43, 44 |
-| Seed split | Usulan 42 untuk pembentukan validation (bagian 2.1); belum ada split baru yang dibuat |
+| Seed split | 42; split **sudah dibuat** — GCD (8.340/1.471/9.000) dan gabungan (10.483/1.851/9.000), serta train seimbang `combined_balanced` (21.000) |
 | Sistem operasi | Windows 11 Home Single Language 10.0.26200 |
 | Python proyek | 3.11.9, dari `.venv/Scripts/python.exe` (terverifikasi berjalan; audit dataset dijalankan dengan interpreter ini) |
-| PyTorch | **Belum terpasang** di `.venv`; `requirements.txt` mematok 2.1.1 |
-| torchvision | **Belum terpasang**; dipatok 0.16.1 |
+| PyTorch | **Terpasang** `2.1.1+cu121` di `.venv` (build CUDA; `requirements.txt` mematok 2.1.1) |
+| torchvision | **Terpasang** `0.16.1+cu121` |
 | GPU terdeteksi | NVIDIA GeForce RTX 4060 Laptop GPU, 8188 MiB, dari nvidia-smi |
 | Driver NVIDIA | 610.78 dari nvidia-smi |
-| CUDA | nvidia-smi melaporkan CUDA UMD 13.3; **bukan bukti versi CUDA toolkit atau torch.version.cuda yang terpasang** |
-| PyTorch CUDA/cuDNN | Belum dapat diperiksa karena PyTorch belum terpasang |
-| Dependency terpasang | numpy 1.26.2; pandas 2.1.3; matplotlib 3.8.2; Pillow 10.1.0; opencv-python 4.8.1.78; scikit-learn 1.3.2 (terverifikasi dengan `pip list`) |
-| Dependency belum terpasang | albumentations 1.3.1 (dipatok); pyyaml (belum ada di `requirements.txt`, diperlukan untuk membaca konfigurasi) |
-| Konfigurasi eksperimen | YAML sudah ada sebagai placeholder; nilai dokumen ini belum diterapkan ke YAML |
+| CUDA | `torch.version.cuda = 12.1`; `torch.cuda.is_available() = True` (terverifikasi dari notebook pelatihan) |
+| PyTorch CUDA/cuDNN | Aktif — pelatihan berjalan di GPU (RTX 4060 Laptop, cu121) |
+| Dependency terpasang | torch 2.1.1+cu121; torchvision 0.16.1+cu121; numpy 1.26.2; pandas 2.1.3; matplotlib 3.8.2; Pillow 10.1.0; opencv-python 4.8.1.78; scikit-learn 1.3.2; pyyaml (dipakai `load_config`); pkbar (progress bar) |
+| Konfigurasi eksperimen | YAML `exp_005…009` sudah terisi (bukan placeholder); nilai efektif via merge `base.yaml` + override |
 
 Catatan pemasangan PyTorch: di Windows, `pip install torch==2.1.1` dari indeks bawaan memasang build CPU. Agar GPU terpakai, PyTorch harus dipasang dari indeks build CUDA (untuk 2.1.1 tersedia cu118 dan cu121) dan `requirements.txt` perlu mencatat hal itu. Setelah terpasang, catat `torch.__version__`, `torch.version.cuda`, dan versi cuDNN di sini.
 
-Pada tahap implementasi, kunci environment yang kompatibel dan rekam versi aktual Python/PyTorch/torchvision/CUDA/cuDNN, OS, GPU, driver, dependency lengkap, dan checksum bobot pretrained. PyTorch tidak dipasang pada tahap ini.
+Pada tahap implementasi, kunci environment yang kompatibel dan rekam versi aktual Python/PyTorch/torchvision/CUDA/cuDNN, OS, GPU, driver, dependency lengkap, dan checksum bobot pretrained. Versi aktual **sudah tercatat** di tabel §7: PyTorch 2.1.1+cu121, torchvision 0.16.1+cu121, CUDA 12.1, cuDNN 8801.
 
 Atur RNG Python, NumPy, PyTorch CPU/CUDA, DataLoader generator, worker, dan augmentasi. Gunakan deterministic algorithms yang didukung, nonaktifkan cuDNN benchmark dan TF32 pada perbandingan awal, serta catat konfigurasi backend yang diperlukan. Ketidaktersediaan operasi deterministik harus dilaporkan, bukan diabaikan diam-diam. Reproduksibilitas lintas versi/perangkat tidak dijamin hanya oleh seed. [Panduan PyTorch 2.1](https://docs.pytorch.org/docs/2.1/notes/randomness.html).
 
@@ -222,4 +221,4 @@ logs/
 
 Untuk pengulangan tiga seed, simpan struktur per-run yang sama di `experiments/<nama>/seed_42/`, `seed_43/`, dan `seed_44/`; checkpoint dan log mengikuti subfolder seed yang sama. Folder eksperimen induk menyimpan rangkuman antar seed. Metrik per-run tidak ditimpa oleh seed lain.
 
-Verifikasi yang direncanakan sebelum run formal: kesesuaian class mapping lintas split, disjointness manifest/hash, tensor input/output, transform evaluasi deterministik, seluruh label dalam rentang 0..6, perhitungan metrik pada contoh kecil dengan jawaban diketahui, dan pemuatan ulang checkpoint yang menghasilkan prediksi identik dalam environment yang sama. Pemeriksaan ini belum dijalankan karena kode pelatihan belum ditulis.
+Verifikasi yang direncanakan sebelum run formal: kesesuaian class mapping lintas split, disjointness manifest/hash, tensor input/output, transform evaluasi deterministik, seluruh label dalam rentang 0..6, perhitungan metrik pada contoh kecil dengan jawaban diketahui, dan pemuatan ulang checkpoint yang menghasilkan prediksi identik dalam environment yang sama. **Kode pelatihan sudah ditulis** (`src/datasets/`, `src/models/baseline.py`, `src/training/trainer.py`, `src/evaluation/metrics.py`, `scripts/train.py`, notebook `04`–`06`); gunakan `python scripts/train.py --config … --dry-run` untuk validasi pra-run. Pelatihan penuh dipantau sendiri oleh pengguna.

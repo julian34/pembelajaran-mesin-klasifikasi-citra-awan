@@ -139,7 +139,7 @@ Sebuah eksperimen dianggap dapat diulang jika orang lain dapat memperoleh angka 
 - Hyperparameter yang wajib ada: arsitektur model, seed, optimizer, learning rate, weight decay, batch size, jumlah epoch, scheduler, ukuran citra masukan, dan pengaturan augmentasi.
 - Penyetelan hyperparameter hanya memakai validation set.
 
-Nilai di `base.yaml` sudah diisi dari hasil EDA (epochs 200, optimizer adamw, lr 1e-4, dll.); rasional kombinasi untuk baseline AlexNet ada di [rasional-alexnet-hyperparameter/](rasional-alexnet-hyperparameter/README.md).
+Nilai di `base.yaml` sudah diisi dari hasil EDA (epochs 200, optimizer adamw, lr 1e-4, dll.); rasional kombinasi untuk baseline AlexNet ada di [alexnet/rasional-hyperparameter.md](alexnet/rasional-hyperparameter.md).
 
 ## 11. Penyimpanan checkpoint terbaik
 

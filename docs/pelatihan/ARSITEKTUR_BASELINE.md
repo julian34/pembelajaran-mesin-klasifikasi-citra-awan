@@ -149,7 +149,7 @@ criterion = nn.CrossEntropyLoss(weight=class_weight)
 # 5) Evaluasi akhir sekali pada test (macro-F1 + per kelas)
 ```
 
-Catatan: `torch`/`torchvision` tercantum di `requirements.txt` tetapi **belum terpasang** di environment ini; pasang dulu sebelum menjalankan kode di atas.
+Catatan: `torch`/`torchvision` **sudah terpasang** (torch 2.1.1+cu121, torchvision 0.16.1+cu121; CUDA 12.1 aktif di RTX 4060 Laptop), jadi kode di atas langsung dapat dijalankan.
 
 ---
 
@@ -165,7 +165,7 @@ Catatan: `torch`/`torchvision` tercantum di `requirements.txt` tetapi **belum te
 | scheduler | null |
 | monitor checkpoint | val_macro_f1 (mode max) |
 
-Nilai ini berlaku untuk semua baseline exp_005–009 (diwarisi dari `configs/base.yaml`). Rasional pemilihannya untuk AlexNet dibahas di [`rasional-alexnet-hyperparameter/`](rasional-alexnet-hyperparameter/README.md).
+Nilai ini berlaku untuk semua baseline exp_005–009 (diwarisi dari `configs/base.yaml`). Rasional pemilihannya untuk AlexNet dibahas di [`alexnet/rasional-hyperparameter.md`](alexnet/rasional-hyperparameter.md).
 
 ---
 
@@ -230,6 +230,6 @@ Semua meng-override `model` dan `preprocess.normalize` (ke statistik ImageNet) t
 
 ### Dataset baseline: combined_balanced
 
-Kelima eksperimen baseline (exp_005–009) memakai **train seimbang** `data/combined_balanced/train/` (3.000 citra/kelas = 21.000; GCD+CCSN, lihat [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md)), dengan **val/test combined apa adanya** (`combined_val`/`combined_test`, 1.851 / 9.000; tidak diseimbangkan). Karena train sudah seimbang, `training.imbalance: none` — tidak dipadukan dengan `class_weights` agar tidak terjadi koreksi ganda. Blok `data` dan `training.imbalance` ini ditulis di tiap config exp_005–009.
+Kelima eksperimen baseline (exp_005–009) memakai **train seimbang** `data/combined_balanced/train/` (3.000 citra/kelas = 21.000 = 10.483 asli + 10.517 augmentasi; GCD+CCSN, lihat [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md)), dengan **val/test combined apa adanya** (`combined_val`/`combined_test`, 1.851 / 9.000; tidak diseimbangkan). **Total data pelatihan = 21.000 + 1.851 + 9.000 = 31.851 citra.** Karena train sudah seimbang, `training.imbalance: none` — tidak dipadukan dengan `class_weights` agar tidak terjadi koreksi ganda. Blok `data` dan `training.imbalance` ini ditulis di tiap config exp_005–009.
 
-Dokumen baseline per arsitektur (rinci): **AlexNet** → [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md).
+Dokumen baseline per arsitektur (rinci): **AlexNet** → [`alexnet/BASELINE_ALEXNET.md`](alexnet/BASELINE_ALEXNET.md); **DenseNet-121** → [`densenet121/BASELINE_DENSENET121.md`](densenet121/BASELINE_DENSENET121.md).

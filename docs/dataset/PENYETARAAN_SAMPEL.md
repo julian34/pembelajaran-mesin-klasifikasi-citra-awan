@@ -4,7 +4,7 @@ Tanggal: 14 Oktober 2026 (Asia/Jakarta). Terkait: [`AUGMENTASI_DATA.md`](AUGMENT
 
 Dokumen ini merinci strategi **menyetarakan jumlah sampel menjadi 3.000 gambar per kelas** (seperti pada praktik GCD/CCSN): kelas dengan **>3.000** gambar **dikurangi (trimming)**, kelas dengan **<3.000** gambar **diperbanyak dengan augmentasi**. Augmentasi memakai transformasi **geometri spasial** (translasi, flipping, rotasi) dan **warna** (color, contrast, brightness enhancement).
 
-> **Status.** Rencana/metodologi — **belum dijalankan**. Augmentasi diterapkan di tahap training (butuh `torch`/`torchvision`, belum terpasang). Angka rencana di bawah dihitung dari manifest split aktual.
+> **Status (diperbarui 19 Oktober 2026).** **Sudah dijalankan** — strategi **Opsi A** (pra-bangkitkan ke disk) dipilih dan dimaterialisasi: `data/combined_balanced/train/<kelas>/` berisi **21.000 citra** (3.000/kelas = 10.483 asli + 10.517 augmentasi), tercatat di `reports/tables/combined_balanced_train_manifest.csv` (kolom `kind` = `original`/`augmented`). `torch`/`torchvision` (CUDA cu121) **sudah terpasang**. Inilah data latih yang dipakai baseline exp_005–009. Angka di bawah sudah terverifikasi terhadap disk.
 
 ---
 
@@ -18,7 +18,21 @@ Dokumen ini merinci strategi **menyetarakan jumlah sampel menjadi 3.000 gambar p
 | Diterapkan pada | **Hanya split train** |
 | Val / test | **Tidak disentuh** (tidak di-trim, tidak diaugmentasi) |
 | Teknik augmentasi | translasi, flip horizontal, rotasi, color, contrast, brightness |
-| Hasil train (7 kelas) | 7 × 3.000 = **21.000** gambar |
+| Hasil train (7 kelas) | 7 × 3.000 = **21.000** gambar (10.483 asli + 10.517 augmentasi) |
+| Lokasi materialisasi | `data/combined_balanced/train/<kelas>/` (Opsi A, terverifikasi di disk) |
+
+### Total data pelatihan (setelah augmentasi)
+
+Augmentasi **hanya** menambah train; val/test tetap distribusi nyata (tak disentuh).
+
+| Split | Jumlah | Keterangan |
+|---|---:|---|
+| Train (seimbang) | **21.000** | 10.483 asli + **10.517 augmentasi** → 3.000/kelas |
+| Validation | **1.851** | combined apa adanya (tidak diaugmentasi) |
+| Test | **9.000** | test resmi GCD (tidak diaugmentasi) |
+| **Total keseluruhan** | **31.851** | train seimbang + val + test |
+
+> Sebagai perbandingan, total sebelum augmentasi (train mentah 10.483 + val 1.851 + test 9.000) = **21.334** citra; augmentasi menambah **10.517** citra sehingga total menjadi **31.851**.
 
 ---
 
@@ -91,11 +105,11 @@ Dari `reports/tables/gcd_raw_split_train_manifest.csv` (train 8.340):
 
 ## 5. Implementasi (dua opsi)
 
-**Opsi A — Pra-bangkitkan ke disk (gaya paper).**
-Hasilkan citra augmentasi hingga 3.000/kelas dan simpan, mis. ke `data/combined_balanced/train/<kelas>/` (asli + augmentasi). Kelas >3.000 (bila ada) di-subsample acak. Deterministik dan mudah diaudit, tetapi menambah berkas (±21.000 train) dan menyimpan hasil augmentasi tetap.
+**Opsi A — Pra-bangkitkan ke disk (gaya paper). ✅ DIPAKAI.**
+Hasilkan citra augmentasi hingga 3.000/kelas dan simpan ke `data/combined_balanced/train/<kelas>/` (asli + augmentasi). Kelas >3.000 (bila ada) di-subsample acak. Deterministik dan mudah diaudit, tetapi menambah berkas (**21.000** train) dan menyimpan hasil augmentasi tetap. **Inilah opsi yang dijalankan**: folder sudah terisi 21.000 citra dan manifest `combined_balanced_train_manifest.csv` dibentuk; baseline membaca train seimbang ini dengan `training.imbalance: none`.
 
-**Opsi B — On-the-fly saat training (disarankan).**
-Pakai sampling berimbang (mis. `WeightedRandomSampler` dengan bobot per kelas) + augmentasi acak tiap epoch pada train. Efek seimbang mendekati 3.000/kelas tanpa menulis berkas, dan variasi augmentasi berbeda tiap epoch (lebih kaya, risiko overfitting lebih kecil). Jumlah "efektif" per epoch disetel lewat jumlah sampel sampler.
+**Opsi B — On-the-fly saat training (alternatif, tidak dipakai).**
+Pakai sampling berimbang (mis. `WeightedRandomSampler` dengan bobot per kelas) + augmentasi acak tiap epoch pada train. Efek seimbang mendekati 3.000/kelas tanpa menulis berkas, dan variasi augmentasi berbeda tiap epoch (lebih kaya, risiko overfitting lebih kecil). Jumlah "efektif" per epoch disetel lewat jumlah sampel sampler. Dicatat sebagai alternatif; proyek memilih Opsi A agar set latih tetap (reproducible) dan mudah diaudit.
 
 Keduanya hanya menyentuh train; val/test memakai transform evaluasi (resize + normalisasi) tanpa augmentasi.
 
@@ -103,13 +117,22 @@ Keduanya hanya menyentuh train; val/test memakai transform evaluasi (resize + no
 
 ## 6. Konfigurasi
 
-Penyetaraan ini **alternatif** dari `training.imbalance: class_weights`. Usulan penambahan di `configs/base.yaml` (pilih salah satu strategi):
+Penyetaraan ini **alternatif** dari `training.imbalance: class_weights`. **Yang dipakai sekarang:** karena train sudah diseimbangkan di hulu (Opsi A, materialisasi ke `data/combined_balanced/train/`), eksperimen baseline (exp_005–009) men-*set* `training.imbalance: none` agar kelas tidak dikoreksi dua kali:
+
+```yaml
+# Efektif di exp_005–009 (train sudah seimbang 3.000/kelas):
+training:
+  imbalance: none                 # train pra-seimbang → tanpa class_weights/resample
+data:
+  train_dir: data/combined_balanced/train
+  train_manifest: reports/tables/combined_balanced_train_manifest.csv
+```
+
+Sebagai acuan, bila memilih penyetaraan **on-the-fly** (Opsi B, tidak dipakai) alih-alih pra-materialisasi, skema konfigurasinya:
 
 ```yaml
 training:
-  imbalance: class_weights        # class_weights | balanced_resample | weighted_sampler | none
-  # Bila memakai penyetaraan 3.000/kelas:
-  # imbalance: balanced_resample
+  imbalance: balanced_resample    # class_weights | balanced_resample | weighted_sampler | none
   balanced_resample:
     target_per_class: 3000        # kelas > target di-trim, < target diaugmentasi
     apply_to: [train]             # tidak pernah val/test
@@ -117,7 +140,7 @@ training:
     augment: [translate, hflip, rotate, color, contrast, brightness]
 ```
 
-Jika `imbalance: balanced_resample` dipakai, **jangan** sekaligus memakai `class_weights` (koreksi ganda).
+Apa pun strateginya, **jangan** menumpuk `balanced_resample`/pra-seimbang **dengan** `class_weights` (koreksi ganda).
 
 ---
 
@@ -127,7 +150,7 @@ Jika `imbalance: balanced_resample` dipakai, **jangan** sekaligus memakai `class
 - Augmentasi warna jangan terlalu ekstrem agar karakteristik kelas (mis. biru polos `4_clearsky`) tetap terjaga.
 - Target 3.000 adalah pilihan desain; nilai lain (mis. 2.000) dapat diuji sebagai sensitivitas, terutama karena `7_mixed` memerlukan pengali besar.
 - Perbedaan dari paper sumber: paper dapat menyetarakan seluruh data; di proyek ini penyetaraan **hanya train** karena test resmi GCD dipertahankan utuh ([`DATASET_SPLIT.md`](DATASET_SPLIT.md)).
-- Belum dijalankan: perlu `torch`/`torchvision` dan kode training; augmentasi diterapkan di `src/datasets/` saat pemuatan.
+- **Sudah dijalankan (Opsi A):** augmentasi dipra-bangkitkan ke `data/combined_balanced/train/` (21.000 citra, 3.000/kelas); `torch`/`torchvision` (CUDA cu121) terpasang. Loader membaca train seimbang ini apa adanya (tanpa augmentasi acak tambahan); val/test memakai transform evaluasi.
 
 ---
 

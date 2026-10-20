@@ -1,6 +1,6 @@
 # Persiapan Pelatihan — Baseline Model (Klasifikasi Citra Awan)
 
-Tanggal: 14 Oktober 2026. Framework: PyTorch / torchvision. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md), [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md).
+Tanggal: 14 Oktober 2026. Framework: PyTorch / torchvision. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`BASELINE_ALEXNET.md`](alexnet/BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md), [`TRAINING_GUIDE.md`](TRAINING_GUIDE.md).
 
 Dokumen ini menetapkan **persiapan pelatihan** untuk **baseline model** klasifikasi citra awan 7 kelas. Status: **siap** — `torch`/`torchvision` build CUDA cu121 sudah terpasang (GPU RTX 4060 Laptop); pelatihan penuh belum dijalankan (dipantau sendiri oleh pengguna). Model dibangun dari [`src/models/baseline.py`](../../src/models/baseline.py); konfigurasi di `configs/base.yaml` + `configs/experiments/exp_005…009`.
 

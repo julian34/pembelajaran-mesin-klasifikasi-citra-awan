@@ -3,7 +3,7 @@
 Membaca manifes via `src.datasets.manifest`, memuat citra RGB, dan menerapkan
 transform. Normalisasi mengikuti `configs/base.yaml`: skala /255 ke [0, 1]
 dengan mean 0 / std 1 (tanpa standardisasi ImageNet) — pilihan praproses eksplisit
-proyek ini, lihat docs/pelatihan/BASELINE_ALEXNET.md Bagian 3.
+proyek ini, lihat docs/pelatihan/alexnet/BASELINE_ALEXNET.md Bagian 3.
 """
 from __future__ import annotations
 

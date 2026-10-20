@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResNet-18 — Lapisan Awal hingga Akhir (exp_008) — dashmotion</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace; background: #020617;
+         min-height: 100vh; padding: 2rem; color: #e2e8f0; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.4rem; }
+  .pulse-dot { width: 10px; height: 10px; border-radius: 50%; background: #22d3ee; }
+  h1 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
+  .subtitle { color: #64748b; font-size: 0.8rem; margin-bottom: 1.5rem; }
+  .diagram-card { border: 1px solid #1e293b; border-radius: 12px; position: relative;
+    background: repeating-linear-gradient(0deg, #0f1b33 0 0.5px, transparent 0.5px 40px),
+      repeating-linear-gradient(90deg, #0f1b33 0 0.5px, transparent 0.5px 40px), #030a1c;
+    padding: 1.25rem 1rem; }
+  .pause-btn { position: absolute; top: 12px; right: 12px; z-index: 2; background: transparent;
+    border: 1px solid #1e293b; color: #64748b; border-radius: 6px; padding: 4px 10px;
+    font: inherit; font-size: 11px; cursor: pointer; }
+  .pause-btn:hover { color: #e2e8f0; border-color: #334155; }
+  .footer { color: #475569; font-size: 0.7rem; margin-top: 1rem; }
+  .flow { stroke-dasharray: 5 5; }
+  .flow-async { stroke-dasharray: 2 4; }
+  .flow-auth { stroke-dasharray: 4 4; }
+  @media (prefers-reduced-motion: no-preference) {
+    .flow { animation: dashmove 0.75s linear infinite; }
+    .flow-async { animation: dashasync 0.9s linear infinite; }
+    .flow-auth { animation: dashauth 1.2s linear infinite; }
+    .pulse-dot { animation: pulse 2s ease-in-out infinite; }
+  }
+  @keyframes dashmove { to { stroke-dashoffset: -10; } }
+  @keyframes dashasync { to { stroke-dashoffset: -12; } }
+  @keyframes dashauth { to { stroke-dashoffset: -8; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  body.paused .flow, body.paused .flow-async, body.paused .flow-auth,
+  body.paused .pulse-dot { animation-play-state: paused; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem; margin-top: 1.25rem; }
+  .card { border: 1px solid #1e293b; border-radius: 10px; background: #060d20; padding: 1rem 1.1rem; }
+  .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.6rem; }
+  .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .card-dot.cyan { background: #22d3ee; } .card-dot.violet { background: #a78bfa; }
+  .card-dot.rose { background: #fb7185; }
+  .card h3 { font-size: 0.8rem; font-weight: 600; }
+  .card ul { list-style: none; } .card li { font-size: 0.72rem; color: #94a3b8; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><div class="pulse-dot"></div><h1>ResNet-18 — Lapisan Awal hingga Akhir (exp_008)</h1></div>
+  <p class="subtitle">Arsitektur lapis demi lapis: input 512×512 → 7 kelas awan (ukuran peta fitur per tahap)</p>
+  <div class="diagram-card">
+    <button class="pause-btn" id="pauseBtn" aria-pressed="false">⏸ pause</button>
+    <svg id="flowsvg" width="100%" viewBox="0 0 525 1202" role="img" aria-roledescription="architecture diagram" aria-labelledby="flowsvg-title" aria-describedby="flowsvg-desc"><title id="flowsvg-title">ResNet-18 — Lapisan Awal hingga Akhir (exp_008) animated diagram</title><desc id="flowsvg-desc">Top-down architecture diagram; dashed connectors animate in the direction of flow and dots ride the main paths.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs><g fill="none"><path class="flow" d="M159 90 V142" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 202 V254" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 314 V366" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 426 V478" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 554 V606" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 682 V734" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 810 V862" stroke="#64748b" stroke-width="1" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 922 V974" stroke="#64748b" stroke-width="1.5" opacity="1" marker-end="url(#arrow)"/><path class="flow" d="M159 1034 V1086" stroke="#64748b" stroke-width="1.5" opacity="1" marker-end="url(#arrow)"/></g><g><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_0" dur="0.6s" begin="0s;j0_8.end+0.6s" fill="freeze" path="M159 90 V142"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_1" dur="0.6s" begin="j0_0.end+0.3s" fill="freeze" path="M159 202 V254"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_2" dur="0.6s" begin="j0_1.end+0.3s" fill="freeze" path="M159 314 V366"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_3" dur="0.6s" begin="j0_2.end+0.3s" fill="freeze" path="M159 426 V478"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_4" dur="0.6s" begin="j0_3.end+0.3s" fill="freeze" path="M159 554 V606"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_5" dur="0.6s" begin="j0_4.end+0.3s" fill="freeze" path="M159 682 V734"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_6" dur="0.6s" begin="j0_5.end+0.3s" fill="freeze" path="M159 810 V862"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_7" dur="0.6s" begin="j0_6.end+0.3s" fill="freeze" path="M159 922 V974"/></circle><circle r="3.5" class="dot" fill="#22d3ee"><animateMotion id="j0_8" dur="0.6s" begin="j0_7.end+0.3s" fill="freeze" path="M159 1034 V1086"/></circle></g><g font-family="JetBrains Mono, ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace" text-anchor="middle"><rect x="83" y="34" width="152" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="83" y="34" width="152" height="56" rx="8" fill="rgba(8,51,68,0.45)" stroke="#22d3ee" stroke-width="1.5" data-grp=""/><text x="159" y="57" fill="#e2e8f0" font-size="13" font-weight="500">Input citra awan</text><text x="159" y="80" fill="#64748b" font-size="10">512×512×3 RGB</text><rect x="59.5" y="146" width="199" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="59.5" y="146" width="199" height="56" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="169" fill="#e2e8f0" font-size="13" font-weight="500">Conv 7×7, stride 2 (64)</text><text x="159" y="192" fill="#64748b" font-size="10">256×256×64 · beku</text><rect x="66" y="258" width="186" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="66" y="258" width="186" height="56" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="281" fill="#e2e8f0" font-size="13" font-weight="500">MaxPool 3×3, stride 2</text><text x="159" y="304" fill="#64748b" font-size="10">128×128×64 · beku</text><rect x="41" y="370" width="236" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="41" y="370" width="236" height="56" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="393" fill="#e2e8f0" font-size="13" font-weight="500">Stage 1 — 2× BasicBlock (64)</text><text x="159" y="416" fill="#64748b" font-size="10">128×128×64 · beku · skip</text><rect x="56.5" y="482" width="205" height="72" rx="8" fill="#0b1226" data-grp=""/><rect x="56.5" y="482" width="205" height="72" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="506" fill="#e2e8f0" font-size="13" font-weight="500"><tspan x="159">Stage 2 — 2×</tspan><tspan x="159" dy="15">BasicBlock (128) /2</tspan></text><text x="159" y="544" fill="#64748b" font-size="10">64×64×128 · beku · skip</text><rect x="56.5" y="610" width="205" height="72" rx="8" fill="#0b1226" data-grp=""/><rect x="56.5" y="610" width="205" height="72" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="634" fill="#e2e8f0" font-size="13" font-weight="500"><tspan x="159">Stage 3 — 2×</tspan><tspan x="159" dy="15">BasicBlock (256) /2</tspan></text><text x="159" y="672" fill="#64748b" font-size="10">32×32×256 · beku · skip</text><rect x="56.5" y="738" width="205" height="72" rx="8" fill="#0b1226" data-grp=""/><rect x="56.5" y="738" width="205" height="72" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="762" fill="#e2e8f0" font-size="13" font-weight="500"><tspan x="159">Stage 4 — 2×</tspan><tspan x="159" dy="15">BasicBlock (512) /2</tspan></text><text x="159" y="800" fill="#64748b" font-size="10">16×16×512 · beku · skip</text><rect x="72.5" y="866" width="173" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="72.5" y="866" width="173" height="56" rx="8" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" data-grp=""/><text x="159" y="889" fill="#e2e8f0" font-size="13" font-weight="500">Global Average Pool</text><text x="159" y="912" fill="#64748b" font-size="10">1×1×512 · beku</text><rect x="61.5" y="978" width="195" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="61.5" y="978" width="195" height="56" rx="8" fill="rgba(6,78,59,0.45)" stroke="#34d399" stroke-width="1.5" data-grp=""/><text x="159" y="1001" fill="#e2e8f0" font-size="13" font-weight="500">Head: Linear 512→7</text><text x="159" y="1024" fill="#64748b" font-size="10">DILATIH · 3.591 param</text><rect x="34" y="1090" width="250" height="56" rx="8" fill="#0b1226" data-grp=""/><rect x="34" y="1090" width="250" height="56" rx="8" fill="rgba(8,51,68,0.45)" stroke="#22d3ee" stroke-width="1.5" data-grp=""/><text x="159" y="1113" fill="#e2e8f0" font-size="13" font-weight="500">Softmax → 7 kelas</text><text x="159" y="1136" fill="#64748b" font-size="10">Cu · Ac · Ci · Cl · Sc · Cb · Mi</text></g><g font-family="JetBrains Mono, ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace" font-size="11"><rect x="34" y="1152" width="12" height="12" rx="3" fill="rgba(8,51,68,0.45)" stroke="#22d3ee"/><text x="52" y="1162" fill="#94a3b8" font-size="11">frontend</text><rect x="145" y="1152" width="12" height="12" rx="3" fill="rgba(30,41,59,0.5)" stroke="#94a3b8"/><text x="163" y="1162" fill="#94a3b8" font-size="11">external</text><rect x="253" y="1152" width="12" height="12" rx="3" fill="rgba(6,78,59,0.45)" stroke="#34d399"/><text x="271" y="1162" fill="#94a3b8" font-size="11">service</text><circle cx="362" cy="1158" r="3.5" fill="#22d3ee"/><text x="372" y="1162" fill="#94a3b8" font-size="11">request in flight</text></g></svg>
+  </div>
+  <div class="cards"><div class="card"><div class="card-header"><div class="card-dot cyan"></div><h3>Request path</h3></div><ul><li>• animated dot rides the main journey</li><li>• tier by tier</li></ul></div><div class="card"><div class="card-header"><div class="card-dot violet"></div><h3>Data layer</h3></div><ul><li>• stores and caches</li><li>• violet components</li></ul></div><div class="card"><div class="card-header"><div class="card-dot rose"></div><h3>Boundaries</h3></div><ul><li>• regions and subnets</li><li>• dashed containment</li></ul></div></div>
+  <p class="footer">ResNet-18 (torchvision, ImageNet) · 4 tahap residual 2-2-2-2 BasicBlock · head fc 512→7 (3.591 param dilatih)</p>
+</div>
+
+<script>
+(function () {
+  var svg = document.getElementById('flowsvg');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.dot').forEach(function (d) { d.remove(); });
+    var b = document.getElementById('pauseBtn'); if (b) b.remove(); return;
+  }
+  var btn = document.getElementById('pauseBtn'); var paused = false;
+  btn.addEventListener('click', function () {
+    paused = !paused; document.body.classList.toggle('paused', paused);
+    paused ? svg.pauseAnimations() : svg.unpauseAnimations();
+    btn.textContent = paused ? '▶ play' : '⏸ pause';
+    btn.setAttribute('aria-pressed', String(paused));
+  });
+})();
+</script>
+
+</body>
+</html>

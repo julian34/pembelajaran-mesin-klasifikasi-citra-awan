@@ -1,17 +1,17 @@
 # Baseline AlexNet — Klasifikasi Citra Awan (Transfer Learning ImageNet)
 
 Dataset train: **combined_balanced** (GCD+CCSN, 3.000/kelas = 21.000 citra). Framework: **PyTorch / torchvision**.
-Tanggal: 14 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md), [`ANALISIS_BASELINE_ALEXNET.md`](ANALISIS_BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](../dataset/PENYETARAAN_SAMPEL.md), [`PENGGABUNGAN_DATASET.md`](../dataset/PENGGABUNGAN_DATASET.md), [`EXPERIMENT_PLAN.md`](EXPERIMENT_PLAN.md).
+Tanggal: 14 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](../ARSITEKTUR_BASELINE.md), [`ANALISIS_BASELINE_ALEXNET.md`](ANALISIS_BASELINE_ALEXNET.md), [`PENYETARAAN_SAMPEL.md`](../../dataset/PENYETARAAN_SAMPEL.md), [`PENGGABUNGAN_DATASET.md`](../../dataset/PENGGABUNGAN_DATASET.md), [`EXPERIMENT_PLAN.md`](../EXPERIMENT_PLAN.md).
 
 Dokumen ini mendokumentasikan **baseline AlexNet**: transfer learning dengan bobot pra-latih **ImageNet**, lapisan klasifikasi terakhir diganti agar keluaran = **7 kelas** awan. Regularisasi **Dropout(0.5)** adalah bawaan desain AlexNet pada **dua lapisan fully-connected tersembunyi** (FC-6 & FC-7). Status: **pelatihan penuh (200 epoch) sudah dijalankan** — `torch`/`torchvision` build CUDA cu121 terpasang (GPU RTX 4060 Laptop). Hasil: best epoch 63, **test macro-F1 0,5042** (artefak di `experiments/exp_006_alexnet/`); analisis lengkap (waktu latih, semua metrik, F1 per kelas, confusion matrix) di **[`ANALISIS_BASELINE_ALEXNET.md`](ANALISIS_BASELINE_ALEXNET.md)**. Kode:
 
-- Model: [`src/models/baseline.py`](../../src/models/baseline.py) (`build_model`).
-- Data: [`src/datasets/manifest.py`](../../src/datasets/manifest.py) (resolusi path/label) + [`src/datasets/cloud_dataset.py`](../../src/datasets/cloud_dataset.py) (`Dataset`/`DataLoader` + transform /255).
-- Pelatihan: [`src/training/trainer.py`](../../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`; opsi `progress=True` → progress bar per-epoch gaya Keras via `pkbar`).
-- Evaluasi: [`src/evaluation/metrics.py`](../../src/evaluation/metrics.py).
-- Config: [`configs/experiments/exp_006_alexnet.yaml`](../../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../../scripts/train.py); notebook pemantau: [`notebooks/04_baseline_training.ipynb`](../../notebooks/04_baseline_training.ipynb).
+- Model: [`src/models/baseline.py`](../../../src/models/baseline.py) (`build_model`).
+- Data: [`src/datasets/manifest.py`](../../../src/datasets/manifest.py) (resolusi path/label) + [`src/datasets/cloud_dataset.py`](../../../src/datasets/cloud_dataset.py) (`Dataset`/`DataLoader` + transform /255).
+- Pelatihan: [`src/training/trainer.py`](../../../src/training/trainer.py) (`fit`, checkpoint by `val_macro_f1`; opsi `progress=True` → progress bar per-epoch gaya Keras via `pkbar`).
+- Evaluasi: [`src/evaluation/metrics.py`](../../../src/evaluation/metrics.py).
+- Config: [`configs/experiments/exp_006_alexnet.yaml`](../../../configs/experiments/exp_006_alexnet.yaml); runner: [`scripts/train.py`](../../../scripts/train.py); notebook pemantau: [`notebooks/04_baseline_training.ipynb`](../../../notebooks/04_baseline_training.ipynb).
 
-Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipeline.py`](../../tests/test_pipeline.py) dan resolusi path diverifikasi terhadap manifes nyata (train 21.000 / val 1.851 / test 9.000, 0 file hilang).
+Bagian bebas-torch (resolusi manifes & metrik) sudah diuji di [`tests/test_pipeline.py`](../../../tests/test_pipeline.py) dan resolusi path diverifikasi terhadap manifes nyata (train 21.000 / val 1.851 / test 9.000, 0 file hilang).
 
 ---
 
@@ -67,11 +67,15 @@ Bobot pra-latih yang dipakai di proyek ini berasal dari `torchvision.models.alex
 
 Jumlah neuron FC (4.096) dan head 1000-kelas **sama**, sehingga penggantian head ke 7 kelas identik untuk kedua varian. Perbedaan channel/LRN dicatat agar laporan akurat: yang benar-benar dilatih adalah varian torchvision, bukan rancangan dua-GPU asli.
 
+Diagram (animasi, buka di browser):
+- **Arsitektur lapisan awal→akhir** (5 konvolusi + 3 fully-connected, ukuran peta fitur tiap tahap, Dropout FC): [`arsitektur-alexnet-lapisan.html`](arsitektur-alexnet-lapisan.html).
+- **Pipeline** (data → model → latih → evaluasi): [`arsitektur-exp006.html`](arsitektur-exp006.html).
+
 ---
 
 ## 3. Transfer learning ke 7 kelas
 
-Pola sama dengan [`ARSITEKTUR_BASELINE.md`](ARSITEKTUR_BASELINE.md) Bagian 3:
+Pola sama dengan [`ARSITEKTUR_BASELINE.md`](../ARSITEKTUR_BASELINE.md) Bagian 3:
 
 1. Muat AlexNet dengan bobot ImageNet.
 2. Ganti **lapisan terakhir** `model.classifier[6]` (sebuah `nn.Linear(4096, 1000)`) menjadi `nn.Linear(4096, 7)`. Lapisan lain — termasuk kedua `Dropout(0.5)` — dibiarkan utuh.
@@ -100,7 +104,7 @@ Mekanisme:
 
 Dropout tidak punya parameter yang dipelajari, jadi memuat bobot ImageNet tidak mengubah perilakunya. Untuk baseline ini penempatannya **tidak diubah**; regularisasi tambahan (mis. weight decay) diatur lewat `configs/base.yaml`.
 
-Normalisasi memakai **pembagian /255 ke rentang [0, 1]** (tanpa mean/std); lihat [`PERSIAPAN_PELATIHAN.md`](PERSIAPAN_PELATIHAN.md). Catatan: bobot pra-latih ImageNet aslinya dilatih dengan standardisasi mean/std ImageNet, jadi penggunaan [0,1] adalah pilihan praproses eksplisit proyek ini.
+Normalisasi memakai **pembagian /255 ke rentang [0, 1]** (tanpa mean/std); lihat [`PERSIAPAN_PELATIHAN.md`](../PERSIAPAN_PELATIHAN.md). Catatan: bobot pra-latih ImageNet aslinya dilatih dengan standardisasi mean/std ImageNet, jadi penggunaan [0,1] adalah pilihan praproses eksplisit proyek ini.
 
 ---
 
@@ -113,8 +117,9 @@ Train memakai set **seimbang 3.000 citra/kelas** (total 21.000) hasil penyetaraa
 | Train (seimbang) | 21.000 (7 × 3.000; 10.483 asli + 10.517 augmentasi) | `reports/tables/combined_balanced_train_manifest.csv` (kolom `class`, `filename`, `kind`, `split`, `rel_path`) |
 | Validation | 1.851 (distribusi nyata) | `reports/tables/combined_val_manifest.csv` |
 | Test | 9.000 (distribusi nyata) | `reports/tables/combined_test_manifest.csv` |
+| **Total** | **31.851** | train seimbang + val + test |
 
-Prinsip (lihat [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md)):
+Prinsip (lihat [`PENYETARAAN_SAMPEL.md`](../../dataset/PENYETARAAN_SAMPEL.md)):
 - **Hanya train** yang diseimbangkan; **val/test tetap apa adanya** agar evaluasi jujur dan sebanding.
 - Karena train sudah seimbang, `training.imbalance: none` — **jangan** sekaligus memakai `class_weights` (koreksi ganda).
 - Kolom `kind` membedakan citra `original` vs `augmented`; augmentasi hanya pada train.
@@ -123,7 +128,7 @@ Prinsip (lihat [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md)):
 
 ## 5. Konfigurasi & hyperparameter
 
-Config: [`configs/experiments/exp_006_alexnet.yaml`](../../configs/experiments/exp_006_alexnet.yaml) (override terhadap `configs/base.yaml`).
+Config: [`configs/experiments/exp_006_alexnet.yaml`](../../../configs/experiments/exp_006_alexnet.yaml) (override terhadap `configs/base.yaml`).
 
 ```yaml
 model:
@@ -146,13 +151,13 @@ training:
   imbalance: none
 ```
 
-Hyperparameter efektif (diwarisi dari `configs/base.yaml`): epochs 200, batch_size 32, optimizer adamw, lr 0,0001 (1e-4), weight_decay 0,0, scheduler null. Rasional pemilihan kombinasi ini dibahas rinci di [`rasional-alexnet-hyperparameter/`](rasional-alexnet-hyperparameter/README.md). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih). Catatan VRAM: input 512×512 di GPU 8 GB (RTX 4060 Laptop) nyaman di **batch 8** — notebook memakai default itu.
+Hyperparameter efektif (diwarisi dari `configs/base.yaml`): epochs 200, batch_size 32, optimizer adamw, lr 0,0001 (1e-4), weight_decay 0,0, scheduler null. Rasional pemilihan kombinasi ini dibahas rinci di [`rasional-hyperparameter.md`](rasional-hyperparameter.md). Pemilihan checkpoint: `val_macro_f1` (test tidak dipakai untuk memilih). Catatan VRAM: input 512×512 di GPU 8 GB (RTX 4060 Laptop) nyaman di **batch 8** — notebook memakai default itu.
 
 ### 5.1 Menjalankan
 
 **Lingkungan sudah siap:** `torch 2.1.1+cu121` / `torchvision 0.16.1+cu121` terpasang di `.venv`, `pkbar` terpasang, dan GPU terdeteksi (`torch.cuda.is_available() == True`).
 
-**Opsi A — notebook (pantau sendiri, disarankan untuk eksplorasi):** buka [`notebooks/04_baseline_training.ipynb`](../../notebooks/04_baseline_training.ipynb), jalankan sel atas→bawah. Sel 5 melatih dengan **progress bar per-epoch (pkbar)** dan Sel 5b menampilkan tabel + grafik riwayat. Untuk uji cepat set `EPOCHS=1`.
+**Opsi A — notebook (pantau sendiri, disarankan untuk eksplorasi):** buka [`notebooks/04_baseline_training.ipynb`](../../../notebooks/04_baseline_training.ipynb), jalankan sel atas→bawah. Sel 5 melatih dengan **progress bar per-epoch (pkbar)** dan Sel 5b menampilkan tabel + grafik riwayat. Untuk uji cepat set `EPOCHS=1`.
 
 **Opsi B — runner terminal (lebih cepat, pemuatan paralel):**
 ```powershell

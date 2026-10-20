@@ -4,7 +4,7 @@ Tanggal: 13 Oktober 2026. Terkait: [`ARSITEKTUR_BASELINE.md`](../pelatihan/ARSIT
 
 Dokumen ini mendokumentasikan strategi augmentasi data untuk memperbanyak jumlah dan kompleksitas sampel train, mengikuti teknik yang dipakai pada literatur GCD: **transformasi geometri spasial** (translasi, flipping, rotasi) dan **transformasi warna** (color enhancement, contrast enhancement, brightness enhancement).
 
-> **Status.** Augmentasi **belum diaktifkan** pada pelatihan (`configs/base.yaml` `augmentation.enabled: false`) — belum ada training yang dijalankan. "Hasil" pada dokumen ini berupa **contoh visual** penerapan augmentasi pada citra sampel (bukan hasil metrik pelatihan).
+> **Status (diperbarui 19 Oktober 2026).** Augmentasi **sudah dipakai untuk pra-bangkitkan train seimbang** (Opsi A pada [`PENYETARAAN_SAMPEL.md`](PENYETARAAN_SAMPEL.md)): **10.517 citra augmentasi** dimaterialisasi ke `data/combined_balanced/train/` (bersama 10.483 asli → 21.000; 3.000/kelas). Augmentasi **on-the-fly saat training tetap nonaktif** (`augmentation.enabled: false`) karena variasi sudah "dibakar" ke berkas. Baseline membaca train seimbang ini apa adanya. "Hasil" pada dokumen ini berupa **contoh visual** teknik augmentasi (bukan hasil metrik pelatihan).
 
 ---
 
@@ -101,7 +101,7 @@ Dua pustaka umum (keduanya di-apply hanya pada train):
 - **torchvision.transforms** — `RandomAffine(degrees=15, translate=(0.1,0.1))`, `RandomHorizontalFlip(0.5)`, `ColorJitter(brightness=.., contrast=.., saturation=..)`.
 - **albumentations** (sudah di `requirements.txt`) — `ShiftScaleRotate`, `HorizontalFlip`, `RandomBrightnessContrast`, `HueSaturationValue`.
 
-`torchvision`/`torch` tercantum di `requirements.txt` tetapi **belum terpasang** di environment ini; pasang sebelum menjalankan pelatihan.
+`torchvision`/`torch` **sudah terpasang** (torch 2.1.1+cu121, torchvision 0.16.1+cu121; CUDA 12.1 aktif) dan `albumentations` 1.3.1 tersedia.
 
 ---
 

@@ -3,7 +3,7 @@
 Dokumen ini menjelaskan **mengapa** arsitektur **AlexNet** dipadukan dengan **set hyperparameter yang sedang dipakai** pada pelatihan baseline `exp_006_alexnet`, bukan sekadar *apa* nilainya. Fokusnya adalah alasan tiap pilihan dan — yang terpenting — **mengapa pilihan-pilihan itu saling cocok sebagai satu kombinasi**.
 
 Tanggal: 16 Oktober 2026. Framework: PyTorch / torchvision.
-Terkait: [`BASELINE_ALEXNET.md`](../BASELINE_ALEXNET.md), [`PERSIAPAN_PELATIHAN.md`](../PERSIAPAN_PELATIHAN.md), [`EXPERIMENT_PLAN.md`](../EXPERIMENT_PLAN.md), [`PENYETARAAN_SAMPEL.md`](../../dataset/PENYETARAAN_SAMPEL.md), [`ARSITEKTUR_BASELINE.md`](../ARSITEKTUR_BASELINE.md).
+Terkait: [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md), [`PERSIAPAN_PELATIHAN.md`](../PERSIAPAN_PELATIHAN.md), [`EXPERIMENT_PLAN.md`](../EXPERIMENT_PLAN.md), [`PENYETARAAN_SAMPEL.md`](../../dataset/PENYETARAAN_SAMPEL.md), [`ARSITEKTUR_BASELINE.md`](../ARSITEKTUR_BASELINE.md).
 Sumber nilai: [`configs/base.yaml`](../../../configs/base.yaml) + override [`configs/experiments/exp_006_alexnet.yaml`](../../../configs/experiments/exp_006_alexnet.yaml).
 
 > **Catatan konsistensi.** Nilai hyperparameter di dokumen ini diambil dari `configs/base.yaml` **versi sekarang** (commit `30bc319`/`eaca319`: epochs **200**, optimizer **adamw**, lr **1e-4**). Angka lama "epochs 50 / adam / lr 0.001" yang masih tertulis di `BASELINE_ALEXNET.md §5` dan `PERSIAPAN_PELATIHAN.md §4` adalah **nilai awal yang sudah disalip** — yang berlaku pada pelatihan adalah nilai di bawah.
@@ -48,7 +48,7 @@ AlexNet dipilih **bukan** karena diharapkan menjadi model terbaik, melainkan kar
 3. **Ringan secara komputasi.** Lebih murah daripada DenseNet-264, sehingga **batch & resolusi besar lebih mungkin muat** di GPU 8 GB — relevan untuk keputusan batch size di §4.6.
 4. **Tersedia bobot pra-latih ImageNet di torchvision.** Memungkinkan **transfer learning** langsung, yang menjadi pangkal seluruh pilihan hyperparameter (lr kecil, feature_extraction, dsb.).
 
-> Varian yang benar-benar dipakai adalah **AlexNet torchvision single-stream** (64/192 channel, tanpa LRN), bukan rancangan dua-GPU asli 2012. Detail di [`BASELINE_ALEXNET.md §2.1`](../BASELINE_ALEXNET.md). Head 1000→7 identik untuk kedua varian.
+> Varian yang benar-benar dipakai adalah **AlexNet torchvision single-stream** (64/192 channel, tanpa LRN), bukan rancangan dua-GPU asli 2012. Detail di [`BASELINE_ALEXNET.md §2.1`](BASELINE_ALEXNET.md). Head 1000→7 identik untuk kedua varian.
 
 ---
 
@@ -72,7 +72,7 @@ Inti "mengapa kombinasi" (bukan sekadar "mengapa tiap nilai"): ketiga prinsip in
 ### 4.2 `finetune: feature_extraction` (backbone beku)
 **Mengapa dipadu AlexNet:** karena beban parameter AlexNet menumpuk di FC, membekukan seluruh konvolusi + FC pra-latih dan hanya melatih **head `Linear(4096→7)`** sangat mengurangi jumlah parameter yang belajar → **risiko overfitting turun drastis** pada train yang sebagian besar augmentasi. Ini juga membuat baseline **murah & cepat konvergen**, cocok sebagai titik referensi. Trade-off: fitur tidak beradaptasi ke domain awan; bila macro-F1 val mentok, opsi `full` fine-tuning tersedia sebagai langkah lanjut (dengan lr yang tetap kecil, lihat 4.4).
 
-> Dropout(0.5) bawaan tetap bekerja di *forward pass* mode latih meski bobot FC beku, sehingga fitur yang mengalir ke head tetap teregularisasi — penguat argumen anti-overfitting (lihat [`BASELINE_ALEXNET.md §3.1`](../BASELINE_ALEXNET.md)).
+> Dropout(0.5) bawaan tetap bekerja di *forward pass* mode latih meski bobot FC beku, sehingga fitur yang mengalir ke head tetap teregularisasi — penguat argumen anti-overfitting (lihat [`BASELINE_ALEXNET.md §3.1`](BASELINE_ALEXNET.md)).
 
 ### 4.3 Optimizer **AdamW**
 **Mengapa:** AdamW = Adam dengan **decoupled weight decay**. Dipilih karena (a) *adaptif per-parameter* → konvergensi stabil & cepat pada fine-tuning tanpa tuning lr yang rewel, pas untuk baseline; (b) bila nanti `weight_decay` dinaikkan, AdamW menerapkannya dengan benar (terpisah dari update adaptif), berbeda dari Adam klasik yang mencampur L2 ke dalam momen. Jadi AdamW adalah **pilihan yang tahan-masa-depan**: sekarang `weight_decay=0` berperilaku seperti Adam, tapi siap untuk regularisasi tanpa ganti optimizer.
@@ -136,5 +136,4 @@ Inti: tiap pilihan menutup risiko pilihan lain. Batch kecil yang "lemah" ditebus
 - Krizhevsky (2014), *One weird trick for parallelizing CNNs* (varian single-stream torchvision). https://arxiv.org/abs/1404.5997
 - Loshchilov & Hutter (2019), *Decoupled Weight Decay Regularization* (AdamW). https://arxiv.org/abs/1711.05101
 - torchvision AlexNet: https://pytorch.org/vision/stable/models/generated/torchvision.models.alexnet.html
-- Dokumen internal: [`BASELINE_ALEXNET.md`](../BASELINE_ALEXNET.md), [`PERSIAPAN_PELATIHAN.md`](../PERSIAPAN_PELATIHAN.md), [`EXPERIMENT_PLAN.md`](../EXPERIMENT_PLAN.md), [`PENYETARAAN_SAMPEL.md`](../../dataset/PENYETARAAN_SAMPEL.md).
-</content>
+- Dokumen internal: [`BASELINE_ALEXNET.md`](BASELINE_ALEXNET.md), [`PERSIAPAN_PELATIHAN.md`](../PERSIAPAN_PELATIHAN.md), [`EXPERIMENT_PLAN.md`](../EXPERIMENT_PLAN.md), [`PENYETARAAN_SAMPEL.md`](../../dataset/PENYETARAAN_SAMPEL.md).
