@@ -113,21 +113,23 @@ Test dihitung **sekali** memakai checkpoint terbaik (dipilih dari validation,
 
 ### 5.2 F1 per kelas (precision / recall / F1 / support)
 
-Sumber: `metrics.json → test.per_class`.
+Sumber: `metrics.json → test.per_class`. Urutan baris & format **mengikuti tabel
+AlexNet** (§5.3 di analisis AlexNet) agar bisa dibandingkan baris-per-baris.
 
-| Kelas | Precision | Recall | **F1** | Support |
-|---|---|---|---|---|
-| Cu | 0,9256 | 0,6307 | 0,7502 | 750 |
-| Ac | 0,8344 | 0,5440 | 0,6586 | 750 |
-| Ci | 0,6121 | 0,8194 | 0,7007 | 753 |
-| Cl | 0,9182 | 0,9824 | **0,9492** | 1.589 |
-| Sc | 0,5813 | 0,5615 | 0,5712 | 1.790 |
-| Cb | 0,6544 | 0,7936 | 0,7173 | 2.761 |
-| Mi | 0,7860 | 0,2784 | **0,4112** | 607 |
+| # | Kelas | Precision | Recall | **F1** | Support |
+|---|---|---|---|---|---|
+| 3 | **Cl** — Clear sky | 0,918 | 0,982 | **0,949** | 1.589 |
+| 0 | **Cu** — Cumulus | 0,926 | 0,631 | **0,750** | 750 |
+| 5 | **Cb** — Cumulonimbus+nimbostratus | 0,654 | 0,794 | **0,717** | 2.761 |
+| 1 | **Ac** — Altocumulus+cirrocumulus | 0,834 | 0,544 | **0,659** | 750 |
+| 2 | **Ci** — Cirrus+cirrostratus | 0,612 | 0,819 | **0,701** | 753 |
+| 6 | **Mi** — Mixed | 0,786 | 0,278 | **0,411** | 607 |
+| 4 | **Sc** — Stratocumulus+stratus+altostratus | 0,581 | 0,561 | **0,571** | 1.790 |
 
-Urut F1: **Cl 0,95** > Cu 0,75 > Cb 0,72 > Ci 0,70 > Ac 0,66 > Sc 0,57 > **Mi 0,41**.
-Mi adalah titik terlemah — precision tinggi (0,79) tetapi recall sangat rendah (0,28):
-model jarang menebak Mi, dan saat Mi muncul banyak tertukar menjadi Cb (lihat §5.3).
+Peringkat F1 DenseNet sendiri: Cl 0,95 > Cu 0,75 > Cb 0,72 > Ci 0,70 > Ac 0,66 >
+Sc 0,57 > Mi 0,41. Titik terlemah **Mi** — precision tinggi (0,79) tetapi recall
+sangat rendah (0,28): model jarang menebak Mi, dan saat Mi muncul banyak tertukar
+menjadi Cb (lihat §5.3).
 
 ![Precision / recall / F1 per kelas](../../../experiments/exp_005_densenet121/plot_per_class_f1.png)
 
