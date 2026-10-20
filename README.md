@@ -65,6 +65,7 @@ Indeks lengkap: [docs/README.md](docs/README.md). Dokumen dikelompokkan per fold
 - [Persiapan pelatihan](docs/pelatihan/PERSIAPAN_PELATIHAN.md)
 - [Baseline AlexNet (exp_006)](docs/pelatihan/alexnet/BASELINE_ALEXNET.md) — [rasional hyperparameter](docs/pelatihan/alexnet/rasional-hyperparameter.md) · notebook `notebooks/04_baseline_training.ipynb`
 - [Baseline DenseNet-121 (exp_005)](docs/pelatihan/densenet121/BASELINE_DENSENET121.md) — notebook `notebooks/05_densenet121_training.ipynb`
+- [Baseline DenseNet-264 (exp_007)](docs/pelatihan/densenet264/BASELINE_DENSENET264.md) — lanjutan DenseNet terdalam (via timm) · notebook `notebooks/07_densenet264_training.ipynb`
 - [Baseline ResNet-18 (exp_008)](docs/pelatihan/resnet18/BASELINE_RESNET18.md) — [rasional hyperparameter](docs/pelatihan/resnet18/rasional-hyperparameter.md) · notebook `notebooks/06_resnet18_training.ipynb`
 
 **Referensi** (`docs/referensi/`)
