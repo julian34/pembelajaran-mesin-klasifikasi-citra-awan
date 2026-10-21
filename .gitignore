@@ -48,4 +48,20 @@ Thumbs.db
 
 #agent
 AGENTS.md
+MEMORY.md
 .claude/
+.hermes.md
+scripts/hermes.ps1
+docs/referensi/HERMES.md
+
+# Jalur kerja WIP di luar br_ratio_normalization & densenet121 (belum di-commit)
+docs/pelatihan/densenet121_freeze/
+src/models/clouddense.py
+scripts/audit_clouddense.py
+notebooks/05d_se_block_densenet121.ipynb
+notebooks/05e_scs_se_densenet121.ipynb
+
+# Draft & jurnal besar (tidak di-commit pada tahap ini)
+docs/pelatihan/draft.drawio.png
+jurnal/10-3390s23187957.pdf
+jurnal/1702.05870v5.pdf

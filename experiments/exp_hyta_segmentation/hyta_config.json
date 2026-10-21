@@ -1,0 +1,12 @@
+{
+  "algorithm": "HYTA",
+  "stage1": "lambda_N=(B-R)/(B+R+eps)",
+  "stage2": "std>Ts?MCE:fixed Tf; cloud=lambda_N<thr",
+  "eps": 1e-06,
+  "Ts": 0.03,
+  "Tf": 0.25,
+  "mce_nbins": 256,
+  "image_size": 512,
+  "channel_order": "RGB(0=R,1=G,2=B)",
+  "reference": "Li,Lu&Yang(2011) JTECH-D-11-00009.1"
+}

@@ -1,0 +1,29 @@
+# Pendekatan 1: DenseNet-121 dilatih dari bobot acak pada dataset awan.
+name: exp_005b_densenet121_scratch
+description: >
+  DenseNet-121 dari awal (tanpa bobot pretrained), seluruh parameter dilatih
+  pada combined_balanced GCD+CCSN untuk klasifikasi 7 kelas awan.
+
+model:
+  architecture: densenet121
+  pretrained: false            # boolean YAML; diteruskan menjadi weights=None
+  source: torchvision
+  num_classes: 7
+  finetune: full               # semua parameter, termasuk backbone, dilatih
+
+data:
+  train_dir: data/combined_balanced/train
+  train_manifest: reports/tables/combined_balanced_train_manifest.csv
+  val_dir: data/combined/val
+  val_manifest: reports/tables/combined_val_manifest.csv
+  test_dir: data/combined/test
+  test_manifest: reports/tables/combined_test_manifest.csv
+
+training:
+  epochs: 10                   # mengikuti pengaturan awal notebook 05b
+  batch_size: 8
+  num_workers: 0
+  imbalance: none              # train sudah seimbang
+
+# AdamW, learning_rate=1e-4, input 512x512, dan normalisasi /255
+# diwarisi dari configs/base.yaml. Sesuaikan hyperparameter berdasarkan val.

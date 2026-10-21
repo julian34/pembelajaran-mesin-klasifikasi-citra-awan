@@ -41,6 +41,7 @@ Indeks dokumentasi proyek klasifikasi citra awan 7 kelas (GCD + CCSN_v2, PyTorch
 | Dokumen | Isi |
 |---|---|
 | [BASELINE_DENSENET121.md](pelatihan/densenet121/BASELINE_DENSENET121.md) | Baseline DenseNet-121 exp_005 (detail arsitektur, data, konfigurasi, run) |
+| [Pendekatan pelatihan DenseNet-121](pelatihan/densenet121/pendekatan/README.md) | Informasi dan analisis terpisah untuk training dari awal (01) serta pretrained ImageNet (02) |
 | [ANALISIS_BASELINE_DENSENET121.md](pelatihan/densenet121/ANALISIS_BASELINE_DENSENET121.md) | **Analisis hasil** exp_005 (diisi setelah pelatihan dijalankan) |
 | [arsitektur-densenet121-koneksi.html](pelatihan/densenet121/arsitektur-densenet121-koneksi.html) | **Diagram arsitektur animasi** — *dense connectivity* (ciri khas DenseNet: concat antar-lapisan dalam satu dense block; buka di browser, dashmotion) |
 | [arsitektur-densenet121-lapisan.html](pelatihan/densenet121/arsitektur-densenet121-lapisan.html) | **Diagram lapisan animasi** DenseNet-121 awal→akhir (ukuran peta fitur tiap tahap; buka di browser, dashmotion) |

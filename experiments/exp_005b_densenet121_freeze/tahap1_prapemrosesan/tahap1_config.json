@@ -1,0 +1,10 @@
+{
+  "stage": "tahap1_br_ratio_normalization",
+  "formula": "lambda_N = (B - R) / (B + R + eps)",
+  "eps": 1e-05,
+  "reconstruct_mode": "replicate",
+  "remap_to_01": true,
+  "image_size": 512,
+  "channel_order": "RGB (0=R,1=G,2=B)",
+  "note": "Draft Tahap 1; belum dipromosikan ke src/datasets. Lihat BR_RATIO_NORMALIZATION.md."
+}

@@ -1,0 +1,31 @@
+# Pendekatan 2: transfer learning DenseNet-121 dari bobot ImageNet.
+name: exp_005c_densenet121_imagenet
+description: >
+  DenseNet-121 pretrained ImageNet untuk klasifikasi 7 kelas awan GCD+CCSN.
+  Parameter backbone dibekukan; classifier baru dilatih (feature extraction).
+
+model:
+  architecture: densenet121
+  pretrained: imagenet          # DenseNet121_Weights.IMAGENET1K_V1
+  source: torchvision
+  num_classes: 7
+  finetune: feature_extraction  # hanya parameter classifier yang dioptimasi
+
+data:
+  train_dir: data/combined_balanced/train
+  train_manifest: reports/tables/combined_balanced_train_manifest.csv
+  val_dir: data/combined/val
+  val_manifest: reports/tables/combined_val_manifest.csv
+  test_dir: data/combined/test
+  test_manifest: reports/tables/combined_test_manifest.csv
+
+training:
+  epochs: 10
+  batch_size: 8
+  num_workers: 0
+  imbalance: none
+
+# AdamW, learning_rate=1e-4, weight_decay=0, dan tanpa scheduler
+# diwarisi dari configs/base.yaml, sama dengan pendekatan 1.
+# Input 512x512 dan normalisasi /255 mengikuti baseline proyek.
+# BatchNorm running statistics tetap diperbarui oleh trainer saat model.train().
